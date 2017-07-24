@@ -13,6 +13,8 @@
     body {
         margin: 0;
         padding: 40px;
+        background-image: url('bg.png');
+        background-repeat: repeat;
     }
 
     header h1 {
@@ -42,33 +44,39 @@
     #navbar a {
         padding:0 30px;
         text-decoration:none;
-        font-size:14px;
+        font-size: 16px;
+        font-family: 'Jura', sans-serif;
+        color: #1ADCE8;
     }
 
     .tab button {
-        background-color: inherit;
-        border-width: 1px;
-        border-bottom-style: none;
-        border-color: #000;
+        background-color: #fff;
+        border-width: 1px 1px 0 1px;
+        border-color: #1ADCE8;
         border-radius: 5px 5px 0 0;
+        border-style: solid;
         cursor: pointer;
         outline: none;
         padding: 5px 14px;
+        color: #1ADCE8;
         transition: 0.3s;
     }
 
     div.tab button:hover {
-        background-color: #ddd;
-        border-color: #ddd;
+        background-color: #1ADCE8;
+        color: #fff;
     }
 
     div.tab button.active {
-        background-color: #ccc;
+        background-color: #1ADCE8;
+        color: #fff;
     }
 
     .tabcontent {
         float: left;
         display: none;
+        border: 1px solid #1ADCE8;
+        background-color: #fff;
     }
 
     textarea {
@@ -86,6 +94,7 @@
 
     #outputArea {
         box-sizing: border-box;
+        border: 1px solid #1ADCE8;
         width: 45%;
         padding:3px;
         float:right;
@@ -96,7 +105,7 @@
         box-sizing: border-box;
         width: 45%;
         padding:20px 20px 0px 20px;
-        border: 1px solid black;
+        border: 1px solid #19c1ff;
     }
 
 
@@ -108,7 +117,7 @@
         box-sizing: border-box;
         width: 45%;
         padding:20px 20px 0px 20px;
-        border: 1px solid black;
+        border: 1px solid #19c1ff;
     }
 
     #renderArea p {
@@ -124,6 +133,15 @@
         float: left;
         display: block;
         margin: auto;
+        background-color: #1ADCE8;
+        border-radius: 5px;
+        border-style: none;
+        cursor: pointer;
+        outline: none;
+        padding: 10px 20px;
+        color: #fff;
+        font-size: 16px;
+        font-family: 'Jura', sans-serif;
     }
 
     </style>
@@ -134,7 +152,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <!---HEADER!--->
     <header>
-        <h1>ENSTARS STORY FORMATTER</h1>
+        <h1>☆ENSTARS STORY FORMATTER☆</h1>
         <p>A website to more easily upload event/gacha stories from the mobile idol game
             Ensemble Stars to the fandom wiki.<br>It takes translated story dialogue
             and formats it into text that you can paste directly into the "source" section of the page.</p>
@@ -153,8 +171,8 @@
         </div>
 
         <!---CONTENTS OF TABS!--->
-        <script src='bgrins-spectrum-98454b5/spectrum.js'></script>
-        <link rel='stylesheet' href='bgrins-spectrum-98454b5/spectrum.css' />
+        <script src='spectrum.js'></script>
+        <link rel='stylesheet' href='spectrum.css' />
         <form id="everything">
             <!---INPUT TAB!--->
             <textarea id="inputArea" class="tabcontent" name="input"></textarea>
@@ -188,7 +206,7 @@
                 the wiki of the dialogue render you want to use for each character.</p>
                 <div id="renderForms"></div>
             </div>
-            <input type="submit" id="convert" value="Convert">
+            <input type="submit" id="convert" value="CONVERT">
         </form>
 
         <textarea id="outputArea"></textarea>
@@ -221,10 +239,11 @@
 
         function openTab(evt, tabName) {
             $('.tabcontent').hide();
-            $('.tablinks').removeClass("active");
+            $('.tablink').removeClass("active");
             var tabId = "#" + tabName;
             $(tabId).css('display', "block");
             $(tabId).addClass("active");
+            evt.currentTarget.className += " active";
         }
         $('#defaultOpen').click();
 
