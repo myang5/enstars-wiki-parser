@@ -1,0 +1,206 @@
+/*---------------------------------ALL PAGES----------------------------------*/
+body {
+    margin: 0;
+    padding: 40px;
+    background-image: url('bg.png');
+    background-repeat: repeat;
+}
+
+header {
+    text-align: center;
+}
+
+header h1 {
+    font-family: 'Jura', sans-serif;
+    text-align: center;
+    font-size: 40px;
+    margin: 0;
+    margin-bottom: 8px;
+    text-decoration: none;
+}
+
+header h1 a {
+    color: #1ADCE8;
+    text-decoration: none;
+}
+
+header h1 a:hover {
+    color: #fff;
+}
+
+header p {
+    display: inline-block;
+    font-size: 12px;
+    max-width: 300px;
+    text-align: right;
+    margin: 0;
+}
+
+footer {
+    display: block;
+    clear: both;
+}
+
+#navbar {
+    display: inline-block;
+    padding-left: 15px;
+    margin: 0;
+    vertical-align: top;
+}
+
+#navbar li {
+    padding: 1px 0;
+    text-align: left;
+    list-style-type: none;
+}
+
+#navbar a {
+    text-align: left;
+    text-decoration:none;
+    font-size: 16px;
+    font-family: 'Jura', sans-serif;
+    color: #1ADCE8;
+    transition: 0.1s;
+    padding: 1px;
+    border-radius: 3px;
+    background-clip: padding-box
+}
+
+#navbar a:hover {
+    color: #fff;
+    background-color: #1ADCE8;
+}
+
+/*---------------------------------INDEX.HTML---------------------------------*/
+.tab button {
+    background-color: #fff;
+    border-width: 1px 1px 0 1px;
+    border-color: #1ADCE8;
+    border-radius: 5px 5px 0 0;
+    border-style: solid;
+    cursor: pointer;
+    outline: none;
+    padding: 5px 14px;
+    color: #1ADCE8;
+    transition: 0.1s;
+}
+
+div.tab button:hover {
+    background-color: #1ADCE8;
+    color: #fff;
+}
+
+div.tab button.active {
+    background-color: #1ADCE8;
+    color: #fff;
+}
+
+.tabcontent {
+    height: 500px;
+    float: left;
+    display: none;
+    border: 1px solid #1ADCE8;
+    background-color: #fff;
+}
+
+.tabcontent label, option {
+    font-family: "Arial", sans-serif;
+    font-size: 14px;
+}
+
+textarea {
+    height: 500px;
+    resize: none;
+    wrap: soft;
+}
+
+#inputArea {
+    box-sizing: border-box;
+    width: 45%;
+    padding:3px;
+    left:50px;
+    required:true;
+    transition: 0.1s;
+}
+
+#inputArea:focus{
+    outline:none;
+}
+
+#inputArea:focus::placeholder{
+    color: #fff;
+    transition: 0.1s;
+}
+
+#outputArea {
+    box-sizing: border-box;
+    border: 1px solid #1ADCE8;
+    width: 45%;
+    padding:3px;
+    float:right;
+    right:50px;
+}
+
+#detailArea {
+    box-sizing: border-box;
+    width: 45%;
+    padding:20px 20px 0px 20px;
+    border: 1px solid #19c1ff;
+}
+
+
+#detailArea label, input{
+    margin: 5px 0;
+}
+
+#renderArea {
+    box-sizing: border-box;
+    width: 45%;
+    padding:20px 20px 0px 20px;
+    border: 1px solid #19c1ff;
+}
+
+#renderArea p {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-family: "Arial", sans-serif;
+    font-size: 14px;
+}
+
+#renderForms * {
+    margin: 5px 5px;
+    font-family: "Arial", sans-serif;
+    font-size: 14px;
+}
+
+#convert {
+    float: left;
+    display: block;
+    margin: auto;
+    background-color: #1ADCE8;
+    border-radius: 5px;
+    border-style: none;
+    cursor: pointer;
+    outline: none;
+    padding: 10px 20px;
+    color: #fff;
+    font-size: 16px;
+    font-family: 'Jura', sans-serif;
+}
+
+/*---------------------------------PLANS.HTML---------------------------------*/
+#container {
+    box-sizing: border-box;
+    width: 80%;
+    background-color: #fff;
+    padding: 20px;
+    margin: 15px auto;
+    border-radius: 5px;
+}
+
+h2 {
+    font-family: 'Jura', sans-serif;
+    color: #1ADCE8;
+    font-size: 20px;
+    text-transform: uppercase;
+}
