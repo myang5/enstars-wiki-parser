@@ -33,6 +33,7 @@
             <button class="tablink" onclick="openTab(this, 'inputArea')" id="defaultOpen">Text</button>
             <button class="tablink" onclick="openTab(this, 'detailArea')">Details</button>
             <button class="tablink" onclick="openTab(this, 'renderArea')">Renders</button>
+            <button class="tablink" onclick="openTab(this, 'tlArea')">TL Notes</button>
         </div>
 
         <!---CONTENTS OF TABS!--->
@@ -71,7 +72,11 @@
                 the wiki of the dialogue render you want to use for each character.</p>
                 <div id="renderForms"></div>
             </div>
+            <!---TLNOTETAB!--->
+            <textarea id="tlArea" class="tabcontent" name="tl"></textarea>
+
             <input type="submit" id="convert" value="CONVERT">
+
         </form>
 
         <textarea id="outputArea"></textarea>
@@ -96,6 +101,9 @@
         <script>
         var placeholder = "Example of dialogue format:\n\nRitsu: Ah, I feel like Maa-kun’s thinking about me.\n\nRitsu: Well, he’s probably thinking about me all the time, anyway. Just like how I think about Maa-kun all the time too.\n\nRitsu: Yes, this is love… No matter when or where, Maa-kun and I are bonded by it.\n\nArashi: Mmhmm, I think so too~ That’s love right there.\n\nArashi: I’m so jealous~ You have such a wonderful romance…";
         $('#inputArea').attr('placeholder', placeholder);
+
+        var placeholder1 = 'Paste the numbered translation notes (separated by line breaks) into here.';
+        $('#tlArea').attr('placeholder', placeholder1);
 
         $('input[name=tlLink]').hide();
 
@@ -158,15 +166,15 @@
             "! colspan=\"2\" style=\"text-align:center;background-color:#LOCATIONCOLOR; color:#TEXTCOLOR;\" |'''Location: SETTING'''\n";
             var dialogueRender =
             "|-" + "\n" + "|[[File:FILENAME|x200px|link=|center]]" + "\n" + "|" + "\n";
-            var footer = "\n" + "|-" + "\n" +
+            var footer = "|-" + "\n" +
             "! colspan=\"2\" style=\"text-align:center;background-color:#BOTTOMCOLOR;color:#TEXTCOLOR;\" |'''Translation: [TLER] '''" +
             "\n" +
             "|}";
 
             var location = $('input[name=location]').val();
             var author = $('select[name=author] option:selected').text();
-            var translator = $('input[name=translator]').val();
-            var tlLink = $('input[name=tlLink]').val();
+            var translator = $('input[name=translator]').val().trim();
+            var tlLink = $('input[name=tlLink]').val().trim();
 
             if($('input[name=tlLocation]:checked').val()=='wiki'){
                 translator = "[User:" + translator + "|" + translator + "]";
@@ -179,6 +187,16 @@
             var locationCol = $("input[name=locationCol]").val();
             var bottomCol = $('input[name=bottomCol]').val();
             var textCol = $('input[name=textCol]').val();
+
+            var tlNotes = $('#tlArea').val().trim();
+            tlNotes = tlNotes.split(/\n/);
+            var tlDict = {};
+            tlNotes.forEach(function(exp){
+                tlDict[exp.slice(0,exp.indexOf("]")+1)] = exp.trim();
+            });
+
+            console.log(tlDict);
+
             var output;
 
             header = header.replace("SETTING", location.trim());
@@ -190,25 +208,36 @@
             header = header.replace(/TEXTCOLOR/g, textCol);
             footer = footer.replace("TEXTCOLOR", textCol);
 
-            var input=$('#inputArea').val().trim();
+            var input = $('#inputArea').val().trim();
             input = input.split(/\n\n/);
             var currentName = "";
+            var tlExp = /\[\d\]/;
+            var tlToInput = "";
             output = header;
             input.forEach(function(exp){
                 var current = exp.slice(0,exp.indexOf(":"));
                 exp = exp.slice(exp.indexOf(":") + 1).trim();
-                console.log(current);
                 if(current == currentName){
                     output += exp + "\n\n";
                 }
                 else if(current != currentName){
                     currentName = current;
-                    //output += "\n";
                     var renderFile = dialogueRender;
                     var id = "#" + current
+                    if(tlToInput!=""){
+                        console.log(tlToInput)
+                        output += tlToInput;
+                        tlToInput = "";
+                    }
                     output += renderFile.replace("FILENAME", $(id).val().trim());
                     // output += dialogueRender;
                     output += exp + "\n\n";
+                }
+                var tlMarkers = exp.match(tlExp);
+                //console.log(tlMarkers);
+                if(tlMarkers!=null){
+                    var note = "\'\'" + tlDict[tlMarkers[0]] + "\'\'" + "\n\n";
+                    tlToInput = note;
                 }
             });
             output += footer;

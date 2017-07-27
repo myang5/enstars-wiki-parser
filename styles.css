@@ -96,6 +96,8 @@ div.tab button.active {
 }
 
 .tabcontent {
+    width: 45%;
+    box-sizing: border-box;
     height: 500px;
     float: left;
     display: none;
@@ -108,6 +110,13 @@ div.tab button.active {
     font-size: 14px;
 }
 
+.tabcontent p {
+    padding: 0;
+    margin-bottom: 20px;
+    font-family: "Arial", sans-serif;
+    font-size: 14px;
+}
+
 textarea {
     height: 500px;
     resize: none;
@@ -115,8 +124,6 @@ textarea {
 }
 
 #inputArea {
-    box-sizing: border-box;
-    width: 45%;
     padding:3px;
     left:50px;
     required:true;
@@ -142,8 +149,6 @@ textarea {
 }
 
 #detailArea {
-    box-sizing: border-box;
-    width: 45%;
     padding:20px 20px 0px 20px;
     border: 1px solid #19c1ff;
 }
@@ -154,23 +159,29 @@ textarea {
 }
 
 #renderArea {
-    box-sizing: border-box;
-    width: 45%;
     padding:20px 20px 0px 20px;
-    border: 1px solid #19c1ff;
-}
-
-#renderArea p {
-    margin-top: 0;
-    margin-bottom: 20px;
-    font-family: "Arial", sans-serif;
-    font-size: 14px;
 }
 
 #renderForms * {
     margin: 5px 5px;
     font-family: "Arial", sans-serif;
     font-size: 14px;
+}
+
+#tlArea {
+    padding:3px;
+    left:50px;
+    required:true;
+    transition: 0.1s;
+}
+
+#tlArea:focus{
+    outline:none;
+}
+
+#tlArea:focus::placeholder{
+    color: #fff;
+    transition: 0.1s;
 }
 
 #convert {
