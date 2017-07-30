@@ -183,10 +183,10 @@
                 translator = tlLink + " " + translator;
             }
 
-            var writerCol = $('input[name=writerCol]').val();
-            var locationCol = $("input[name=locationCol]").val();
-            var bottomCol = $('input[name=bottomCol]').val();
-            var textCol = $('input[name=textCol]').val();
+            var writerCol = $('input[name=writerCol]').val().replace(/#/g, "");
+            var locationCol = $("input[name=locationCol]").val().replace(/#/g, "");
+            var bottomCol = $('input[name=bottomCol]').val().replace(/#/g, "");
+            var textCol = $('input[name=textCol]').val().replace(/#/g, "");
 
             var tlNotes = $('#tlArea').val().trim();
             tlNotes = tlNotes.split(/\n/);
