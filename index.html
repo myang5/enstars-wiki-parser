@@ -80,8 +80,7 @@
             </div>
             <!---TLNOTETAB!--->
             <textarea id="tlArea" class="tabcontent" name="tl"></textarea>
-            
-            <input type="submit" id="convert" value="CONVERT">
+            <button type="button" onclick="convertText()" id="convert">CONVERT</button>
 
         </form>
 
@@ -239,7 +238,7 @@
         	$('#linkErrMsg').show();	
         }
 
-        $('#everything').submit(function(){
+    	function convertText(){
             var header =
             "{| class=\"article-table\" cellspacing=\"1/6\" cellpadding=\"2\" border=\"1\" align=\"center\" width=\"100%\"" + "\n" +
             "! colspan=\"2\" style=\"text-align:center;background-color:#WRITERCOLOR; color:#TEXTCOLOR;\" |'''Writer:''' AUTHOR" + "\n" +
@@ -307,7 +306,7 @@
 					else if(current != currentName){
 						currentName = current;
 						var renderFile = dialogueRender;
-						var id = "#" + current
+						var id = "#" + current[0].toUpperCase() + current.slice(1,current.length);
 						if(tlToInput!=""){
 							console.log(tlToInput)
 							output += tlToInput;
@@ -329,7 +328,7 @@
 
             $('#outputArea').val(output);
             return false;
-        });
+        }
         </script>
 
     </body>
