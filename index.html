@@ -129,7 +129,8 @@
         $('#inputArea').change(function(){
             //$('#renderForms').empty();
             var input=$('#inputArea').val();
-            input = input.split(/\n\n/);
+            input = input.split(/\n/);
+            console.log(input);
             var names = [];
             input.forEach(function(exp){
                 names.push(exp.slice(0,exp.indexOf(":")));
