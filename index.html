@@ -71,11 +71,16 @@
                 <p>Please paste in the filename as written in the wiki (including extension)
                 of the dialogue render you want to use for each character. <br>
                 (Forms will appear when you paste dialogue into the Text tab)</p>
+                <label>Find renders for:</label>
+				<select id="linkToRenders"></select>
+				<button id="renderLinkBtn" onclick="openLink()" type="button">GO</button>
+				<label id="linkErrMsg">Chara doesn't exist</label>
+				<p></p>
                 <div id="renderForms"></div>
             </div>
             <!---TLNOTETAB!--->
             <textarea id="tlArea" class="tabcontent" name="tl"></textarea>
-
+            
             <input type="submit" id="convert" value="CONVERT">
 
         </form>
@@ -100,6 +105,9 @@
 
 
         <script>
+        
+        $('#linkErrMsg').hide();
+        		
         var placeholder = "Example of dialogue format:\n(what's important is that each line of dialogue has a name + \":\" and is on a new line)\n\nRitsu: Ah, I feel like Maa-kun’s thinking about me.\n\nRitsu: Well, he’s probably thinking about me all the time, anyway. Just like how I think about Maa-kun all the time too.\n\nRitsu: Yes, this is love… No matter when or where, Maa-kun and I are bonded by it.\n\nArashi: Mmhmm, I think so too~ That’s love right there.\n\nArashi: I’m so jealous~ You have such a wonderful romance…";
         $('#inputArea').attr('placeholder', placeholder);
 
@@ -125,10 +133,10 @@
                 $('input[name=tlLink]').show();
             }
         });
-
+		
+		//Updating Renders tab based on dialogue input
         var namesSet = new Set();
         $('#inputArea').change(function(){
-            //$('#renderForms').empty();
             var input=$('#inputArea').val();
             input = input.split(/\n/);
             console.log(input);
@@ -139,26 +147,97 @@
                 }
             });
             names = new Set(names);
+            
+            //deletes divs that no longer exist in the new dialogue
+            //deletes option from the link menu
             namesSet.forEach(function(exp){
                 if(!names.has(exp)){
                     namesSet.delete(exp);
                     var cls = "." + exp;
                     $(cls).remove();
+                    exp = exp[0].toUpperCase() + exp.slice(1,exp.length);
+                    $('option:contains(' + exp + ')').remove();
                 }
             });
 
             names.forEach(function(exp){
-                if(!namesSet.has(exp)){
+            	//format name slightly
+            	exp = exp[0].toUpperCase() + exp.slice(1,exp.length);
+            	//keeps the previously existing divs so that renders don't have to be re-entered
+                if(!namesSet.has(exp)){ 
                     namesSet.add(exp);
+                    //make input box for the render labeled w/ a name
                     var newDiv = $("<div></div>").addClass(exp);
                     var newLabel = $("<label></label>").text(exp);
                     var newInput = $("<input>").attr("id",exp);
                     $(newDiv).append(newLabel);
                     $(newDiv).append(newInput);
                     $('#renderForms').append(newDiv);
+                    //add name option to dropdown menu of render page links
+                    var sel = document.getElementById("linkToRenders");
+                    var opt = document.createElement("option");
+                    opt.text = exp;
+                    sel.add(opt);
                 }
             });
         });
+        
+        function openLink(){
+        	var namesList = ['Tetora_Nagumo',
+							'Hajime_Shino',
+							'Tomoya_Mashiro',
+							'Hinata_Aoi',
+							'Midori_Takamine',
+							'Tori_Himemiya',
+							'Shinobu_Sengoku',
+							'Mitsuru_Tenma',
+							'Yuta_Aoi',
+							'Tsukasa_Suou',
+							'Sora_Harukawa',
+							'Subaru_Akehoshi',
+							'Hokuto_Hidaka',
+							'Makoto_Yuuki',
+							'Souma_Kanzaki',
+							'Adonis_Otogari',
+							'Natsume_Sakasaki',
+							'Koga_Oogami',
+							'Ritsu_Sakuma',
+							'Mao_Isara',
+							'Yuzuru_Fushimi',
+							'Arashi_Narukami',
+							'Mika_Kagehira',
+							'Eichi_Tenshouin',
+							'Keito_Hasumi',
+							'Kaoru_Hakaze',
+							'Izumi_Sena',
+							'Chiaki_Morisawa',
+							'Shu_Itsuki',
+							'Madara_Mikejima',
+							'Kuro_Kiryu',
+							'Wataru_Hibiki',
+							'Kanata_Shinkai',
+							'Rei_Sakuma',
+							'Nazuna_Nito',
+							'Leo_Tsukinaga',
+							'Tsumugi_Aoba',
+							'Jin_Sagami',
+							'Akiomi_Kunugi',
+							'Hiyori_Tomoe',
+							'Jun_Sazanami',
+							'Nagisa_Ran',
+							'Ibara_Saegusa'
+				];
+        	var name = $("#linkToRenders option:selected").text();
+        	for(i = 0; i < namesList.length; i++) {
+        		if(namesList[i].split('_')[0] == name){
+        			$('#linkErrMsg').hide();
+        			var url = "http://ensemble-stars.wikia.com/wiki/NAME/Gallery#Renders".replace("NAME", namesList[i]);
+        			window.open(url, "_blank");
+        			return;
+        		}
+        	}
+        	$('#linkErrMsg').show();	
+        }
 
         $('#everything').submit(function(){
             var header =
