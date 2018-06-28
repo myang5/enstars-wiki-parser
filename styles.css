@@ -187,7 +187,7 @@ textarea {
 #convert {
     float: left;
     display: block;
-    margin: auto;
+    /*margin: auto;*/
     background-color: #1ADCE8;
     border-radius: 5px;
     border-style: none;
@@ -206,12 +206,20 @@ textarea {
     background-color: #fff;
     padding: 20px;
     margin: 15px auto;
-    border-radius: 5px;
+    border-radius: 8px;
 }
 
 h2 {
     font-family: 'Jura', sans-serif;
     color: #1ADCE8;
-    font-size: 20px;
+    font-size: 24px;
+    text-transform: uppercase;
+    margin-top: 0;
+}
+
+h3 {
+    font-family: 'Jura', sans-serif;
+    color: #1ADCE8;
+    font-size: 16px;
     text-transform: uppercase;
 }

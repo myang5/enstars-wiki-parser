@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+
+<head> <!--Code to be executed before page is displayed/rendered!-->
+    <meta name="keywords" content="enstars, ensemble stars, ensemble stars wiki">
+    <meta name="description" content="A text formatter for more efficiently uploading event/gacha stories to the Ensemble Stars Wiki.">
+    <title>Story Formatter</title>
+
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css?family=Jura:600" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+
+</head>
+
+<body> <!--Code to be displayed/rendered!-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!---HEADER!--->
+    <header>
+        <h1><a href="index.html">☆ENSTARS STORY FORMATTER☆</a></h1>
+        <p>A website to more easily upload event/gacha stories from the mobile idol game
+            Ensemble Stars to the fandom wiki.<br>It takes translated story dialogue
+            and formats it into text that you can paste directly into the "source" section of the page.
+        <br> Developed by gayandasleep@twitter.</p>
+            <ul id="navbar">
+                <li><a href="./howto.html">HOW TO USE</a></li>
+                <li><a target="_blank" href="https://goo.gl/forms/Xu42LLAgWKxVYV873">QUESTIONS/FEEDBACK</a></li>
+                <li><a href="./plans.html">DESIGN PLANS</a></li>
+            </ul>
+        </header>
+
+        <div id="container">
+            <h2>BASIC TEXT CONVERSION</h2>
+            <h3>Text Tab</h3>
+            <p>Copy and paste your translated chapter into the left-hand box with the tabs on top. The
+            dialogue should be formatted like this:<br><br> Person A: How are you today?
+            <br><br> Person B: I'm crying about enstars, you?
+            <br><br> Person A: Lol same
+            <br><br>NOTE: It's important to have the double line break in between each
+            line of dialogue.</p>
+
+            <h3>Details Tab</h3>
+            <p>Fill in information about the chapter and its
+                appearance on the wiki. INSERT DIAGRAM OF WHAT EACH COLOR IS</p>
+
+            <h3>Renders Tab</h3>
+            <p>The renders tab should automatically display which characters are in the
+                dialogue once you paste it into the text tab. Fill in which render files
+                should be used for each character (i.e. EXAMPLE for CHARACTER)
+                <br>NOTE: For now, if you want to use more than one render per character in one chapter,
+                you have to format each section of the chapter with different renders separately.
+                INSERT EXAMPLE</p>
+
+            <h3>TL Notes Tab</h3>
+            <p> If the chapter has translation notes, insert a number for each note
+                into the dialogue like so:
+                <br><br> Person A: How are you today? [1]
+                <br><br>Person B: I'm crying about enstars, you? [2]
+                <br><br> Then paste the list of translation notes into the TL Notes tab:
+                <br><br> [1] A question commonly used to start conversation.
+                <br> [2] Ensemble Stars is a popular mobile game that causes many tears.
+                <br><br> NOTE: It's important to separate each note with a line break.
+                <br> NOTE: To have links in your translation notes, make sure to format
+                them like this: [https://www.example.com text that is link]</p>
+
+            <h2>CREATING A NEW PAGE ON THE WIKI</h2>
+            <ol>
+                <li>Copy the text that shows up on the right-hand box (can be done with Ctrl+A/Cmd+A)</li>
+                <li>Go to the main page of the story and edit the URL to be have the name
+                    of the chapter. <br>For example, https://www.ensemble-stars.wikia.com/wiki/Checkmate/CHAPTER TITLE</li>
+                <li>Choose to create a new page.</li>
+                <li>Instead of the visual editor, switch to the source editor and paste in the formatted text.</li>
+                <li>NOTE: As of now you must manually upload the header image of the
+                    chapter in the visual editor unless you upload the header image to
+                    the wiki before creating the new chapter page.</li>
+            </ol>
+        </div>
+
+        <footer></footer>
+
+    </body>
+    </html>

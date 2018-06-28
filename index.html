@@ -1,8 +1,9 @@
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <html>
 
-<head> <!--Code to be executed before page is displayed/rendered!-->
+<head>
     <meta name="keywords" content="enstars, ensemble stars, ensemble stars wiki">
     <meta name="description" content="A text formatter for more efficiently uploading event/gacha stories to the Ensemble Stars Wiki.">
     <title>Story Formatter</title>
@@ -12,18 +13,24 @@
 
 </head>
 
-<body> <!--Code to be displayed/rendered!-->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<body>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
     <!---HEADER!--->
     <header>
         <h1><a href="index.html">☆ENSTARS STORY FORMATTER☆</a></h1>
         <p>A website to more easily upload event/gacha stories from the mobile idol game
             Ensemble Stars to the fandom wiki.<br>It takes translated story dialogue
             and formats it into text that you can paste directly into the "source" section of the page.
-        <br> Developed by gayandasleep@twitter.</p>
+        <br> Developed by <a href="https://twitter.com/gayandasleep">midori</a></p>
             <ul id="navbar">
-                <li><a target="_blank" href="/">HOW TO USE</a></li>
-                <li><a href="https://goo.gl/forms/Xu42LLAgWKxVYV873" target="_blank">QUESTIONS/FEEDBACK</a></li>
+                <li><a href="./howto.html">HOW TO USE</a></li>
+                <li><a target="_blank" href="https://goo.gl/forms/Xu42LLAgWKxVYV873">QUESTIONS/FEEDBACK</a></li>
                 <li><a href="./plans.html">DESIGN PLANS</a></li>
             </ul>
         </header>
@@ -43,6 +50,32 @@
             <!---INPUT TAB!--->
             <textarea id="inputArea" class="tabcontent" name="input"></textarea>
             <!---DETAILS TAB!--->
+            <form class="form-horizontal" action="/action_page.php">
+              <div class="form-group">
+                <label class="control-label col-sm-2" for="email">Email:</label>
+                <div class="col-sm-10">
+                  <input type="email" class="form-control" id="email" placeholder="Enter email">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-sm-2" for="pwd">Password:</label>
+                <div class="col-sm-10">
+                  <input type="password" class="form-control" id="pwd" placeholder="Enter password">
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                  <div class="checkbox">
+                    <label><input type="checkbox"> Remember me</label>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                  <button type="submit" class="btn btn-default">Submit</button>
+                </div>
+              </div>
+            </form>
             <div id="detailArea" class="tabcontent">
                 <label>Story Location</label>
                 <input type="text" name="location"><br>
@@ -234,12 +267,14 @@
                     output += exp + "\n\n";
                 }
                 var tlMarkers = exp.match(tlExp);
-                //console.log(tlMarkers);
                 if(tlMarkers!=null){
                     var note = "\'\'" + tlDict[tlMarkers[0]] + "\'\'" + "\n\n";
-                    tlToInput = note;
+                    tlToInput += note;
                 }
             });
+            if(tlToInput!=""){
+                output += tlToInput;
+            }
             output += footer;
 
             $('#outputArea').val(output);
