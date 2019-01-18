@@ -2,8 +2,9 @@
 body {
     margin: 0;
     padding: 40px;
-    background-image: url('bg.png');
+    background-image: url('bg2.png');
     background-repeat: repeat;
+    background-color: #fff3E6
 }
 
 header {
@@ -20,7 +21,7 @@ header h1 {
 }
 
 header h1 a {
-    color: #10c1f2;
+    color: #15c6e0;
     text-decoration: none;
 }
 
@@ -30,8 +31,8 @@ header h1 a:hover {
 
 header p {
     display: inline-block;
-    font-size: 12px;
-    max-width: 300px;
+    font-size: 14px;
+    max-width: 400px;
     text-align: right;
     margin: 0;
 }
@@ -59,7 +60,7 @@ footer {
     text-decoration:none;
     font-size: 16px;
     font-family: 'Jura', sans-serif;
-    color: #1ADCE8;
+    color: #15c6e0;
     transition: 0.1s;
     padding: 1px;
     border-radius: 3px;
@@ -68,45 +69,45 @@ footer {
 
 #navbar a:hover {
     color: #fff;
-    background-color: #1ADCE8;
+    background-color: #15c6e0;
 }
 
 /*---------------------------------INDEX.HTML---------------------------------*/
 .tab button {
     background-color: #fff;
     border-width: 1px 1px 0 1px;
-    border-color: #1ADCE8;
+    border-color: #15c6e0;
     border-radius: 5px 5px 0 0;
     border-style: solid;
     cursor: pointer;
     outline: none;
     padding: 5px 14px;
-    color: #1ADCE8;
+    color: #15c6e0;
     transition: 0.1s;
 }
 
 div.tab button:hover {
-    background-color: #1ADCE8;
+    background-color: #15c6e0;
     color: #fff;
 }
 
 div.tab button.active {
-    background-color: #1ADCE8;
+    background-color: #15c6e0;
     color: #fff;
 }
 
 .tabcontent {
     width: 45%;
+    max-width: 700px;
     box-sizing: border-box;
     height: 500px;
     float: left;
     display: none;
-    border: 1px solid #1ADCE8;
+    border: 1px solid #15c6e0;
     background-color: #fff;
 }
 
 .tabcontent label, option {
-    font-family: "Arial", sans-serif;
     font-size: 14px;
 }
 
@@ -140,9 +141,10 @@ textarea {
 }
 
 #outputArea {
-    box-sizing: border-box;
-    border: 1px solid #1ADCE8;
     width: 45%;
+    max-width: 700px;
+    box-sizing: border-box;
+    border: 1px solid #15c6e0;
     padding:3px;
     float:right;
     right:50px;
@@ -151,11 +153,6 @@ textarea {
 #detailArea {
     padding:20px 20px 0px 20px;
     border: 1px solid #19c1ff;
-}
-
-
-#detailArea label, input{
-    margin: 5px 0;
 }
 
 #renderArea {
@@ -188,7 +185,7 @@ textarea {
     float: left;
     display: block;
     /*margin: auto;*/
-    background-color: #1ADCE8;
+    background-color: #15c6e0;
     border-radius: 5px;
     border-style: none;
     cursor: pointer;
@@ -211,7 +208,7 @@ textarea {
 
 h2 {
     font-family: 'Jura', sans-serif;
-    color: #1ADCE8;
+    color: #15c6e0;
     font-size: 24px;
     text-transform: uppercase;
     margin-top: 0;
@@ -219,7 +216,7 @@ h2 {
 
 h3 {
     font-family: 'Jura', sans-serif;
-    color: #1ADCE8;
+    color: #15c6e0;
     font-size: 16px;
     text-transform: uppercase;
 }
