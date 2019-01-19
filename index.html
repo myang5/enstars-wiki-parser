@@ -28,28 +28,26 @@
 <body>
 
   <header>
-  <h1><a href="index.html">ENSTARS STORY FORMATTER</a></h1>
-  <p>
-    A website to more easily upload event/gacha stories from the mobile idol game
-    Ensemble Stars to the fandom wiki.
-    <br>It takes translated story dialogue and formats it into text that you can paste directly into the "source" section of the page.
-    <br>Developed by <a target="_blank" href="https://twitter.com/gayandasleep">midori</a>.
-  </p>
+    <h1><a href="index.html">ENSTARS STORY FORMATTER</a></h1>
+    <p>
+      A website to more easily upload event/gacha stories from the mobile idol game
+      Ensemble Stars to the fandom wiki.
+      <br>It takes translated story dialogue and formats it into text that you can paste directly into the "source" section of the page.
+      <br>Developed by <a target="_blank" href="https://twitter.com/gayandasleep">midori</a>.
+    </p>
     <ul id="navbar">
       <li><a href="./howto.html">HOW TO USE</a></li>
       <li><a target="_blank" href="https://goo.gl/forms/Xu42LLAgWKxVYV873">QUESTIONS/FEEDBACK</a></li>
       <li><a href="./plans.html">DESIGN PLANS</a></li>
     </ul>
-    </header>
+  </header>
 
-
-  <script src="header.html"></script>
-
-    <div id="contents">
+  <div class="main">
+    <div class="input">
       <!---TABS ON TOP OF INPUT!--->
       <div class="tab">
-        <button class="tablink" onclick="openTab(this, 'inputArea')">Text</button>
-        <button class="tablink" onclick="openTab(this, 'detailArea')" id="defaultOpen">Details</button>
+        <button class="tablink" onclick="openTab(this, 'inputArea')"id="defaultOpen">Text</button>
+        <button class="tablink" onclick="openTab(this, 'detailArea')">Details</button>
         <button class="tablink" onclick="openTab(this, 'renderArea')">Renders</button>
         <button class="tablink" onclick="openTab(this, 'tlArea')">TL Notes</button>
       </div>
@@ -62,17 +60,17 @@
         <!---DETAILS TAB!--->
         <div id="detailArea" class="tabcontent">
           <!--Note: Bootstrap grid system has 12 columns in each row
-              but columns do not have to add up to 12-->
+          but columns do not have to add up to 12-->
 
           <div class="form-group row">
-            <label class="col-form-label col-sm-3" for="location">Story Location</label>
+            <label class="col-form-label col-sm-2" for="location">Location</label>
             <div class="col-sm-6">
-              <input class="form-control" type="text" id="location"><br>
+              <input class="form-control" type="text" id="location">
             </div>
           </div>
 
           <div class="form-group row">
-            <label for="author" class="col-form-label col-sm-3">Story Writer</label>
+            <label for="author" class="col-form-label col-sm-2">Writer</label>
             <div class="col-sm-6">
               <select class="form-control" id="author">
                 <option value="akira">日日日 (Akira)</option>
@@ -82,25 +80,25 @@
           </div>
 
           <div class="form-group row">
-            <label class="col-form-label col-sm-3">Translator</label>
+            <label class="col-form-label col-sm-2">Translator</label>
             <div class="col-sm-6">
               <input class="form-control" type="text" name="translator">
             </div>
           </div>
           <div class="row">
-            <div class="col-sm-3"></div>
+            <div class="col-sm-2"></div>
             <div class="col-sm-6">
               <input type="radio" name="tlLocation" value="wiki" checked> Translator is wiki username
             </div>
           </div>
           <div class="row">
-            <div class="col-sm-3"></div>
+            <div class="col-sm-2"></div>
             <div class="col-sm-6">
               <input type="radio" name="tlLocation" value="external"> External link for credit needed
             </div>
           </div>
           <div class="row">
-            <div class="col-sm-3"></div>
+            <div class="col-sm-2"></div>
             <div class="col-sm-6">
               <input class="form-control" type="text" name="tlLink"><br>
             </div>
@@ -112,28 +110,28 @@
           </div>
 
           <div class="row">
-            <label class="col-form-label col-sm-3">Writer</label>
+            <label class="col-form-label col-sm-2">Writer</label>
             <div class="col-sm-9">
               <input class="jscolor" name="writerCol" value="fff"><br>
             </div>
           </div>
 
           <div class="row">
-            <label class="col-form-label col-sm-3">Location</label>
+            <label class="col-form-label col-sm-2">Location</label>
             <div class="col-sm-9">
               <input class="jscolor" name="locationCol" value="fff"><br>
             </div>
           </div>
 
           <div class="row">
-            <label class="col-form-label col-sm-3">Bottom</label>
+            <label class="col-form-label col-sm-2">Bottom</label>
             <div class="col-sm-9">
               <input class="jscolor" name="bottomCol" value="fff"><br>
             </div>
           </div>
 
           <div class="row">
-            <label class="col-form-label col-sm-3">Text</label>
+            <label class="col-form-label col-sm-2">Text</label>
             <div class="col-sm-9">
               <input class="jscolor" name="textCol" value="fff"><br>
             </div>
@@ -144,44 +142,45 @@
         <!---RENDERTAB!--->
         <div id="renderArea" class="tabcontent">
           <p>
-            Please paste in the filename as written in the wiki (including extension)
-            of the dialogue render you want to use for each character. <br>
-            (Forms will appear when you paste dialogue into the Text tab)
+            Please paste in the filename as written in the wiki of the dialogue
+            render you want to use for each character (ex. Tsukasa Suou School Dialogue Render.png)<br>
+            (This tab will fill out once you paste dialogue into the Text tab)
           </p>
-            <label for="linkToRenders">Find renders for:</label>
-            <select id="linkToRenders"></select>
-            <button id="renderLinkBtn" onclick="openLink()" type="button">GO</button>
-            <p></p>
-            <div id="renderForms"></div>
-          </div>
-
-          <!---TLNOTETAB!--->
-          <textarea id="tlArea" class="tabcontent" name="tl"></textarea>
-          <button type="button" onclick="convertText()" id="convert">CONVERT</button>
-
-        </form>
-
-        <textarea id="outputArea"></textarea>
-
+          <label for="linkToRenders">Find renders for:</label>
+          <select id="linkToRenders"></select>
+          <button id="renderLinkBtn" onclick="openLink()" type="button">GO</button>
+          <p></p>
+          <div id="renderForms"></div>
         </div>
 
-        <footer></footer>
+        <!---TLNOTETAB!--->
+        <textarea id="tlArea" class="tabcontent" name="tl"></textarea>
 
-        <script>
-        $(".jscolor").spectrum({
-          flat: false,
-          showInput: true,
-          className: "full-spectrum",
-          showInitial: true,
-          preferredFormat: "hex",
-        });
+      </div>
 
-        setup() // makes small edits to page display
+      <button type="button" onclick="convertText()" id="convert">CONVERT</button>
 
-        $('input[name=tlLocation]').change(showExLink); //toggles input for translator link
-        $('#inputArea').change(updateRenders); //makes inputs for each character in dialogue to insert render link
+    </form>
 
-        </script>
+    <textarea id="outputArea"></textarea>
+
+  </div>
+
+  <script>
+  $(".jscolor").spectrum({
+    flat: false,
+    showInput: true,
+    className: "full-spectrum",
+    showInitial: true,
+    preferredFormat: "hex",
+  });
+
+  setup() // makes small edits to page display
+
+  $('input[name=tlLocation]').change(showExLink); //toggles input for translator link
+  $('#inputArea').change(updateRenders); //makes inputs for each character in dialogue to insert render link
+
+  </script>
 
 
 </body>

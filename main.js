@@ -53,8 +53,6 @@ function setup(){
   $('#tlArea').attr('placeholder', placeholder1);
 
   $('input[name=tlLink]').hide();
-
-  console.log($('#inputArea').height());
 }
 
 function openTab(btn, tabName) {
@@ -84,7 +82,6 @@ function updateRenders(){
   //originally was /\n\w+:/g but this did not catch the first name
   var res = input.match(/^(?! )\w+:/gm);
   var names= new Set(res);
-  console.log(names);
 
   //divs that no longer exist in the new dialogue
   //deletes option from the link menu
@@ -121,7 +118,7 @@ function updateRenders(){
       sel.add(opt);
     }
   });
- }
+}
 
 function openLink(){
   var name = $("#linkToRenders option:selected").text();
@@ -173,7 +170,7 @@ function convertText(){
     tlDict[exp.slice(0,exp.indexOf("]")+1)] = exp.trim();
   });
 
-  console.log(tlDict);
+  // console.log(tlDict);
 
   var output;
 
@@ -193,24 +190,38 @@ function convertText(){
   var tlToInput = "";
   output = header;
   input.forEach(function(exp){
-    if(exp != ""){
-      var current = exp.slice(0,exp.indexOf(":"));
-      exp = exp.slice(exp.indexOf(":") + 1).trim();
-      if(current == currentName){
-        output += exp + "\n\n";
+    if(exp != ""){ //omit empty lines
+      var firstWord = exp.split(" ")[0]; //check if current line has new chara speaking
+      if(!firstWord.includes(":")){ //if not
+        output += exp + "\n\n"; //add dialogue line to output
       }
-      else if(current != currentName){
-        currentName = current;
+      else{
+        var character = exp.slice(0,exp.indexOf(":"));
+        console.log(character);
+        exp = exp.slice(exp.indexOf(":") + 1).trim();
         var renderFile = dialogueRender;
-        var id = "#" + current[0].toUpperCase() + current.slice(1,current.length);
-        if(tlToInput!=""){
-          console.log(tlToInput)
-          output += tlToInput;
-          tlToInput = "";
-        }
+        var id = "#" + character[0].toUpperCase() + character.slice(1,character.length);
         output += renderFile.replace("FILENAME", $(id).val().trim());
-        // output += dialogueRender;
         output += exp + "\n\n";
+        // code from when every line had to start with a chara name JIC
+        // var current = exp.slice(0,exp.indexOf(":"));
+        // exp = exp.slice(exp.indexOf(":") + 1).trim();
+        // if(current == currentName){
+        //   output += exp + "\n\n";
+        // }
+        // else if(current != currentName){
+        //   currentName = current;
+        //   var renderFile = dialogueRender;
+        //   var id = "#" + current[0].toUpperCase() + current.slice(1,current.length);
+        //   if(tlToInput!=""){
+        //     console.log(tlToInput)
+        //     output += tlToInput;
+        //     tlToInput = "";
+        //   }
+        //   output += renderFile.replace("FILENAME", $(id).val().trim());
+        //   // output += dialogueRender;
+        //   output += exp + "\n\n";
+        // }
       }
       var tlMarkers = exp.match(tlExp);
       //console.log(tlMarkers);

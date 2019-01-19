@@ -73,6 +73,16 @@ footer {
 }
 
 /*---------------------------------INDEX.HTML---------------------------------*/
+
+.main {
+  max-width: 1600px;
+  margin: auto;
+}
+
+.input{
+  min-width: 330px;
+}
+
 .tab button {
     background-color: #fff;
     border-width: 1px 1px 0 1px;
@@ -98,6 +108,7 @@ div.tab button.active {
 
 .tabcontent {
     width: 45%;
+    min-width: 330px;
     max-width: 700px;
     box-sizing: border-box;
     height: 500px;
@@ -131,6 +142,7 @@ textarea {
 
 #outputArea {
     width: 45%;
+    min-width: 330px;
     max-width: 700px;
     box-sizing: border-box;
     border: 1px solid #15c6e0;
@@ -165,9 +177,8 @@ textarea {
 }
 
 #convert {
-    float: left;
-    display: block;
-    /*margin: auto;*/
+    float: center;
+    margin: auto;
     background-color: #15c6e0;
     border-radius: 5px;
     border-style: none;
