@@ -2,7 +2,7 @@
 body {
     margin: 0;
     padding: 40px;
-    background-image: url('bg2.png');
+    background-image: url('./assets/bg2.png');
     background-repeat: repeat;
     background-color: #fff3E6
 }
@@ -213,4 +213,8 @@ h3 {
     color: #15c6e0;
     font-size: 20px;
     text-transform: uppercase;
+}
+
+img {
+  width: 500px;
 }

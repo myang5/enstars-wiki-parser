@@ -49,7 +49,13 @@ function setup(){
   var placeholder = "Example of dialogue format:\n(Each line of dialogue is on a new line. Dialogue should indicate when a new character is speaking with their name followed by \":\")\n\nRitsu: Yes, this is love… No matter when or where, Maa-kun and I are bonded by it.\n\nArashi: Mmhmm, I think so too~ That’s love right there.\n\nI’m so jealous~ You have such a wonderful romance…";
   $('#inputArea').attr('placeholder', placeholder);
 
-  var placeholder1 = 'Paste the numbered translation notes (separated by line breaks) into here.';
+  var placeholder1 = "Paste the numbered translation notes into here." +
+  "\nNotes should be numbered and on new lines, like so:" +
+  "\n[1] \"Day duty\" (日直 - nicchoku) is a system at Japanese high schools where each student in a class rotates the duties of cleaning up the classroom, and closing all the windows and doors and such at the end of the day. I'm not sure what other countries use this system, but it's fairly common even in workplaces in Japan." +
+  "\n\n[2] High school is not compulsory education in Japan." +
+  "\n\nAnd in the dialogue, the placement of the note should be written like so:" +
+  "\n\nSora: Haha~♪ HiHi~♪ HuHu~♪" +
+  "\n\nHehe~♪ Done with day duty! Good work![1]";
   $('#tlArea').attr('placeholder', placeholder1);
 
   $('input[name=tlLink]').hide();
