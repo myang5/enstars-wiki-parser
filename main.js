@@ -1,9 +1,52 @@
+var namesLink = ['Tetora_Nagumo',
+'Hajime_Shino',
+'Tomoya_Mashiro',
+'Hinata_Aoi',
+'Midori_Takamine',
+'Tori_Himemiya',
+'Shinobu_Sengoku',
+'Mitsuru_Tenma',
+'Yuta_Aoi',
+'Tsukasa_Suou',
+'Sora_Harukawa',
+'Subaru_Akehoshi',
+'Hokuto_Hidaka',
+'Makoto_Yuuki',
+'Souma_Kanzaki',
+'Adonis_Otogari',
+'Natsume_Sakasaki',
+'Koga_Oogami',
+'Ritsu_Sakuma',
+'Mao_Isara',
+'Yuzuru_Fushimi',
+'Arashi_Narukami',
+'Mika_Kagehira',
+'Eichi_Tenshouin',
+'Keito_Hasumi',
+'Kaoru_Hakaze',
+'Izumi_Sena',
+'Chiaki_Morisawa',
+'Shu_Itsuki',
+'Madara_Mikejima',
+'Kuro_Kiryu',
+'Wataru_Hibiki',
+'Kanata_Shinkai',
+'Rei_Sakuma',
+'Nazuna_Nito',
+'Leo_Tsukinaga',
+'Tsumugi_Aoba',
+'Jin_Sagami',
+'Akiomi_Kunugi',
+'Hiyori_Tomoe',
+'Jun_Sazanami',
+'Nagisa_Ran',
+'Ibara_Saegusa'
+];
+
 function setup(){
   $('#defaultOpen').click();
 
-  $('#linkErrMsg').hide();
-
-  var placeholder = "Example of dialogue format:\n(what's important is that each line of dialogue has a name followed by \":\" and is on a new line)\n\nRitsu: Yes, this is love… No matter when or where, Maa-kun and I are bonded by it.\n\nArashi: Mmhmm, I think so too~ That’s love right there.\n\nArashi: I’m so jealous~ You have such a wonderful romance…";
+  var placeholder = "Example of dialogue format:\n(Each line of dialogue is on a new line. Dialogue should indicate when a new character is speaking with their name followed by \":\")\n\nRitsu: Yes, this is love… No matter when or where, Maa-kun and I are bonded by it.\n\nArashi: Mmhmm, I think so too~ That’s love right there.\n\nI’m so jealous~ You have such a wonderful romance…";
   $('#inputArea').attr('placeholder', placeholder);
 
   var placeholder1 = 'Paste the numbered translation notes (separated by line breaks) into here.';
@@ -31,45 +74,46 @@ function showExLink(){
   }
 }
 
-//Updating Renders tab based on dialogue input
+//global list of names in story
 var namesSet = new Set();
+//Updating Renders tab based on dialogue input
 function updateRenders(){
   var input=$('#inputArea').val();
-  input = input.split(/\n/);
-  console.log(input);
-  var names = [];
-  input.forEach(function(exp){
-    if(exp != ""){
-      names.push(exp.slice(0,exp.indexOf(":")));
-    }
-  });
-  names = new Set(names);
+  //returns array of all words ending in colon but not preceded by a space (chara names)
+  //in case there are any colons in the dialogue itself
+  //originally was /\n\w+:/g but this did not catch the first name
+  var res = input.match(/^(?! )\w+:/gm);
+  var names= new Set(res);
+  console.log(names);
 
-  //deletes divs that no longer exist in the new dialogue
+  //divs that no longer exist in the new dialogue
   //deletes option from the link menu
   namesSet.forEach(function(exp){
     if(!names.has(exp)){
       namesSet.delete(exp);
       var cls = "." + exp;
       $(cls).remove();
-      exp = exp[0].toUpperCase() + exp.slice(1,exp.length);
+      exp = exp[0].toUpperCase() + exp.slice(1,exp.length-1); //remove colon
       $('option:contains(' + exp + ')').remove();
     }
   });
 
   names.forEach(function(exp){
     //format name slightly
-    exp = exp[0].toUpperCase() + exp.slice(1,exp.length);
+    exp = exp[0].toUpperCase() + exp.slice(1,exp.length-1);
     //keeps the previously existing divs so that renders don't have to be re-entered
     if(!namesSet.has(exp)){
       namesSet.add(exp);
-      //make input box for the render labeled w/ a name
-      var newDiv = $("<div></div>").addClass(exp);
-      var newLabel = $("<label></label>").text(exp);
-      var newInput = $("<input>").attr("id",exp);
-      $(newDiv).append(newLabel);
+
+      //make row with input box for the render labeled w/ name
+      var newRow = $("<div></div>").addClass("form-group row");
+      var newLabel = $("<label></label>").text(exp).addClass("col-sm-2 col-form-label").attr("for",exp);
+      var newDiv = $("<div></div>").addClass("col-sm-6");
+      var newInput = $("<input>").attr("id",exp).addClass("form-control");
       $(newDiv).append(newInput);
-      $('#renderForms').append(newDiv);
+      $(newRow).append(newLabel);
+      $(newRow).append(newDiv);
+      $('#renderForms').append(newRow);
       //add name option to dropdown menu of render page links
       var sel = document.getElementById("linkToRenders");
       var opt = document.createElement("option");
@@ -77,63 +121,17 @@ function updateRenders(){
       sel.add(opt);
     }
   });
-}
+ }
 
 function openLink(){
-  var namesList = ['Tetora_Nagumo',
-  'Hajime_Shino',
-  'Tomoya_Mashiro',
-  'Hinata_Aoi',
-  'Midori_Takamine',
-  'Tori_Himemiya',
-  'Shinobu_Sengoku',
-  'Mitsuru_Tenma',
-  'Yuta_Aoi',
-  'Tsukasa_Suou',
-  'Sora_Harukawa',
-  'Subaru_Akehoshi',
-  'Hokuto_Hidaka',
-  'Makoto_Yuuki',
-  'Souma_Kanzaki',
-  'Adonis_Otogari',
-  'Natsume_Sakasaki',
-  'Koga_Oogami',
-  'Ritsu_Sakuma',
-  'Mao_Isara',
-  'Yuzuru_Fushimi',
-  'Arashi_Narukami',
-  'Mika_Kagehira',
-  'Eichi_Tenshouin',
-  'Keito_Hasumi',
-  'Kaoru_Hakaze',
-  'Izumi_Sena',
-  'Chiaki_Morisawa',
-  'Shu_Itsuki',
-  'Madara_Mikejima',
-  'Kuro_Kiryu',
-  'Wataru_Hibiki',
-  'Kanata_Shinkai',
-  'Rei_Sakuma',
-  'Nazuna_Nito',
-  'Leo_Tsukinaga',
-  'Tsumugi_Aoba',
-  'Jin_Sagami',
-  'Akiomi_Kunugi',
-  'Hiyori_Tomoe',
-  'Jun_Sazanami',
-  'Nagisa_Ran',
-  'Ibara_Saegusa'
-];
-var name = $("#linkToRenders option:selected").text();
-for(i = 0; i < namesList.length; i++) {
-  if(namesList[i].split('_')[0] == name){
-    $('#linkErrMsg').hide();
-    var url = "http://ensemble-stars.wikia.com/wiki/NAME/Gallery#Renders".replace("NAME", namesList[i]);
-    window.open(url, "_blank");
-    return;
+  var name = $("#linkToRenders option:selected").text();
+  for(i = 0; i < namesLink.length; i++) {
+    if(namesLink[i].split('_')[0] == name){
+      var url = "http://ensemble-stars.wikia.com/wiki/NAME/Gallery#Renders".replace("NAME", namesLink[i]);
+      window.open(url, "_blank");
+      return;
+    }
   }
-}
-$('#linkErrMsg').show();
 }
 
 function convertText(){
@@ -151,8 +149,8 @@ function convertText(){
   "\n" +
   "|}";
 
-  var location = $('input[name=location]').val();
-  var author = $('select[name=author] option:selected').text();
+  var location = $('#location').val();
+  var author = $('#author option:selected').text();
   var translator = $('input[name=translator]').val().trim();
   var tlLink = $('input[name=tlLink]').val().trim();
 

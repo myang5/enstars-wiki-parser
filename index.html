@@ -8,18 +8,21 @@
   <meta name="description" content="A text formatter for more efficiently uploading event/gacha stories to the Ensemble Stars Wiki.">
   <title>Story Formatter</title>
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
   <script src='spectrum.js'></script>
   <link rel='stylesheet' href='spectrum.css' />
+
   <script type="text/javascript" src="main.js"></script>
 
   <link rel="icon" href="favicon.ico" type="image/x-icon">
   <link href="https://fonts.googleapis.com/css?family=Jura:600" rel="stylesheet">
   <link href="styles.css" rel="stylesheet">
-  <!-- Latest compiled and minified CSS -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <!-- Latest compiled JavaScript -->
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
 </head>
 
 <body>
@@ -34,6 +37,7 @@
       <br>Developed by <a target="_blank" href="https://twitter.com/gayandasleep">midori</a>.
     </p>
       <ul id="navbar">
+        <li><a href="./howto.html">HOW TO USE</a></li>
         <li><a target="_blank" href="https://goo.gl/forms/Xu42LLAgWKxVYV873">QUESTIONS/FEEDBACK</a></li>
         <li><a href="./plans.html">DESIGN PLANS</a></li>
       </ul>
@@ -58,43 +62,43 @@
           <!--Note: Bootstrap grid system has 12 columns in each row
               but columns do not have to add up to 12-->
 
-          <div class="row">
-            <label class="control-label col-sm-2">Story Location</label>
+          <div class="form-group row">
+            <label class="col-form-label col-sm-3" for="location">Story Location</label>
             <div class="col-sm-6">
-              <input class="form-control" type="text" name="location"><br>
+              <input class="form-control" type="text" id="location"><br>
             </div>
           </div>
 
-          <div class="row">
-            <label class="control-label col-sm-2">Story Writer</label>
+          <div class="form-group row">
+            <label for="author" class="col-form-label col-sm-3">Story Writer</label>
             <div class="col-sm-6">
-              <select class="form-control" name="author">
+              <select class="form-control" id="author">
                 <option value="akira">日日日 (Akira)</option>
                 <option value="yuuki">結城由乃 (Yuuki Yoshino)</option>
               </select>
             </div>
           </div>
 
-          <div class="row">
-            <label class="control-label col-sm-2">Translator</label>
+          <div class="form-group row">
+            <label class="col-form-label col-sm-3">Translator</label>
             <div class="col-sm-6">
               <input class="form-control" type="text" name="translator">
             </div>
           </div>
           <div class="row">
-            <div class="col-sm-2"></div>
+            <div class="col-sm-3"></div>
             <div class="col-sm-6">
-              <input type="radio" name="tlLocation" value="wiki" checked> Translator is wiki user
+              <input type="radio" name="tlLocation" value="wiki" checked> Translator is wiki username
             </div>
           </div>
           <div class="row">
-            <div class="col-sm-2"></div>
+            <div class="col-sm-3"></div>
             <div class="col-sm-6">
               <input type="radio" name="tlLocation" value="external"> External link for credit needed
             </div>
           </div>
           <div class="row">
-            <div class="col-sm-2"></div>
+            <div class="col-sm-3"></div>
             <div class="col-sm-6">
               <input class="form-control" type="text" name="tlLink"><br>
             </div>
@@ -102,32 +106,32 @@
 
 
           <div class="row">
-            <label class="control-label col-sm-10">Label Colors</label>
+            <label class="col-form-label col-sm-10">Label Colors</label>
           </div>
 
           <div class="row">
-            <label class="control-label col-sm-2">Writer</label>
+            <label class="col-form-label col-sm-3">Writer</label>
             <div class="col-sm-9">
               <input class="jscolor" name="writerCol" value="fff"><br>
             </div>
           </div>
 
           <div class="row">
-            <label class="control-label col-sm-2">Location</label>
+            <label class="col-form-label col-sm-3">Location</label>
             <div class="col-sm-9">
               <input class="jscolor" name="locationCol" value="fff"><br>
             </div>
           </div>
 
           <div class="row">
-            <label class="control-label col-sm-2">Bottom</label>
+            <label class="col-form-label col-sm-3">Bottom</label>
             <div class="col-sm-9">
               <input class="jscolor" name="bottomCol" value="fff"><br>
             </div>
           </div>
 
           <div class="row">
-            <label class="control-label col-sm-2">Text</label>
+            <label class="col-form-label col-sm-3">Text</label>
             <div class="col-sm-9">
               <input class="jscolor" name="textCol" value="fff"><br>
             </div>
@@ -137,13 +141,14 @@
 
         <!---RENDERTAB!--->
         <div id="renderArea" class="tabcontent">
-          <p>Please paste in the filename as written in the wiki (including extension)
+          <p>
+            Please paste in the filename as written in the wiki (including extension)
             of the dialogue render you want to use for each character. <br>
-            (Forms will appear when you paste dialogue into the Text tab)</p>
-            <label>Find renders for:</label>
+            (Forms will appear when you paste dialogue into the Text tab)
+          </p>
+            <label for="linkToRenders">Find renders for:</label>
             <select id="linkToRenders"></select>
             <button id="renderLinkBtn" onclick="openLink()" type="button">GO</button>
-            <label id="linkErrMsg">Chara doesn't exist</label>
             <p></p>
             <div id="renderForms"></div>
           </div>
