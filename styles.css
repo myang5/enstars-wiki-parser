@@ -12,7 +12,7 @@ header {
 }
 
 header h1 {
-    font-family: 'Jura', sans-serif;
+    font-family: 'Nunito', sans-serif;
     text-align: center;
     font-size: 40px;
     margin: 0;
@@ -59,7 +59,7 @@ footer {
     text-align: left;
     text-decoration:none;
     font-size: 16px;
-    font-family: 'Jura', sans-serif;
+    font-family: 'Nunito', sans-serif;
     color: #15c6e0;
     transition: 0.1s;
     padding: 1px;
@@ -187,7 +187,7 @@ textarea {
     padding: 10px 20px;
     color: #fff;
     font-size: 16px;
-    font-family: 'Jura', sans-serif;
+    font-family: 'Nunito', sans-serif;
 }
 
 /*---------------------------------PLANS.HTML---------------------------------*/
@@ -201,7 +201,7 @@ textarea {
 }
 
 h2 {
-    font-family: 'Jura', sans-serif;
+    font-family: 'Nunito', sans-serif;
     color: #15c6e0;
     font-size: 30px;
     text-transform: uppercase;
@@ -209,7 +209,7 @@ h2 {
 }
 
 h3 {
-    font-family: 'Jura', sans-serif;
+    font-family: 'Nunito', sans-serif;
     color: #15c6e0;
     font-size: 20px;
     text-transform: uppercase;
