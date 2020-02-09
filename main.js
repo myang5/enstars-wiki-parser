@@ -43,22 +43,31 @@ var namesLink = ['Tetora_Nagumo',
 'Ibara_Saegusa'
 ];
 
+var placeholder = 
+`Example of dialogue format:
+(Each line of dialogue is on a new line. Dialogue should indicate when a new character is speaking with their name followed by ":")
+
+Ritsu: Yes, this is love… No matter when or where, Maa-kun and I are bonded by it.
+  
+Arashi: Mmhmm, I think so too~ That’s love right there.
+  
+I’m so jealous~ You have such a wonderful romance…`;
+
+var placeholder1 = 
+`Paste the numbered translation notes into here.
+Notes should be numbered and on new lines, like so:
+
+[1] "Day duty" (日直 - nicchoku) is a system at Japanese high schools where each student in a class rotates the duties of cleaning up the classroom, and closing all the windows and doors and such at the end of the day. I'm not sure what other countries use this system, but it's fairly common even in workplaces in Japan.
+[2] High school is not compulsory education in Japan.
+
+And in the dialogue, the placement of the note should be written like so:
+Sora: Haha~♪ HiHi~♪ HuHu~♪
+Hehe~♪ Done with day duty! Good work![1]`;
+
 function setup(){
   $('#defaultOpen').click();
-
-  var placeholder = "Example of dialogue format:\n(Each line of dialogue is on a new line. Dialogue should indicate when a new character is speaking with their name followed by \":\")\n\nRitsu: Yes, this is love… No matter when or where, Maa-kun and I are bonded by it.\n\nArashi: Mmhmm, I think so too~ That’s love right there.\n\nI’m so jealous~ You have such a wonderful romance…";
   $('#inputArea').attr('placeholder', placeholder);
-
-  var placeholder1 = "Paste the numbered translation notes into here." +
-  "\nNotes should be numbered and on new lines, like so:" +
-  "\n[1] \"Day duty\" (日直 - nicchoku) is a system at Japanese high schools where each student in a class rotates the duties of cleaning up the classroom, and closing all the windows and doors and such at the end of the day. I'm not sure what other countries use this system, but it's fairly common even in workplaces in Japan." +
-  "\n\n[2] High school is not compulsory education in Japan." +
-  "\n\nAnd in the dialogue, the placement of the note should be written like so:" +
-  "\n\nSora: Haha~♪ HiHi~♪ HuHu~♪" +
-  "\n\nHehe~♪ Done with day duty! Good work![1]";
   $('#tlArea').attr('placeholder', placeholder1);
-
-  $('input[name=tlLink]').hide();
 }
 
 function openTab(btn, tabName) {
@@ -138,19 +147,6 @@ function openLink(){
 }
 
 function convertText(){
-  var header =
-  "{| class=\"article-table\" cellspacing=\"1/6\" cellpadding=\"2\" border=\"1\" align=\"center\" width=\"100%\"" + "\n" +
-  "! colspan=\"2\" style=\"text-align:center;background-color:#WRITERCOLOR; color:#TEXTCOLOR;\" |'''Writer:''' AUTHOR" + "\n" +
-  "|-" + "\n" +
-  "| colspan=\"2\" |[[File:HEADERFILE|660px|link=|center]]" + "\n" +
-  "|-" + "\n" +
-  "! colspan=\"2\" style=\"text-align:center;background-color:#LOCATIONCOLOR; color:#TEXTCOLOR;\" |'''Location: SETTING'''\n";
-  var dialogueRender =
-  "|-" + "\n" + "|[[File:FILENAME|x200px|link=|center]]" + "\n" + "|" + "\n";
-  var footer = "|-" + "\n" +
-  "! colspan=\"2\" style=\"text-align:center;background-color:#BOTTOMCOLOR;color:#TEXTCOLOR;\" |'''Translation: [TLER] '''" +
-  "\n" +
-  "|}";
 
   var location = $('#location').val();
   var author = $('#author option:selected').text();
@@ -164,10 +160,10 @@ function convertText(){
     translator = tlLink + " " + translator;
   }
 
-  var writerCol = $('input[name=writerCol]').val().replace(/#/g, "");
-  var locationCol = $("input[name=locationCol]").val().replace(/#/g, "");
-  var bottomCol = $('input[name=bottomCol]').val().replace(/#/g, "");
-  var textCol = $('input[name=textCol]').val().replace(/#/g, "");
+  var writerCol = $('input[name=writerCol]').val();
+  var locationCol = $("input[name=locationCol]").val();
+  var bottomCol = $('input[name=bottomCol]').val();
+  var textCol = $('input[name=textCol]').val();
 
   var tlNotes = $('#tlArea').val().trim();
   tlNotes = tlNotes.split(/\n/);
@@ -176,18 +172,25 @@ function convertText(){
     tlDict[exp.slice(0,exp.indexOf("]")+1)] = exp.trim();
   });
 
-  // console.log(tlDict);
+  var header =
+`{| class="article-table" cellspacing="1/6" cellpadding="2" border="1" align="center" width="100%"
+! colspan="2" style="text-align:center;background-color:${writerCol}; color:${textCol};" |'''Writer:''' ${author}"
+|-
+| colspan="2" |[[File:HEADERFILE|660px|link=|center]]"
+|-
+! colspan="2" style="text-align:center;background-color:${locationCol}; color:${textCol}; |'''Location: ${location.trim()}'''
+`;
+  var dialogueRender =
+`|-
+|[[File:FILENAME|x200px|link=|center]]
+|
+`;
+  var footer = 
+`|-
+! colspan="2" style="text-align:center;background-color:${bottomCol};color:${textCol};" |'''Translation: [${translator}] '''" 
+|}`;
 
   var output;
-
-  header = header.replace("SETTING", location.trim());
-  header = header.replace("AUTHOR", author);
-  footer = footer.replace("TLER", translator);
-  header = header.replace("WRITERCOLOR", writerCol);
-  header = header.replace("LOCATIONCOLOR", locationCol);
-  footer = footer.replace("BOTTOMCOLOR", bottomCol);
-  header = header.replace(/TEXTCOLOR/g, textCol);
-  footer = footer.replace("TEXTCOLOR", textCol);
 
   var input = $('#inputArea').val().trim();
   input = input.split(/\n/);
