@@ -77,11 +77,9 @@ p, li {
 
 .main {
   max-width: 1600px;
-  margin: auto;
-}
-
-.input{
-  min-width: 330px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start
 }
 
 .tab button {
@@ -107,14 +105,27 @@ div.tab button.active {
     color: #fff;
 }
 
-.tabcontent {
+#input, #output {
     width: 45%;
     min-width: 330px;
     max-width: 700px;
-    box-sizing: border-box;
     height: 500px;
-    float: left;
-    display: none;
+}
+
+#output {
+    margin-top: 26.5px;
+}
+
+textarea {
+    box-sizing: border-box;
+    border: 1px solid #15c6e0;
+    resize: none;
+}
+
+.tabcontent {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
     border: 1px solid #15c6e0;
     background-color: #fff;
 }
@@ -123,16 +134,10 @@ div.tab button.active {
     margin-bottom: 10px;
 }
 
-textarea {
-    height: 500px;
-    resize: none;
-    wrap: soft;
-}
-
 #inputArea {
     padding:3px;
     left:50px;
-    required:true;
+    required: true;
     transition: 0.1s;
 }
 
@@ -143,17 +148,6 @@ textarea {
 #inputArea:focus::placeholder{
     color: #fff;
     transition: 0.1s;
-}
-
-#outputArea {
-    width: 45%;
-    min-width: 330px;
-    max-width: 700px;
-    box-sizing: border-box;
-    border: 1px solid #15c6e0;
-    padding:3px;
-    float:right;
-    right:50px;
 }
 
 #detailArea {
@@ -168,9 +162,9 @@ textarea {
 }
 
 #tlArea {
-    padding:3px;
-    left:50px;
-    required:true;
+    padding: 3px;
+    left: 50px;
+    required: true;
     transition: 0.1s;
 }
 
@@ -184,8 +178,7 @@ textarea {
 }
 
 #convert {
-    float: center;
-    margin: auto;
+    margin: 26.5px 10px 0px 10px;
     background-color: #15c6e0;
     border-radius: 5px;
     border-style: none;
