@@ -174,9 +174,9 @@ function convertText(){
 
   var header =
 `{| class="article-table" cellspacing="1/6" cellpadding="2" border="1" align="center" width="100%"
-! colspan="2" style="text-align:center;background-color:${writerCol}; color:${textCol};" |'''Writer:''' ${author}"
+! colspan="2" style="text-align:center;background-color:${writerCol}; color:${textCol};" |'''Writer:''' ${author}
 |-
-| colspan="2" |[[File:HEADERFILE|660px|link=|center]]"
+| colspan="2" |[[File:HEADERFILE|660px|link=|center]]
 |-
 ! colspan="2" style="text-align:center;background-color:${locationCol}; color:${textCol}; |'''Location: ${location.trim()}'''
 `;
@@ -187,7 +187,7 @@ function convertText(){
 `;
   var footer = 
 `|-
-! colspan="2" style="text-align:center;background-color:${bottomCol};color:${textCol};" |'''Translation: [${translator}] '''" 
+! colspan="2" style="text-align:center;background-color:${bottomCol};color:${textCol};" |'''Translation: [${translator}] '''
 |}`;
 
   var output;
