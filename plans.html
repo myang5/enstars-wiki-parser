@@ -2,36 +2,30 @@
 
 <html>
 
-<head> <!--Code to be executed before page is displayed/rendered!-->
+<head>
+  <!--Code to be executed before page is displayed/rendered!-->
   <meta name="keywords" content="enstars, ensemble stars, ensemble stars wiki">
-  <meta name="description" content="A text formatter for more efficiently uploading event/gacha stories to the Ensemble Stars Wiki.">
+  <meta name="description"
+    content="A text formatter for more efficiently uploading event/gacha stories to the Ensemble Stars Wiki.">
   <title>Story Formatter</title>
 
-  <link rel="icon" href="./assets/favicon.ico" type="image/x-icon">
-  <link href="https://fonts.googleapis.com/css?family=Jura:600" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="icon" href="./assets/favicon.ico" type="image/x-icon">
+  <link href="https://fonts.googleapis.com/css?family=Nunito&display=swap" rel="stylesheet">
   <link href="styles.css" rel="stylesheet">
 
+  <script> 
+    $(function(){
+      $("#header").load("header.html"); 
+    });
+  </script> 
+  
 </head>
 
-<body> <!--Code to be displayed/rendered!-->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <!---HEADER!--->
-  <header>
-    <h1><a href="index.html">ENSTARS STORY FORMATTER</a></h1>
-    <p>
-      A website to more easily upload event/gacha stories from the mobile idol game
-      Ensemble Stars to the fandom wiki.
-      <br>It takes translated story dialogue and formats it into text that you can paste directly into the "source" section of the page.
-      <br>Developed by <a target="_blank" href="https://twitter.com/gayandasleep">midori</a>.
-    </p>
-    <ul id="navbar">
-      <li><a href="./howto.html">HOW TO USE</a></li>
-      <li><a target="_blank" href="https://goo.gl/forms/Xu42LLAgWKxVYV873">QUESTIONS/FEEDBACK</a></li>
-      <li><a href="./plans.html">DESIGN PLANS</a></li>
-    </ul>
-  </header>
+<body>
+
+  <div id="header"></div>
 
   <div id="container">
     <h2>File upload</h2>
@@ -47,38 +41,40 @@
     </ul>
     <h2>Choosing renders</h2>
     <ul id="list">
-      <li>Instead of pasting in name of render file, have a dropdown list with all the possible renders for that character</li>
+      <li>Instead of pasting in name of render file, have a dropdown list with all the possible renders for that
+        character</li>
       <li>Would require somehow pulling that list from the wiki</li>
       <li>What about renders that haven't been uploaded yet?</li>
     </ul>
     <h2>Formatting CGs and scene changes</h2>
     <ul id="list">
       <li>People typically insert new rows for when the story displays CGs and scene changes</li>
-      <li>Do scene changes typically have just a row with text stating Scene Change: (NEW  LOCATION) or do
+      <li>Do scene changes typically have just a row with text stating Scene Change: (NEW LOCATION) or do
         they also put in a new screenshot of the in-game story? Which looks better? </li>
-        <li>Having more markers seems cumbersome so possible solution:
-          <li>Users place the cursor where the CG/scene change should be in the dialogue</li>
-          <li>New tab in input area that allows user to choose whether CG or scene change should be inserted</li>
-          <li>Input field for relevant wiki file/new location</li>
-          <li>Formatter inserts marker in dialogue, edit backend to handle marker</li>
-          <li>Could alternatively be a tab in output area that inserts wiki code directly</li>
-        </li>
-      </ul>
-      <h2>Working in smaller windows</h2>
-      <ul id="list">
-        <li>Make formatter more presentable for windows that aren't fullscreen</li>
-        <li>People might have formatter open in one half-screen window and the
-          wiki open in another half-screen window</li>
-          <li>Is this necessary/needed?</li>
-        </ul>
-        <h2>Visual design</h2>
-        <ul id="list">
-          <li>Center the damn convert button lol</li>
-          <li>Font/color choices</li>
-        </ul>
-      </div>
+      <li>Having more markers seems cumbersome so possible solution:
+      <li>Users place the cursor where the CG/scene change should be in the dialogue</li>
+      <li>New tab in input area that allows user to choose whether CG or scene change should be inserted</li>
+      <li>Input field for relevant wiki file/new location</li>
+      <li>Formatter inserts marker in dialogue, edit backend to handle marker</li>
+      <li>Could alternatively be a tab in output area that inserts wiki code directly</li>
+      </li>
+    </ul>
+    <h2>Working in smaller windows</h2>
+    <ul id="list">
+      <li>Make formatter more presentable for windows that aren't fullscreen</li>
+      <li>People might have formatter open in one half-screen window and the
+        wiki open in another half-screen window</li>
+      <li>Is this necessary/needed?</li>
+    </ul>
+    <h2>Visual design</h2>
+    <ul id="list">
+      <li>Center the damn convert button lol</li>
+      <li>Font/color choices</li>
+    </ul>
+  </div>
 
-      <footer></footer>
+  <footer></footer>
 
-    </body>
-    </html>
+</body>
+
+</html>

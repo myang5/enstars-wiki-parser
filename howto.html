@@ -2,98 +2,93 @@
 
 <html>
 
-<head> <!--Code to be executed before page is displayed/rendered!-->
-    <meta name="keywords" content="enstars, ensemble stars, ensemble stars wiki">
-    <meta name="description" content="A text formatter for more efficiently uploading event/gacha stories to the Ensemble Stars Wiki.">
-    <title>Story Formatter</title>
+<head>
+  <!--Code to be executed before page is displayed/rendered!-->
+  <meta name="keywords" content="enstars, ensemble stars, ensemble stars wiki">
+  <meta name="description"
+    content="A text formatter for more efficiently uploading event/gacha stories to the Ensemble Stars Wiki.">
+  <title>Story Formatter</title>
 
-    <link rel="icon" href="./assets/favicon.ico" type="image/x-icon">
-    <link href="https://fonts.googleapis.com/css?family=Jura:600" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link href="styles.css" rel="stylesheet">
+  <link rel="icon" href="./assets/favicon.ico" type="image/x-icon">
+  <link href="https://fonts.googleapis.com/css?family=Nunito&display=swap" rel="stylesheet">
+  <link href="styles.css" rel="stylesheet">
 
+  <script>
+    $(function () {
+      $("#header").load("header.html");
+    });
+  </script>
+  
 </head>
 
-<body> <!--Code to be displayed/rendered!-->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <!---HEADER!--->
-    <header>
-      <h1><a href="index.html">ENSTARS STORY FORMATTER</a></h1>
-      <p>
-        A website to more easily upload event/gacha stories from the mobile idol game
-        Ensemble Stars to the fandom wiki.
-        <br>It takes translated story dialogue and formats it into text that you can paste directly into the "source" section of the page.
-        <br>Developed by <a target="_blank" href="https://twitter.com/gayandasleep">midori</a>.
-      </p>
-      <ul id="navbar">
-        <li><a href="./howto.html">HOW TO USE</a></li>
-        <li><a target="_blank" href="https://goo.gl/forms/Xu42LLAgWKxVYV873">QUESTIONS/FEEDBACK</a></li>
-        <li><a href="./plans.html">DESIGN PLANS</a></li>
-      </ul>
-    </header>
+<body>
+  
+  <div id="header"></div>
 
-        <div id="container">
-            <h2>BASIC TEXT CONVERSION</h2>
-            <h3>Text Tab</h3>
-            <p>Copy and paste your translated chapter into the left-hand box with the tabs on top. The
-            dialogue should be formatted like this:<br>Person A: How are you today?
-            <br>Person B: I'm crying about enstars, you?
-            <br>Person A: Lol same
-            </p>
-            <p></p>
+  <div id="container">
+    <h2>BASIC TEXT CONVERSION</h2>
+    <h3>Text Tab</h3>
+    <p>Copy and paste your translated chapter into the left-hand box with the tabs on top. The
+      dialogue should be formatted like this:<br>Person A: How are you today?
+      <br>Person B: I'm crying about enstars, you?
+      <br>Person A: Lol same
+    </p>
+    <p></p>
 
-            <h3>Details Tab</h3>
-            <p>Fill in information about the chapter and its
-                appearance on the wiki. INSERT DIAGRAM OF WHAT EACH COLOR IS</p>
-            <p></p>
+    <h3>Details Tab</h3>
+    <p>Fill in information about the chapter and its
+      appearance on the wiki. INSERT DIAGRAM OF WHAT EACH COLOR IS</p>
+    <p></p>
 
-            <h3>Renders Tab</h3>
-            <p>The renders tab should automatically display which characters are in the
-                dialogue once you paste it into the text tab. Fill in the file names of the renders that
-                should be used for each character. (ex. Tsukasa Suou School Dialogue Render.png)
-                <br>NOTE: For now, if you want to use more than one render per character in one chapter,
-                you have to format each section of the chapter with different renders separately.
-                INSERT EXAMPLE
-            </p>
-            <p></p>
+    <h3>Renders Tab</h3>
+    <p>The renders tab should automatically display which characters are in the
+      dialogue once you paste it into the text tab. Fill in the file names of the renders that
+      should be used for each character. (ex. Tsukasa Suou School Dialogue Render.png)
+      <br>NOTE: For now, if you want to use more than one render per character in one chapter,
+      you have to format each section of the chapter with different renders separately.
+      INSERT EXAMPLE
+    </p>
+    <p></p>
 
-            <h3>TL Notes Tab</h3>
-            <p> If the chapter has translation notes, insert a number for each note
-                into the dialogue like so:
-                <br> Person A: How are you today? [1]
-                <br>Person B: I'm crying about enstars, you? [2]
-                <br><br> Then paste the list of translation notes into the TL Notes tab:
-                <br><br> [1] A question commonly used to start conversation.
-                <br> [2] Ensemble Stars is a popular mobile game that causes many tears.
-                <br><br> NOTE: It's important to separate each note with a line break.
-                <br> NOTE: To have links in your translation notes, make sure to format
-                them like this: [https://www.example.com text that is link]</p>
+    <h3>TL Notes Tab</h3>
+    <p> If the chapter has translation notes, insert a number for each note
+      into the dialogue like so:
+      <br> Person A: How are you today? [1]
+      <br>Person B: I'm crying about enstars, you? [2]
+      <br><br> Then paste the list of translation notes into the TL Notes tab:
+      <br><br> [1] A question commonly used to start conversation.
+      <br> [2] Ensemble Stars is a popular mobile game that causes many tears.
+      <br><br> NOTE: It's important to separate each note with a line break.
+      <br> NOTE: To have links in your translation notes, make sure to format
+      them like this: [https://www.example.com text that is link]</p>
 
-            <h2>CREATING A NEW PAGE ON THE WIKI</h2>
-            <ol>
-                <li>Copy the text that shows up on the right-hand box (can be done with Ctrl+A/Cmd+A)</li>
-                <li>Go to the cover page of the story and edit the URL to have the name
-                    of the chapter. <br>For example, https://www.ensemble-stars.wikia.com/wiki/Checkmate/CHAPTER TITLE</li>
-                <li>
-                  Choose to create a new page.<br>
-                  <img src="./assets/howTo_createNewPage1.PNG">
-                </li>
-                <li>
-                  Instead of the visual editor, switch to the source editor.<br>
-                  <img src="./assets/howTo_createNewPage2.PNG">
-                  <li>
-                    Paste in the formatted text, and publish the page.<br>
-                    <img src="./assets/howTo_createNewPage3.PNG">
-                  </li>
-                </li>
-                <li>NOTE: As of now you must manually upload the header image of the
-                    chapter in the visual editor unless you upload the header image to
-                    the wiki before creating the new chapter page.</li>
-            </ol>
-        </div>
+    <h2>CREATING A NEW PAGE ON THE WIKI</h2>
+    <ol>
+      <li>Copy the text that shows up on the right-hand box (can be done with Ctrl+A/Cmd+A)</li>
+      <li>Go to the cover page of the story and edit the URL to have the name
+        of the chapter. <br>For example, https://www.ensemble-stars.wikia.com/wiki/Checkmate/CHAPTER TITLE</li>
+      <li>
+        Choose to create a new page.<br>
+        <img src="./assets/howTo_createNewPage1.PNG">
+      </li>
+      <li>
+        Instead of the visual editor, switch to the source editor.<br>
+        <img src="./assets/howTo_createNewPage2.PNG">
+      <li>
+        Paste in the formatted text, and publish the page.<br>
+        <img src="./assets/howTo_createNewPage3.PNG">
+      </li>
+      </li>
+      <li>NOTE: As of now you must manually upload the header image of the
+        chapter in the visual editor unless you upload the header image to
+        the wiki before creating the new chapter page.</li>
+    </ol>
+  </div>
 
-        <footer></footer>
+  <footer></footer>
 
-    </body>
-    </html>
+</body>
+
+</html>
