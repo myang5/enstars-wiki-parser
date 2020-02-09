@@ -1,16 +1,21 @@
-
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <html>
 
 <head>
   <meta name="keywords" content="enstars, ensemble stars, ensemble stars wiki">
-  <meta name="description" content="A text formatter for more efficiently uploading event/gacha stories to the Ensemble Stars Wiki.">
+  <meta name="description"
+    content="A text formatter for more efficiently uploading event/gacha stories to the Ensemble Stars Wiki.">
   <title>Story Formatter</title>
 
-  <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
 
   <script src='spectrum.js'></script>
   <link rel='stylesheet' href='spectrum.css' />
@@ -21,12 +26,12 @@
   <link href="https://fonts.googleapis.com/css?family=Nunito&display=swap" rel="stylesheet">
   <link href="styles.css" rel="stylesheet">
 
-  <script> 
-    $(function(){
-      $("#header").load("header.html"); 
+  <script>
+    $(function () {
+      $("#header").load("header.html");
     });
-  </script> 
-  
+  </script>
+
 </head>
 
 <body>
@@ -37,142 +42,108 @@
     <div class="input">
       <!---TABS ON TOP OF INPUT!--->
       <div class="tab">
-        <button class="tablink" onclick="openTab(this, 'inputArea')"id="defaultOpen">Text</button>
+        <button class="tablink" onclick="openTab(this, 'inputArea')" id="defaultOpen">Text</button>
         <button class="tablink" onclick="openTab(this, 'detailArea')">Details</button>
         <button class="tablink" onclick="openTab(this, 'renderArea')">Renders</button>
         <button class="tablink" onclick="openTab(this, 'tlArea')">TL Notes</button>
       </div>
 
       <!---CONTENTS OF TABS!--->
-      <form id="everything">
-        <!---INPUT TAB!--->
-        <textarea id="inputArea" class="tabcontent" name="input"></textarea>
 
-        <!---DETAILS TAB!--->
-        <div id="detailArea" class="tabcontent">
-          <!--Note: Bootstrap grid system has 12 columns in each row
-          but columns do not have to add up to 12-->
+      <!---INPUT TAB!--->
+      <textarea id="inputArea" class="tabcontent" name="input"></textarea>
 
-          <div class="form-group row">
-            <label class="col-form-label col-sm-2" for="location">Location</label>
-            <div class="col-sm-6">
-              <input class="form-control" type="text" id="location">
-            </div>
-          </div>
+      <!---DETAILS TAB!--->
+      <div id="detailArea" class="tabcontent">
 
-          <div class="form-group row">
-            <label for="author" class="col-form-label col-sm-2">Writer</label>
-            <div class="col-sm-6">
-              <select class="form-control" id="author">
-                <option value="akira">日日日 (Akira)</option>
-                <option value="yuuki">結城由乃 (Yuuki Yoshino)</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="form-group row">
-            <label class="col-form-label col-sm-2">Translator</label>
-            <div class="col-sm-6">
-              <input class="form-control" type="text" name="translator">
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-2"></div>
-            <div class="col-sm-6">
-              <input type="radio" name="tlLocation" value="wiki" checked> Translator is wiki username
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-2"></div>
-            <div class="col-sm-6">
-              <input type="radio" name="tlLocation" value="external"> External link for credit needed
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-2"></div>
-            <div class="col-sm-6">
-              <input class="form-control" type="text" name="tlLink"><br>
-            </div>
-          </div>
-
-
-          <div class="row">
-            <label class="col-form-label col-sm-10">Label Colors</label>
-          </div>
-
-          <div class="row">
-            <label class="col-form-label col-sm-2">Writer</label>
-            <div class="col-sm-9">
-              <input class="jscolor" name="writerCol" value="fff"><br>
-            </div>
-          </div>
-
-          <div class="row">
-            <label class="col-form-label col-sm-2">Location</label>
-            <div class="col-sm-9">
-              <input class="jscolor" name="locationCol" value="fff"><br>
-            </div>
-          </div>
-
-          <div class="row">
-            <label class="col-form-label col-sm-2">Bottom</label>
-            <div class="col-sm-9">
-              <input class="jscolor" name="bottomCol" value="fff"><br>
-            </div>
-          </div>
-
-          <div class="row">
-            <label class="col-form-label col-sm-2">Text</label>
-            <div class="col-sm-9">
-              <input class="jscolor" name="textCol" value="fff"><br>
-            </div>
-          </div>
-
+        <div class="row">
+          <label for="location">Location</label>
+          <input type="text" id="location">
         </div>
 
-        <!---RENDERTAB!--->
-        <div id="renderArea" class="tabcontent">
-          <p>
-            Please paste in the filename as written in the wiki of the dialogue
-            render you want to use for each character (ex. Tsukasa Suou School Dialogue Render.png)<br>
-            (This tab will fill out once you paste dialogue into the Text tab)
-          </p>
-          <label for="linkToRenders">Find renders for:</label>
-          <select id="linkToRenders"></select>
-          <button id="renderLinkBtn" onclick="openLink()" type="button">GO</button>
-          <p></p>
-          <div id="renderForms"></div>
+        <div class="row">
+          <label for="author">Writer</label>
+          <select id="author">
+            <option value="akira">日日日 (Akira)</option>
+            <option value="yuuki">結城由乃 (Yuuki Yoshino)</option>
+          </select>
         </div>
 
-        <!---TLNOTETAB!--->
-        <textarea id="tlArea" class="tabcontent" name="tl"></textarea>
+        <div class="row">
+          <label for="translator">Translator</label>
+          <input type="text" id="translator" name="translator">
+        </div>
+        <div class="row">
+          <input type="radio" name="tlLocation" value="wiki" checked> Translator is wiki username
+        </div>
+        <div class="row">
+          <input type="radio" name="tlLocation" value="external"> External link for credit needed
+          <input type="text" name="tlLink">
+        </div>
 
+        <div class="row"> 
+          <label>Label Colors</label>
+        </div>
+        <div class="row">
+          <label>Writer</label>
+          <input class="jscolor" name="writerCol" value="fff">
+        </div>
+        <div class="row">
+          <label>Location</label>
+          <input class="jscolor" name="locationCol" value="fff">
+        </div>
+        <div class="row">
+          <label>Bottom</label>
+          <input class="jscolor" name="bottomCol" value="fff">
+        </div>
+        <div class="row">
+          <label>Text</label>
+          <input class="jscolor" name="textCol" value="fff">
+        </div>
       </div>
 
-      <button type="button" onclick="convertText()" id="convert">CONVERT</button>
+      <!---RENDERTAB!--->
+      <div id="renderArea" class="tabcontent">
+        <p>
+          Please paste in the filename as written in the wiki of the dialogue
+          render you want to use for each character (ex. Tsukasa Suou School Dialogue Render.png)<br>
+          (This tab will fill out once you paste dialogue into the Text tab)
+        </p>
+        <label for="linkToRenders">Find renders for:</label>
+        <select id="linkToRenders"></select>
+        <button id="renderLinkBtn" onclick="openLink()" type="button">GO</button>
+        <p></p>
+        <div id="renderForms"></div>
+      </div>
 
-    </form>
+      <!---TLNOTETAB!--->
+      <textarea id="tlArea" class="tabcontent" name="tl"></textarea>
+
+    </div>
+
+    <button type="button" onclick="convertText()" id="convert">CONVERT</button>
 
     <textarea id="outputArea"></textarea>
 
   </div>
 
   <script>
-  $(".jscolor").spectrum({
-    flat: false,
-    showInput: true,
-    className: "full-spectrum",
-    showInitial: true,
-    preferredFormat: "hex",
-  });
+    $(".jscolor").spectrum({
+      flat: false,
+      showInput: true,
+      className: "full-spectrum",
+      showInitial: true,
+      preferredFormat: "hex",
+    });
 
-  setup() // makes small edits to page display
+    setup() // makes small edits to page display
 
-  $('input[name=tlLocation]').change(showExLink); //toggles input for translator link
-  $('#inputArea').change(updateRenders); //makes inputs for each character in dialogue to insert render link
+    $('input[name=tlLocation]').change(showExLink); //toggles input for translator link
+    $('#inputArea').change(updateRenders); //makes inputs for each character in dialogue to insert render link
 
   </script>
 
 
 </body>
+
 </html>

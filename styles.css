@@ -119,6 +119,10 @@ div.tab button.active {
     background-color: #fff;
 }
 
+.tabcontent .row {
+    margin-bottom: 10px;
+}
+
 textarea {
     height: 500px;
     resize: none;
@@ -155,6 +159,8 @@ textarea {
 #detailArea {
     padding:20px 20px 0px 20px;
     border: 1px solid #19c1ff;
+    display: flex;
+    flex-direction: column;
 }
 
 #renderArea {
