@@ -29,20 +29,35 @@ header h1 {
 }
 
 header a {
+    position: relative;
     color: #15c6e0;
     text-decoration: none;
     border-radius: 3px;
     padding: 1px;
     background-clip: padding-box;
-    transition: all 0.1s;
-    -webkit-transition: all 0.1s;
-    -moz-transition: all 0.1s;
+    transition: all 0.4s ease-out;
+    -webkit-transition: all 0.4s ease-out;
+    -moz-transition: all 0.4s ease-out;
 }
 
-header a:hover {
-    color: #fff;
-    text-decoration: none;
-    background-color: #15c6e0;
+header h1 a:hover {
+    padding-right: 35px; /* roughly size of after? */
+}
+
+header h1 a:after {
+    content: '★';
+    position: absolute;
+    opacity: 0;
+    top: -2px;
+    right: -30px;
+    transition: 0.4s ease-out;
+    transform: rotate(-90deg);
+}
+
+header h1 a:hover:after {
+    opacity: 1;
+    right: 0;
+    transform: rotate(0deg);
 }
 
 header p {
@@ -198,7 +213,7 @@ textarea {
     padding: 10px 20px;
     color: #fff;
     font-size: 16px;
-    transition: all 0.1s;
+    transition: all 0.1s ;
     -webkit-transition: all 0.1s;
     -moz-transition: all 0.1s;
 }
