@@ -203,10 +203,8 @@ textarea {
     -moz-transition: all 0.1s;
 }
 
-#convert:hover {
-    background-color: #fff;
-    color: #15c6e0;
-    border-color: #15c6e0;
+#convert:active {
+    transform: scale(0.9);
 }
 
 /*---------------------------------HOWTO.HTML AND PLANS.HTML---------------------------------*/
