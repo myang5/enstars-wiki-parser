@@ -92,7 +92,9 @@ p, li {
     outline: none;
     padding: 5px 14px;
     color: #15c6e0;
-    transition: 0.1s;
+    transition: all 0.1s;
+    -webkit-transition: all 0.1s;
+    -moz-transition: all 0.1s;
 }
 
 div.tab button:hover {
@@ -138,7 +140,9 @@ textarea {
     padding:3px;
     left:50px;
     required: true;
-    transition: 0.1s;
+    transition: all 0.1s;
+    -webkit-transition: all 0.1s;
+    -moz-transition: all 0.1s;
 }
 
 #inputArea:focus{
@@ -147,7 +151,9 @@ textarea {
 
 #inputArea:focus::placeholder{
     color: #fff;
-    transition: 0.1s;
+    transition: all 0.1s;
+    -webkit-transition: all 0.1s;
+    -moz-transition: all 0.1s;
 }
 
 #detailArea {
@@ -165,7 +171,9 @@ textarea {
     padding: 3px;
     left: 50px;
     required: true;
-    transition: 0.1s;
+    transition: all 0.1s;
+    -webkit-transition: all 0.1s;
+    -moz-transition: all 0.1s;
 }
 
 #tlArea:focus{
@@ -174,19 +182,31 @@ textarea {
 
 #tlArea:focus::placeholder{
     color: #fff;
-    transition: 0.1s;
+    transition: all 0.1s;
+    -webkit-transition: all 0.1s;
+    -moz-transition: all 0.1s;
 }
 
 #convert {
     margin: 26.5px 10px 0px 10px;
     background-color: #15c6e0;
+    box-sizing: border-box;
     border-radius: 5px;
-    border-style: none;
+    border: 1px solid;
     cursor: pointer;
     outline: none;
     padding: 10px 20px;
     color: #fff;
     font-size: 16px;
+    transition: all 0.1s;
+    -webkit-transition: all 0.1s;
+    -moz-transition: all 0.1s;
+}
+
+#convert:hover {
+    background-color: #fff;
+    color: #15c6e0;
+    border-color: #15c6e0;
 }
 
 /*---------------------------------HOWTO.HTML AND PLANS.HTML---------------------------------*/
