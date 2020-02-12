@@ -245,6 +245,8 @@ function convertText(){
   }
   output += footer;
 
-  $('#outputArea').val(output);
+  console.log(output);
+
+  $('#output').val(output);
   return false;
 }
