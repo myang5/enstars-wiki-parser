@@ -206,7 +206,7 @@ function convertText(){
       }
       else{
         var character = exp.slice(0,exp.indexOf(":"));
-        console.log(character);
+        //console.log(character);
         exp = exp.slice(exp.indexOf(":") + 1).trim();
         var renderFile = dialogueRender;
         var id = "#" + character[0].toUpperCase() + character.slice(1,character.length);
@@ -245,7 +245,7 @@ function convertText(){
   }
   output += footer;
 
-  console.log(output);
+  //console.log(output);
 
   $('#output').val(output);
   return false;
