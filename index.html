@@ -53,6 +53,10 @@
       <!---DETAILS TAB!--->
       <div id="detailArea" class="tabcontent">
 
+        <div class="row"> 
+          <h3>Story Details</h3>
+        </div>
+
         <div class="row">
           <label for="location">Location</label>
           <input type="text" id="location">
@@ -63,6 +67,10 @@
           <select id="author">
             <option value="akira">日日日 (Akira)</option>
             <option value="yuuki">結城由乃 (Yuuki Yoshino)</option>
+            <option value="yuuki">西岡麻衣子 (Nishioka Maiko)</option>
+            <option value="yuuki">ゆーます (Yuumasu)</option>
+            <option value="yuuki">木野誠太郎 (Kinosei Tarou)</option>
+            <option value="yuuki">Happy Elements株式会社 (Happy Elements K.K)</option>
           </select>
         </div>
 
@@ -79,7 +87,7 @@
         </div>
 
         <div class="row"> 
-          <label>Label Colors</label>
+          <h3>Label Colors</h3>
         </div>
         <div class="row">
           <label>Writer</label>
@@ -135,7 +143,7 @@
 
     setup() // makes small edits to page display
 
-    $('input[name=tlLocation]').change(showExLink); //toggles input for translator link
+    //$('input[name=tlLocation]').change(showExLink); //toggles input for translator link
     $('#inputArea').change(updateRenders); //makes inputs for each character in dialogue to insert render link
 
   </script>
