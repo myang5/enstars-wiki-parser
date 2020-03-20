@@ -167,30 +167,31 @@ function convertText() {
 
   let tlNotes = $('#tlArea').val().trim();
   tlNotes = tlNotes.split(/\n/);
-  var tlDict = {};
+  const tlDict = {};
   tlNotes.forEach(function (exp) {
     tlDict[exp.slice(0, exp.indexOf("]") + 1)] = exp.trim();
   });
 
-  var header =
-    `{| class="article-table" cellspacing="1/6" cellpadding="2" border="1" align="center" width="100%"
+  const header =
+`{| class="article-table" cellspacing="1/6" cellpadding="2" border="1" align="center" width="100%"
 ! colspan="2" style="text-align:center;background-color:${writerCol}; color:${textCol};" |'''Writer:''' ${author}
 |-
 | colspan="2" |[[File:HEADERFILE|660px|link=|center]]
 |-
 ! colspan="2" style="text-align:center;background-color:${locationCol}; color:${textCol};" |'''Location: ${location.trim()}'''
 `;
-  var dialogueRender =
-    `|-
+
+  const dialogueRender =
+`|-
 |[[File:FILENAME|x200px|link=|center]]
 |
 `;
-  var footer =
+  const footer =
     `|-
 ! colspan="2" style="text-align:center;background-color:${bottomCol};color:${textCol};" |'''Translation: [${translator}] '''
 |}`;
 
-  var output;
+  let output;
 
   var input = $('#inputArea').val().trim();
   input = input.split(/\n/);
