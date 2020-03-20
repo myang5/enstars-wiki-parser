@@ -54,7 +54,7 @@ Arashi: Mmhmm, I think so too~ That’s love right there.
 I’m so jealous~ You have such a wonderful romance…`;
 
 var placeholder1 =
-  `THIS AREA IS A WORK IN PROGRESS, NOT YET IMPLEMENTED
+`THIS AREA IS A WORK IN PROGRESS, NOT YET IMPLEMENTED
 
 Paste the numbered translation notes into here.
 Notes should be numbered and on new lines, like so:
@@ -80,14 +80,14 @@ function openTab(btn, tabName) {
   $(btn).addClass("active");
 }
 
-function showExLink() {
-  if ($('input[name=tlLocation]:checked').val() == 'wiki') {
-    $('input[name=tlLink]').hide();
-  }
-  else if ($('input[name=tlLocation]:checked').val() == 'external') {
-    $('input[name=tlLink]').show();
-  }
-}
+// function showExLink() {
+//   if ($('input[name=tlLocation]:checked').val() == 'wiki') {
+//     $('input[name=tlLink]').hide();
+//   }
+//   else if ($('input[name=tlLocation]:checked').val() == 'external') {
+//     $('input[name=tlLink]').show();
+//   }
+// }
 
 //global list of names in story
 const namesSet = new Set();
@@ -136,6 +136,7 @@ function updateRenders() {
   });
 }
 
+//helper function for updateRenders
 function makeLink(name) {
   for (i = 0; i < namesLink.length; i++) {
     if (namesLink[i].split('_')[0] === name) {
@@ -148,39 +149,17 @@ function makeLink(name) {
 
 function convertText() {
 
-  const location = $('#location').val();
-  const author = $('#author option:selected').text();
-  let translator = $('input[name=translator]').val().trim();
-  const tlLink = $('input[name=tlLink]').val().trim();
+  values = getValues();
 
-  if ($('input[name=tlLocation]:checked').val() == 'wiki') {
-    translator = `[User:${translator}|${translator}]`;
-  }
-  else if ($('input[name=tlLocation]:checked').val() == 'external') {
-    translator = `${tlLink} ${translator}`;
-  }
-
-  const writerCol = $('input[name=writerCol]').val();
-  const locationCol = $("input[name=locationCol]").val();
-  const bottomCol = $('input[name=bottomCol]').val();
-  const textCol = $('input[name=textCol]').val();
-
-  let tlNotes = $('#tlArea').val().trim();
-  tlNotes = tlNotes.split(/\n/);
-  const tlDict = {};
-  tlNotes.forEach(function (exp) {
-    tlDict[exp.slice(0, exp.indexOf("]") + 1)] = exp.trim();
-  });
-
+  //format wiki code with user input
   const header =
 `{| class="article-table" cellspacing="1/6" cellpadding="2" border="1" align="center" width="100%"
-! colspan="2" style="text-align:center;background-color:${writerCol}; color:${textCol};" |'''Writer:''' ${author}
+! colspan="2" style="text-align:center;background-color:${values.writerCol}; color:${values.textCol};" |'''Writer:''' ${values.author}
 |-
 | colspan="2" |[[File:HEADERFILE|660px|link=|center]]
 |-
-! colspan="2" style="text-align:center;background-color:${locationCol}; color:${textCol};" |'''Location: ${location.trim()}'''
+! colspan="2" style="text-align:center;background-color:${values.locationCol}; color:${values.textCol};" |'''Location: ${values.location}'''
 `;
-
   const dialogueRender =
 `|-
 |[[File:FILENAME|x200px|link=|center]]
@@ -188,31 +167,30 @@ function convertText() {
 `;
   const footer =
     `|-
-! colspan="2" style="text-align:center;background-color:${bottomCol};color:${textCol};" |'''Translation: [${translator}] '''
+! colspan="2" style="text-align:center;background-color:${values.bottomCol};color:${values.textCol};" |'''Translation: [${values.translator}] '''
 |}`;
 
-  let output;
+  //format dialogue
+  let output = header;
+  let input = $('#inputArea').val().trim();
+  input = input.split(/\n/); //get array of dialogue lines
 
-  var input = $('#inputArea').val().trim();
-  input = input.split(/\n/);
-  var currentName = "";
-  var tlExp = /\[\d\]/;
-  var tlToInput = "";
-  output = header;
-  input.forEach(function (exp) {
-    if (exp != "") { //omit empty lines
-      var firstWord = exp.split(" ")[0]; //check if current line has new chara speaking
+  let currentName = "";
+  const tlExp = /\[\d\]/;
+  let tlToInput = "";
+  input.forEach(function (line) {
+    if (line != "") { //ignore empty lines
+      const firstWord = line.split(" ")[0]; //check if current line has new chara speaking
       if (!firstWord.includes(":")) { //if not
-        output += exp + "\n\n"; //add dialogue line to output
+        output += line + "\n\n"; //add dialogue line to output
       }
       else {
-        var character = exp.slice(0, exp.indexOf(":"));
-        //console.log(character);
-        exp = exp.slice(exp.indexOf(":") + 1).trim();
-        var renderFile = dialogueRender;
-        var id = "#" + character[0].toUpperCase() + character.slice(1, character.length);
+        let character = firstWord.slice(0, -1); //remove colon
+        line = line.slice(line.indexOf(":") + 1).trim(); //get chara's spoken line
+        let renderFile = dialogueRender;
+        let id = "#" + character[0].toUpperCase() + character.slice(1, character.length); //create id to access chara's render file in Renders tab
         output += renderFile.replace("FILENAME", $(id).val().trim());
-        output += exp + "\n\n";
+        output += line + "\n\n";
         // code from when every line had to start with a chara name JIC
         // var current = exp.slice(0,exp.indexOf(":"));
         // exp = exp.slice(exp.indexOf(":") + 1).trim();
@@ -233,7 +211,7 @@ function convertText() {
         //   output += exp + "\n\n";
         // }
       }
-      var tlMarkers = exp.match(tlExp);
+      var tlMarkers = line.match(tlExp);
       //console.log(tlMarkers);
       if (tlMarkers != null) {
         var note = "\'\'" + tlDict[tlMarkers[0]] + "\'\'" + "\n\n";
@@ -250,4 +228,25 @@ function convertText() {
 
   $('#output').val(output);
   return false;
+}
+
+//helper function for convertText
+function getValues(){
+  const values = {} 
+  values.location = $('#location').val().trim();
+  values.author = $('#author option:selected').text();
+  values.translator = $('#translator').val().trim();
+  values.tlLink = $('#tlLink').val().trim();
+  console.log("tlLink: " + values.tlLink);
+  if (values.tlLink === "") { //if TL credit is to a wiki user
+    values.translator = `[User:${values.translator}|${values.translator}]`;
+  }
+  else { //if TL credit is to an external wiki user
+    values.translator = `${values.tlLink} ${values.translator}`;
+  }
+  values.writerCol = $('input[name=writerCol]').val();
+  values.locationCol = $("input[name=locationCol]").val();
+  values.bottomCol = $('input[name=bottomCol]').val();
+  values.textCol = $('input[name=textCol]').val();
+  return values;
 }

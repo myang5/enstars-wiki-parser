@@ -71,14 +71,14 @@ header h1 a:hover:after {
 }
 
 header p {
-    font-size: 14px;
-    max-width: 400px;
+    font-size: 0.875rem;
+    max-width: 25rem;
     text-align: right;
     margin: 0;
 }
 
 #navbar {
-    padding-left: 15px;
+    padding-left: 1rem;
     margin: 0;
     vertical-align: top;
 }
@@ -91,7 +91,7 @@ header p {
 
 #navbar a {
     text-align: left;
-    font-size: 16px;
+    font-size: 1rem;
 }
 
 #navbar a:hover {
@@ -115,7 +115,7 @@ header p {
 }
 
 p, li {
-    font-size: 14px;
+    font-size: 0.875rem;
 }
 
 @media (min-width: 20em) {
@@ -187,7 +187,7 @@ textarea {
     background-color: #fff;
 }
 
-.tabcontent label{
+.tabcontent label, span{
     display: inline-block;
     text-align: right; 
     padding-right: 10px;
@@ -225,8 +225,16 @@ textarea {
 }
 
 #detailArea label, span {
-    display: inline-block; /*for span*/
+    display: inline-block;
     width: 5rem;
+}
+
+#detailArea label[for='tlLink'] {
+    display: inline-block;
+    text-align: left; 
+    width: auto;
+    font-size: 0.85rem;
+    opacity: 0.8;
 }
 
 #detailArea select, input[type='text'] {
@@ -276,7 +284,7 @@ textarea {
     outline: none;
     padding: 10px 20px;
     color: #fff;
-    font-size: 16px;
+    font-size: 1rem;
     transition: all 0.1s ;
     -webkit-transition: all 0.1s;
     -moz-transition: all 0.1s;
