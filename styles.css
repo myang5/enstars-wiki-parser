@@ -1,11 +1,23 @@
 /*---------------------------------ALL PAGES----------------------------------*/
 body {
     margin: 0;
-    padding: 40px;
+    padding: 2.5rem;
     background-image: url('./assets/bg2.png');
     background-repeat: repeat;
     background-color: #fff3E6;
     font-family: 'Nunito', sans-serif;
+}
+
+a {
+    color: #15c6e0;
+    text-decoration: none;
+    transition: all 0.2s ease-out;
+    -webkit-transition: all 0.2s ease-out;
+    -moz-transition: all 0.2s ease-out;
+}
+
+a:hover {
+    opacity: 0.2;
 }
 
 header {
@@ -22,7 +34,7 @@ header .horizontal {
 
 header h1 {
     text-align: center;
-    font-size: 40px;
+    font-size: 2.5rem;
     margin: 0;
     margin-bottom: 8px;
     text-decoration: none;
@@ -30,9 +42,6 @@ header h1 {
 
 header a {
     position: relative;
-    color: #15c6e0;
-    text-decoration: none;
-    border-radius: 3px;
     padding: 1px;
     background-clip: padding-box;
     transition: all 0.4s ease-out;
@@ -42,6 +51,7 @@ header a {
 
 header h1 a:hover {
     padding-right: 35px; /* roughly size of :after? */
+    opacity: 1;
 }
 
 header h1 a:after {
@@ -84,6 +94,10 @@ header p {
     font-size: 16px;
 }
 
+#navbar a:hover {
+    opacity: 1;
+}
+
 #navbar a:after {
     content: '☆';
     position: absolute;
@@ -104,17 +118,23 @@ p, li {
     font-size: 14px;
 }
 
-p a:hover {
-    opacity: 0.2;
+@media (min-width: 20em) {
+    body {
+        padding: 2rem;
+    }
 }
 
 /*---------------------------------INDEX.HTML---------------------------------*/
 
 .main {
-  max-width: 1600px;
+  max-width: 100rem;
   display: flex;
   justify-content: center;
-  align-items: flex-start
+  align-items: flex-start;
+}
+
+.main h3:nth-of-type(1) {
+    margin-top: 0;
 }
 
 .tab button {
@@ -144,9 +164,9 @@ div.tab button.active {
 
 #input, #output {
     width: 45%;
-    min-width: 330px;
-    max-width: 700px;
-    height: 500px;
+    min-width: 22rem;
+    max-width: 43rem;
+    height: 31.25rem;
 }
 
 #output {
@@ -165,6 +185,12 @@ textarea {
     box-sizing: border-box;
     border: 1px solid #15c6e0;
     background-color: #fff;
+}
+
+.tabcontent label{
+    display: inline-block;
+    text-align: right; 
+    padding-right: 10px;
 }
 
 .tabcontent .row {
@@ -198,8 +224,26 @@ textarea {
     flex-direction: column;
 }
 
+#detailArea label, span {
+    display: inline-block; /*for span*/
+    width: 5rem;
+}
+
+#detailArea select, input[type='text'] {
+    width: 10rem;
+    padding: 2px;
+}
+
 #renderArea {
     padding:20px 20px 0px 20px;
+}
+
+#renderArea p {
+    margin-top: 0;
+}
+
+#renderArea label {
+    width: 4rem;
 }
 
 #tlArea {
@@ -240,6 +284,24 @@ textarea {
 
 #convert:active {
     transform: scale(0.9);
+}
+
+@media (max-width: 45em) { /*half-screen window*/
+    .main {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #convert {
+        margin: 2em 0 0 0;
+    }
+
+    #input, #output {
+        margin-top: 2em;
+        width: 90%;
+        min-width: 22rem;
+        max-width: 40rem;
+    }
 }
 
 /*---------------------------------HOWTO.HTML AND PLANS.HTML---------------------------------*/

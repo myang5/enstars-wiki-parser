@@ -79,10 +79,12 @@
           <input type="text" id="translator" name="translator">
         </div>
         <div class="row">
+          <span></span>
           <input type="radio" name="tlLocation" value="wiki" checked> Translator is wiki username
         </div>
         <div class="row">
-          <input type="radio" name="tlLocation" value="external"> External link for credit needed
+          <span></span>
+          <input type="radio" name="tlLocation" value="external"> External link for credit
           <input type="text" name="tlLink">
         </div>
 
@@ -112,12 +114,8 @@
         <p>
           Please paste in the filename as written in the wiki of the dialogue
           render you want to use for each character (ex. Tsukasa Suou School Dialogue Render.png)<br>
-          (This tab will fill out once you paste dialogue into the Text tab)
+          (This tab will fill out with links to the galleries once you paste dialogue into the Text tab)
         </p>
-        <label for="linkToRenders">Find renders for:</label>
-        <select id="linkToRenders"></select>
-        <button id="renderLinkBtn" onclick="openLink()" type="button">GO</button>
-        <p></p>
         <div id="renderForms"></div>
       </div>
 
