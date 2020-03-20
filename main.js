@@ -1,4 +1,4 @@
-var namesLink = ['Tetora_Nagumo',
+const namesLink = ['Tetora_Nagumo',
   'Hajime_Shino',
   'Tomoya_Mashiro',
   'Hinata_Aoi',
@@ -43,7 +43,7 @@ var namesLink = ['Tetora_Nagumo',
   'Ibara_Saegusa'
 ];
 
-var placeholder =
+const placeholder =
   `Example of dialogue format:
 (Each line of dialogue is on a new line. Dialogue should indicate when a new character is speaking with their name followed by ":")
 
@@ -53,7 +53,7 @@ Arashi: Mmhmm, I think so too~ That’s love right there.
   
 I’m so jealous~ You have such a wonderful romance…`;
 
-var placeholder1 =
+const placeholder1 =
 `THIS AREA IS A WORK IN PROGRESS, NOT YET IMPLEMENTED
 
 Paste the numbered translation notes into here.
@@ -89,52 +89,58 @@ function openTab(btn, tabName) {
 //   }
 // }
 
-//global list of names in story
-const namesSet = new Set();
 
 //Updating Renders tab based on dialogue input
 function updateRenders() {
 
-  //get array of all chara names
-  //names end in colon but are not preceded by a space (in case there are any colons in the dialogue itself)
-  //originally was /\n\w+:/g but this did not catch the first name
-  const input = $('#inputArea').val();
-  const res = input.match(/^(?! )\w+:/gm);
-  const namesRaw = new Set(res); //colons are still attached
-  //remove colon from each name
-  const names = new Set();
-  namesRaw.forEach(function(name){ 
-    const nameFormatted = name[0].toUpperCase() + name.slice(1, name.length - 1);
-    //names.delete(name);
-    names.add(nameFormatted);
-  });
+  const namesSet = new Set();
 
-  //if the character no longer exists in the new chapter,
-  //delete character from the Renders options
-  namesSet.forEach(function(name) {
-    if (!names.has(name)) {
-      namesSet.delete(name);
-      let cls = "." + name;
-      $(cls).remove();
-      $(`option:contains(${name})`).remove();
-    }
-  });
+  // trying to use closure! wow
+  return function() {
 
-  //add character to Renders menu if they don't exist
-  names.forEach(function(name){
-    //keeps the previously existing rows so that renders don't have to be re-entered
-    if (!namesSet.has(name)){
-      namesSet.add(name);
-      //make row with input box for the chara's render
-      var newRow = $("<div></div>").addClass(`row ${name}`);
-      var newLabel = $("<label></label>").append(makeLink(name)).attr("for", name);
-      var newInput = $("<input>").attr("id", name)
-      $(newRow).append(newLabel);
-      $(newRow).append(newInput);
-      $('#renderForms').append(newRow);
-    }
-  });
+    //get array of all chara names
+    //names end in colon but are not preceded by a space (in case there are any colons in the dialogue itself)
+    //originally was /\n\w+:/g but this did not catch the first name
+    const input = $('#inputArea').val();
+    const res = input.match(/^(?! )\w+:/gm);
+    const namesRaw = new Set(res); //colons are still attached
+    //remove colon from each name
+    const names = new Set();
+    namesRaw.forEach(function (name) {
+      const nameFormatted = name[0].toUpperCase() + name.slice(1, name.length - 1);
+      //names.delete(name);
+      names.add(nameFormatted);
+    });
+
+    //if the character no longer exists in the new chapter,
+    //delete character from the Renders options
+    namesSet.forEach(function (name) {
+      if (!names.has(name)) {
+        namesSet.delete(name);
+        let cls = "." + name;
+        $(cls).remove();
+        $(`option:contains(${name})`).remove();
+      }
+    });
+
+    //add character to Renders menu if they don't exist
+    names.forEach(function (name) {
+      //keeps the previously existing rows so that renders don't have to be re-entered
+      if (!namesSet.has(name)) {
+        namesSet.add(name);
+        //make row with input box for the chara's render
+        var newRow = $("<div></div>").addClass(`row ${name}`);
+        var newLabel = $("<label></label>").append(makeLink(name)).attr("for", name);
+        var newInput = $("<input>").attr("id", name)
+        $(newRow).append(newLabel);
+        $(newRow).append(newInput);
+        $('#renderForms').append(newRow);
+      }
+    });
+  }
 }
+
+const renders = updateRenders();
 
 //helper function for updateRenders
 function makeLink(name) {
@@ -175,7 +181,7 @@ function convertText() {
   let input = $('#inputArea').val().trim();
   input = input.split(/\n/); //get array of dialogue lines
 
-  let currentName = "";
+  //let currentName = "";
   const tlExp = /\[\d\]/;
   let tlToInput = "";
   input.forEach(function (line) {
