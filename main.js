@@ -148,24 +148,24 @@ function makeLink(name) {
 
 function convertText() {
 
-  var location = $('#location').val();
-  var author = $('#author option:selected').text();
-  var translator = $('input[name=translator]').val().trim();
-  var tlLink = $('input[name=tlLink]').val().trim();
+  const location = $('#location').val();
+  const author = $('#author option:selected').text();
+  let translator = $('input[name=translator]').val().trim();
+  const tlLink = $('input[name=tlLink]').val().trim();
 
   if ($('input[name=tlLocation]:checked').val() == 'wiki') {
-    translator = "[User:" + translator + "|" + translator + "]";
+    translator = `[User:${translator}|${translator}]`;
   }
   else if ($('input[name=tlLocation]:checked').val() == 'external') {
-    translator = tlLink + " " + translator;
+    translator = `${tlLink} ${translator}`;
   }
 
-  var writerCol = $('input[name=writerCol]').val();
-  var locationCol = $("input[name=locationCol]").val();
-  var bottomCol = $('input[name=bottomCol]').val();
-  var textCol = $('input[name=textCol]').val();
+  const writerCol = $('input[name=writerCol]').val();
+  const locationCol = $("input[name=locationCol]").val();
+  const bottomCol = $('input[name=bottomCol]').val();
+  const textCol = $('input[name=textCol]').val();
 
-  var tlNotes = $('#tlArea').val().trim();
+  let tlNotes = $('#tlArea').val().trim();
   tlNotes = tlNotes.split(/\n/);
   var tlDict = {};
   tlNotes.forEach(function (exp) {
@@ -178,7 +178,7 @@ function convertText() {
 |-
 | colspan="2" |[[File:HEADERFILE|660px|link=|center]]
 |-
-! colspan="2" style="text-align:center;background-color:${locationCol}; color:${textCol}; |'''Location: ${location.trim()}'''
+! colspan="2" style="text-align:center;background-color:${locationCol}; color:${textCol};" |'''Location: ${location.trim()}'''
 `;
   var dialogueRender =
     `|-
