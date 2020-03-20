@@ -54,7 +54,9 @@ Arashi: Mmhmm, I think so too~ That’s love right there.
 I’m so jealous~ You have such a wonderful romance…`;
 
 var placeholder1 = 
-`Paste the numbered translation notes into here.
+`THIS AREA IS A WORK IN PROGRESS, NOT YET IMPLEMENTED
+
+Paste the numbered translation notes into here.
 Notes should be numbered and on new lines, like so:
 
 [1] "Day duty" (日直 - nicchoku) is a system at Japanese high schools where each student in a class rotates the duties of cleaning up the classroom, and closing all the windows and doors and such at the end of the day. I'm not sure what other countries use this system, but it's fairly common even in workplaces in Japan.
