@@ -14,14 +14,15 @@
     integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
     crossorigin="anonymous"></script>
 
-  <script src='spectrum.js'></script>
-  <link rel='stylesheet' href='spectrum.css' />
+  <script src='spectrum/spectrum.js'></script>
+  <link rel='stylesheet' href='spectrum/spectrum.css' />
 
   <script type="text/javascript" src="main.js"></script>
 
   <link rel="icon" href="./assets/favicon.ico" type="image/x-icon">
   <link href="https://fonts.googleapis.com/css?family=Nunito&display=swap" rel="stylesheet">
-  <link href="styles.css" rel="stylesheet">
+  <link href="styles/styles.css" rel="stylesheet">
+  <link href="styles/ck-styles.css" rel="stylesheet">
 
   <script>
     $(function () {
@@ -48,7 +49,11 @@
       <!---CONTENTS OF TABS!--->
 
       <!---INPUT TAB!--->
-      <textarea id="inputArea" class="tabcontent" name="input"></textarea>
+      <div id="inputArea" class="tabcontent">
+        <div id="inputEditor" class="editor">
+          <p>test</p>
+        </div>
+      </div>
 
       <!---DETAILS TAB!--->
       <div id="detailArea" class="tabcontent">
@@ -129,6 +134,8 @@
 
   </div>
 
+  <script src="ckeditor5/build/ckeditor.js"></script>
+  
   <script>
     $(".jscolor").spectrum({
       flat: false,
@@ -138,10 +145,9 @@
       preferredFormat: "hex",
     });
 
-    setup() // makes small edits to page display
+    setup();
 
-    //$('input[name=tlLocation]').change(showExLink); //toggles input for translator link
-    $('#inputArea').change(renders); //makes inputs for each character in dialogue to insert render link
+    //$('#inputArea').change(renders); //makes inputs for each character in dialogue to insert render link
 
   </script>
 

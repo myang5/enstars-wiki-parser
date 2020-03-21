@@ -66,10 +66,28 @@ And in the dialogue, the placement of the note should be written like so:
 Sora: Haha~♪ HiHi~♪ HuHu~♪
 Hehe~♪ Done with day duty! Good work![1]`;
 
+let userInput;
+
 function setup() {
   $('#defaultOpen').click();
-  $('#inputArea').attr('placeholder', placeholder);
+  //$('#inputArea').attr('placeholder', placeholder);
   $('#tlArea').attr('placeholder', placeholder1);
+  BalloonEditor
+    .create(document.querySelector('.editor'), {
+      autosave: {
+        save(editor) {
+          userInput = editor.getData()
+          renders();
+        }
+      }
+    })
+    .then(editor => {
+      window.editor = editor;
+    })
+    .catch(error => {
+      console.error(error);
+    });
+  $('.editor').attr('spellcheck', 'false');
 }
 
 function openTab(btn, tabName) {
@@ -79,16 +97,6 @@ function openTab(btn, tabName) {
   $(tabId).css('display', "block");
   $(btn).addClass("active");
 }
-
-// function showExLink() {
-//   if ($('input[name=tlLocation]:checked').val() == 'wiki') {
-//     $('input[name=tlLink]').hide();
-//   }
-//   else if ($('input[name=tlLocation]:checked').val() == 'external') {
-//     $('input[name=tlLink]').show();
-//   }
-// }
-
 
 //Updating Renders tab based on dialogue input
 function updateRenders() {
@@ -101,7 +109,7 @@ function updateRenders() {
     //get array of all chara names
     //names end in colon but are not preceded by a space (in case there are any colons in the dialogue itself)
     //originally was /\n\w+:/g but this did not catch the first name
-    const input = $('#inputArea').val();
+    const input = userInput;
     const res = input.match(/^(?! )\w+:/gm);
     const namesRaw = new Set(res); //colons are still attached
     //remove colon from each name
@@ -155,7 +163,7 @@ function makeLink(name) {
 
 function convertText() {
 
-  values = getValues();
+  values = getValues(); //get user input from all the tabs
 
   //format wiki code with user input
   const header =
@@ -172,12 +180,14 @@ function convertText() {
 |
 `;
   const footer =
-    `|-
+`|-
 ! colspan="2" style="text-align:center;background-color:${values.bottomCol};color:${values.textCol};" |'''Translation: [${values.translator}] '''
 |}`;
 
-  //format dialogue
   let output = header;
+  let test;
+
+  //format dialogue
   let input = $('#inputArea').val().trim();
   input = input.split(/\n/); //get array of dialogue lines
 
@@ -255,4 +265,18 @@ function getValues(){
   values.bottomCol = $('input[name=bottomCol]').val();
   values.textCol = $('input[name=textCol]').val();
   return values;
+}
+
+//helper function to check if the line is a file
+function isFileName(line) {
+  const extensions = ['.png', '.gif', '.jpg', '.jpeg', '.ico', '.pdf', '.svg'];
+  extensions.forEach(function (ext) {
+    if (line.includes(ext)) {
+      if (line.lastIndexof('.') === line.length - 4 ||
+        line.lastIndexof('.') === line.length - 5) { //JIC there is actually an extension in a dialogue line??
+        return true;
+      }
+    }
+  });
+  return false;
 }
