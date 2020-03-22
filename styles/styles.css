@@ -129,6 +129,7 @@ p, li {
 .main {
   max-width: 100rem;
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: flex-start;
 }
@@ -165,7 +166,7 @@ div.tab button.active {
 #input, #output {
     width: 45%;
     min-width: 22rem;
-    max-width: 43rem;
+    max-width: 31.25rem;
     height: 31.25rem;
 }
 
