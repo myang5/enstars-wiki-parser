@@ -1,65 +1,66 @@
-const namesLink = ['Tetora_Nagumo',
-  'Hajime_Shino',
-  'Tomoya_Mashiro',
-  'Hinata_Aoi',
-  'Midori_Takamine',
-  'Tori_Himemiya',
-  'Shinobu_Sengoku',
-  'Mitsuru_Tenma',
-  'Yuta_Aoi',
-  'Tsukasa_Suou',
-  'Sora_Harukawa',
-  'Subaru_Akehoshi',
-  'Hokuto_Hidaka',
-  'Makoto_Yuuki',
-  'Souma_Kanzaki',
-  'Adonis_Otogari',
-  'Natsume_Sakasaki',
-  'Koga_Oogami',
-  'Ritsu_Sakuma',
-  'Mao_Isara',
-  'Yuzuru_Fushimi',
-  'Arashi_Narukami',
-  'Mika_Kagehira',
-  'Eichi_Tenshouin',
-  'Keito_Hasumi',
-  'Kaoru_Hakaze',
-  'Izumi_Sena',
-  'Chiaki_Morisawa',
-  'Shu_Itsuki',
-  'Madara_Mikejima',
-  'Kuro_Kiryu',
-  'Wataru_Hibiki',
-  'Kanata_Shinkai',
-  'Rei_Sakuma',
-  'Nazuna_Nito',
-  'Leo_Tsukinaga',
-  'Tsumugi_Aoba',
-  'Jin_Sagami',
-  'Akiomi_Kunugi',
-  'Hiyori_Tomoe',
-  'Jun_Sazanami',
-  'Nagisa_Ran',
-  'Ibara_Saegusa',
-  'Rinne_Amagi',
-  'HiMERU',
-  'Kohaku_Oukawa', 
-  'Niki_Shiina',
-  'Hiiro_Amagi',
-  'Aira_Shiratori',
-  'Mayoi_Ayase',
-  'Tatsumi_Kazehaya'
-];
+const namesLink = {
+  TETORA:'Tetora_Nagumo',
+  HAJIME:'Hajime_Shino',
+  TOMOYA:'Tomoya_Mashiro',
+  HINATA:'Hinata_Aoi',
+  MIDORI:'Midori_Takamine',
+  TORI:'Tori_Himemiya',
+  SHINOBU:'Shinobu_Sengoku',
+  MITSURU:'Mitsuru_Tenma',
+  YUTA:'Yuta_Aoi',
+  TSUKASA:'Tsukasa_Suou',
+  SORA:'Sora_Harukawa',
+  SUBARU:'Subaru_Akehoshi',
+  HOKUTO:'Hokuto_Hidaka',
+  MAKOTO:'Makoto_Yuuki',
+  SOUMA:'Souma_Kanzaki',
+  ADONIS:'Adonis_Otogari',
+  NATSUME:'Natsume_Sakasaki',
+  KOGA:'Koga_Oogami',
+  RITSU:'Ritsu_Sakuma',
+  MAO:'Mao_Isara',
+  YUZURU:'Yuzuru_Fushimi',
+  ARASHI:'Arashi_Narukami',
+  MIKA:'Mika_Kagehira',
+  EICHI:'Eichi_Tenshouin',
+  KEITO:'Keito_Hasumi',
+  KAORU:'Kaoru_Hakaze',
+  IZUMI:'Izumi_Sena',
+  CHIAKI:'Chiaki_Morisawa',
+  SHU:'Shu_Itsuki',
+  MADARA:'Madara_Mikejima',
+  KURO:'Kuro_Kiryu',
+  WATARU:'Wataru_Hibiki',
+  KANATA:'Kanata_Shinkai',
+  REI:'Rei_Sakuma',
+  NAZUNA:'Nazuna_Nito',
+  LEO:'Leo_Tsukinaga',
+  TSUMUGI:'Tsumugi_Aoba',
+  JIN:'Jin_Sagami',
+  AKIOMI:'Akiomi_Kunugi',
+  HIYORI:'Hiyori_Tomoe',
+  JUN:'Jun_Sazanami',
+  NAGISA:'Nagisa_Ran',
+  IBARA:'Ibara_Saegusa',
+  RINNE:'Rinne_Amagi',
+  HIMERU:'HiMERU',
+  KOHAKU:'Kohaku_Oukawa', 
+  NIKI:'Niki_Shiina',
+  HIIRO:'Hiiro_Amagi',
+  AIRA:'Aira_Shiratori',
+  MAYOI:'Mayoi_Ayase',
+  TATSUMI:'Tatsumi_Kazehaya'
+};
 
-const placeholder =
-  `Example of dialogue format:
-(Each line of dialogue is on a new line. Dialogue should indicate when a new character is speaking with their name followed by ":")
+// const placeholder =
+//   `Example of dialogue format:
+// (Each line of dialogue is on a new line. Dialogue should indicate when a new character is speaking with their name followed by ":")
 
-Ritsu: Yes, this is love… No matter when or where, Maa-kun and I are bonded by it.
+// Ritsu: Yes, this is love… No matter when or where, Maa-kun and I are bonded by it.
   
-Arashi: Mmhmm, I think so too~ That’s love right there.
+// Arashi: Mmhmm, I think so too~ That’s love right there.
   
-I’m so jealous~ You have such a wonderful romance…`;
+// I’m so jealous~ You have such a wonderful romance…`;
 
 const placeholder1 =
 `THIS AREA IS A WORK IN PROGRESS, NOT YET IMPLEMENTED
@@ -111,23 +112,22 @@ function updateRenders() {
 
   const namesSet = new Set();
 
-  // trying to use closure! wow
+  //trying to use closure! wow
   return function() {
     //console.log('running renders');
 
     //get array of all chara names
     //names end in colon but are not preceded by a space (in case there are any colons in the dialogue itself)
-    //originally was /\n\w+:/g but this did not catch the first name
     const input = userInput;
     const res = input.match(/^(?! )[*_]*\w+:/gm); //ERROR: problem if colon and name are not formatted the same
-    //console.log(res);
     const namesRaw = new Set(res); //colons are still attached
-    //remove colon from each name
     const names = new Set();
-    namesRaw.forEach(function (name) {
+    namesRaw.forEach(function (name) {  //remove colon + gfm from each name
       let nameClean = name.replace(/[*_]*/g, '');
       nameClean = nameClean[0].toUpperCase() + nameClean.slice(1, nameClean.length - 1);
-      names.add(nameClean);
+      if (namesLink[nameClean.toUpperCase()] != undefined){ //only add valid names
+        names.add(nameClean);
+      }
     });
 
     //if the character no longer exists in the new chapter,
@@ -135,7 +135,7 @@ function updateRenders() {
     namesSet.forEach(function (name) {
       if (!names.has(name)) {
         namesSet.delete(name);
-        let cls = "." + name;
+        let cls = "." + name; // row has the name as a class
         $(cls).remove();
         $(`option:contains(${name})`).remove();
       }
@@ -159,15 +159,11 @@ function updateRenders() {
 
 const renders = updateRenders(); //closure!!
 
-//helper function for updateRenders
 function makeLink(name) {
-  for (i = 0; i < namesLink.length; i++) {
-    if (namesLink[i].split('_')[0] === name) {
-      const url = `http://ensemble-stars.wikia.com/wiki/${namesLink[i]}/Gallery#Render`;
-      const a = $("<a></a>").text(name).attr("href", url).attr("target", "_blank")
-      return a;
-    }
-  }
+  const link = namesLink[name.toUpperCase()];
+  const url = `http://ensemble-stars.wikia.com/wiki/${link}/Gallery#Render`;
+  const a = $("<a></a>").text(name).attr("href", url).attr("target", "_blank")
+  return a;
 }
 
 function convertText() {
@@ -263,10 +259,8 @@ function convertText() {
   //     }
      }
    });
+   
   output += footer;
-
-  //console.log(output);
-
   $('#output').val(output);
   return false;
 }
@@ -278,7 +272,6 @@ function getValues() {
   values.author = $('#author option:selected').text();
   values.translator = $('#translator').val().trim();
   values.tlLink = $('#tlLink').val().trim();
-  //console.log("tlLink: " + values.tlLink);
   if (values.tlLink === "") { //if TL credit is to a wiki user
     values.translator = `[User:${values.translator}|${values.translator}]`;
   }
