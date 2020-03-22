@@ -135,6 +135,7 @@ p, li {
 
 .main h3:nth-of-type(1) {
     margin-top: 0;
+    margin-bottom: 1rem;
 }
 
 .tab button {
@@ -188,7 +189,7 @@ textarea {
     background-color: #fff;
 }
 
-.tabcontent label, span{
+.spacer {
     display: inline-block;
     text-align: right; 
     padding-right: 0.7rem;
@@ -222,12 +223,12 @@ textarea {
     flex-direction: column;
 }
 
-#detailArea label, span {
+#detailArea .spacer {
     display: inline-block;
     width: 5rem;
 }
 
-#detailArea label[for='tlLink'] {
+#detailArea .spacer[for='tlLink'] {
     display: inline-block;
     text-align: left; 
     width: auto;
@@ -248,7 +249,7 @@ textarea {
     margin-top: 0;
 }
 
-#renderArea label {
+#renderArea .spacer {
     width: 4rem;
 }
 

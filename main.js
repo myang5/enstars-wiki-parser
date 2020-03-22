@@ -79,7 +79,7 @@ let userInput;
 
 function setup() {
   $('#defaultOpen').click();
-  //$('#inputArea').attr('placeholder', placeholder);
+  //$('#inputEditor').append(placeholder);
   $('#tlArea').attr('placeholder', placeholder1);
   BalloonEditor
     .create(document.querySelector('.editor'), {
@@ -116,16 +116,24 @@ function updateRenders() {
   return function() {
     //console.log('running renders');
 
-    //get array of all chara names
-    //names end in colon but are not preceded by a space (in case there are any colons in the dialogue itself)
-    const input = userInput;
-    const res = input.match(/^(?! )[*_]*\w+:/gm); //ERROR: problem if colon and name are not formatted the same
-    const namesRaw = new Set(res); //colons are still attached
-    const names = new Set();
-    namesRaw.forEach(function (name) {  //remove colon + gfm from each name
-      let nameClean = name.replace(/[*_]*/g, '');
-      nameClean = nameClean[0].toUpperCase() + nameClean.slice(1, nameClean.length - 1);
-      if (namesLink[nameClean.toUpperCase()] != undefined){ //only add valid names
+    const input = userInput.split('<p>'); //get array of dialogue lines
+    //get first word in each line and check if there's a colon
+    const namesRaw = new Set(); //add "key" of each line if there is one
+    input.forEach(function(line){
+      let nameRaw = line.split(' ')[0]; //get first word in the line
+      //console.log('nameRaw: ' + nameRaw);
+      if(nameRaw.includes(':')){ //if there is a colon
+        namesRaw.add(nameRaw.slice(0, nameRaw.indexOf(':'))); //get text up until colon
+      }
+    });
+    
+    const names = new Set() //get set of valid names
+    namesRaw.forEach(function(name){
+      let nameClean = name.replace(/<\w+>/g, ''); //remove opening html tags
+      nameClean = nameClean.replace(/<.\w+>/g, ''); //remove ending html tags
+      //console.log('nameClean: ' + nameClean);
+      if (namesLink[nameClean.toUpperCase()] != undefined){ //if valid name
+        nameClean = nameClean[0].toUpperCase() + nameClean.slice(1, nameClean.length); //format name ex. arashi --> Arashi
         names.add(nameClean);
       }
     });
@@ -147,7 +155,7 @@ function updateRenders() {
         namesSet.add(name);
         //make row with input box for the chara's render
         var newRow = $("<div></div>").addClass(`row ${name}`);
-        var newLabel = $("<label></label>").append(makeLink(name)).attr("for", name);
+        var newLabel = $("<label class = 'spacer'></label>").append(makeLink(name)).attr("for", name);
         var newInput = $("<input>").attr("id", name)
         $(newRow).append(newLabel);
         $(newRow).append(newInput);
@@ -188,6 +196,10 @@ function convertText() {
 `|-
 ! colspan="2" style="text-align:center;" |[[File:FILENAME|center|660px]]
 `;
+  const title = 
+`|-
+! colspan="2" style="text-align:center;background-color:#D5B5D2; color:#ffffff;" |'''TITLE'''
+`
   const footer =
 `|-
 ! colspan="2" style="text-align:center;background-color:${values.bottomCol};color:${values.textCol};" |'''Translation: [${values.translator}] '''
@@ -206,7 +218,7 @@ function convertText() {
     if (line != "") { //ignore empty lines
       if (isFileName(line)) {
         console.log('isFileName: true');
-        if (!headerImgInsert){ //if image file for the header
+        if (!headerImgInsert) { //if image file for the header
           console.log('headerfile');
           output = output.replace("HEADERFILE", line.trim());
           headerImgInsert = true;
@@ -218,48 +230,55 @@ function convertText() {
         }
       }
       else {
-        const firstWord = line.split(" ")[0];
+        let firstWord = line.split(" ")[0];
         if (!firstWord.includes(":")) { //if dialogue is continuing
           output += line + "\n\n";
         }
-        else { //if new character is speaking
-          //console.log('new character');
-          let character = firstWord.slice(0, -1); //remove colon
-          line = line.slice(line.indexOf(":") + 1).trim(); //get chara's spoken line
-          let renderCode = dialogueRender;
-          let id = "#" + character[0].toUpperCase() + character.slice(1, character.length); //create id to access chara's render file in Renders tab
-          output += renderCode.replace("FILENAME", $(id).val().trim());
-          output += line + "\n\n";
-          // code from when every line had to start with a chara name JIC
-          // var current = exp.slice(0,exp.indexOf(":"));
-          // exp = exp.slice(exp.indexOf(":") + 1).trim();
-          // if(current == currentName){
-          //   output += exp + "\n\n";
-          // }
-          // else if(current != currentName){
-          //   currentName = current;
-          //   var renderFile = dialogueRender;
-          //   var id = "#" + current[0].toUpperCase() + current.slice(1,current.length);
-          //   if(tlToInput!=""){
-          //     console.log(tlToInput)
-          //     output += tlToInput;
-          //     tlToInput = "";
-          //   }
-          //   output += renderFile.replace("FILENAME", $(id).val().trim());
-          //   // output += dialogueRender;
-          //   output += exp + "\n\n";
-          // }
+        else { 
+          firstWord = firstWord.slice(0, -1); //remove colon
+          if (firstWord.toUpperCase() === 'TITLE') {
+            console.log('new title');
+            let titleCode = title;
+            output += titleCode.replace("TITLE", line.trim());
+          }
+          else if (namesLink[firstWord.toUpperCase()] != undefined){ //if valid new character is speaking
+            console.log('new character: ' + firstWord);
+            line = line.slice(line.indexOf(":") + 1).trim(); //get chara's spoken line
+            let renderCode = dialogueRender;
+            let id = "#" + firstWord[0].toUpperCase() + firstWord.slice(1, firstWord.length); //create id to access chara's render file in Renders tab
+            output += renderCode.replace("FILENAME", $(id).val().trim());
+            output += line + "\n\n";
+            // code from when every line had to start with a chara name JIC
+            // var current = exp.slice(0,exp.indexOf(":"));
+            // exp = exp.slice(exp.indexOf(":") + 1).trim();
+            // if(current == currentName){
+            //   output += exp + "\n\n";
+            // }
+            // else if(current != currentName){
+            //   currentName = current;
+            //   var renderFile = dialogueRender;
+            //   var id = "#" + current[0].toUpperCase() + current.slice(1,current.length);
+            //   if(tlToInput!=""){
+            //     console.log(tlToInput)
+            //     output += tlToInput;
+            //     tlToInput = "";
+            //   }
+            //   output += renderFile.replace("FILENAME", $(id).val().trim());
+            //   // output += dialogueRender;
+            //   output += exp + "\n\n";
+            // }
+          }
         }
       }
-  //     var tlMarkers = line.match(tlExp);
-  //     //console.log(tlMarkers);
-  //     if (tlMarkers != null) {
-  //       var note = "\'\'" + tlDict[tlMarkers[0]] + "\'\'" + "\n\n";
-  //       tlToInput = note;
-  //     }
-     }
-   });
-   
+      //     var tlMarkers = line.match(tlExp);
+      //     //console.log(tlMarkers);
+      //     if (tlMarkers != null) {
+      //       var note = "\'\'" + tlDict[tlMarkers[0]] + "\'\'" + "\n\n";
+      //       tlToInput = note;
+      //     }
+    }
+  });
+
   output += footer;
   $('#output').val(output);
   return false;
