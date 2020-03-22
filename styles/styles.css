@@ -317,24 +317,24 @@ textarea {
     box-sizing: border-box;
     width: 80%;
     background-color: #fff;
-    padding: 20px;
-    margin: 15px auto;
-    border-radius: 8px;
+    padding: 2.5rem;
+    margin: 1rem auto;
+    border-radius: 5px;
 }
 
 h2 {
     color: #15c6e0;
-    font-size: 30px;
+    font-size: 2rem;
     text-transform: uppercase;
     margin-top: 0;
 }
 
 h3 {
     color: #15c6e0;
-    font-size: 20px;
+    font-size: 1.5rem;
     text-transform: uppercase;
 }
 
 img {
-  width: 500px;
+  width: 30.125rem;
 }
