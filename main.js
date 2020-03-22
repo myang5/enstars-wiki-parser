@@ -206,9 +206,12 @@ function convertText() {
 |}`;
 
   let input = editor.getData();
-  input = input.split(/\n/); //get array of dialogue lines
+  input = input.split('<p>'); //get array of dialogue lines
+  for(let i=0; i<input.length; i++){
+    input[i] = input[i].replace('</p>', '');
+  }
   let output = header;
-  //console.log(input);
+  console.log(input);
 
   //let currentName = "";
   // const tlExp = /\[\d\]/;
@@ -267,6 +270,9 @@ function convertText() {
             //   // output += dialogueRender;
             //   output += exp + "\n\n";
             // }
+          }
+          else {
+            console.log('Formatter was unable to process this name: ' + firstWord);
           }
         }
       }

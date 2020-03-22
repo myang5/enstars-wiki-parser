@@ -1,10 +1,6 @@
 .ck.ck-editor__editable_inline {
     height: inherit;
-}
-
-.ck.ck-editor__editable:not(ck-editor__nested-editable) .ck-focused {
     border: none;
-    box-shadow: none;
 }
 
 :root {
