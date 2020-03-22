@@ -40,7 +40,15 @@ const namesLink = ['Tetora_Nagumo',
   'Hiyori_Tomoe',
   'Jun_Sazanami',
   'Nagisa_Ran',
-  'Ibara_Saegusa'
+  'Ibara_Saegusa',
+  'Rinne_Amagi',
+  'HiMERU',
+  'Kohaku_Oukawa', 
+  'Niki_Shiina',
+  'Hiiro_Amagi',
+  'Aira_Shiratori',
+  'Mayoi_Ayase',
+  'Tatsumi_Kazehaya'
 ];
 
 const placeholder =
@@ -105,19 +113,21 @@ function updateRenders() {
 
   // trying to use closure! wow
   return function() {
+    //console.log('running renders');
 
     //get array of all chara names
     //names end in colon but are not preceded by a space (in case there are any colons in the dialogue itself)
     //originally was /\n\w+:/g but this did not catch the first name
     const input = userInput;
-    const res = input.match(/^(?! )\w+:/gm);
+    const res = input.match(/^(?! )[*_]*\w+:/gm); //ERROR: problem if colon and name are not formatted the same
+    //console.log(res);
     const namesRaw = new Set(res); //colons are still attached
     //remove colon from each name
     const names = new Set();
     namesRaw.forEach(function (name) {
-      const nameFormatted = name[0].toUpperCase() + name.slice(1, name.length - 1);
-      //names.delete(name);
-      names.add(nameFormatted);
+      let nameClean = name.replace(/[*_]*/g, '');
+      nameClean = nameClean[0].toUpperCase() + nameClean.slice(1, nameClean.length - 1);
+      names.add(nameClean);
     });
 
     //if the character no longer exists in the new chapter,
@@ -133,8 +143,7 @@ function updateRenders() {
 
     //add character to Renders menu if they don't exist
     names.forEach(function (name) {
-      //keeps the previously existing rows so that renders don't have to be re-entered
-      if (!namesSet.has(name)) {
+      if (!namesSet.has(name)) { //keep the previously existing rows so that renders don't have to be re-entered
         namesSet.add(name);
         //make row with input box for the chara's render
         var newRow = $("<div></div>").addClass(`row ${name}`);
@@ -148,13 +157,13 @@ function updateRenders() {
   }
 }
 
-const renders = updateRenders();
+const renders = updateRenders(); //closure!!
 
 //helper function for updateRenders
 function makeLink(name) {
   for (i = 0; i < namesLink.length; i++) {
     if (namesLink[i].split('_')[0] === name) {
-      const url = `http://ensemble-stars.wikia.com/wiki/${namesLink[i]}/Gallery#Renders`;
+      const url = `http://ensemble-stars.wikia.com/wiki/${namesLink[i]}/Gallery#Render`;
       const a = $("<a></a>").text(name).attr("href", url).attr("target", "_blank")
       return a;
     }
@@ -179,65 +188,81 @@ function convertText() {
 |[[File:FILENAME|x200px|link=|center]]
 |
 `;
+  const cgRender =
+`|-
+! colspan="2" style="text-align:center;" |[[File:FILENAME|center|660px]]
+`;
   const footer =
 `|-
 ! colspan="2" style="text-align:center;background-color:${values.bottomCol};color:${values.textCol};" |'''Translation: [${values.translator}] '''
 |}`;
 
-  let output = header;
-  let test;
-
-  //format dialogue
-  let input = $('#inputArea').val().trim();
+  let input = editor.getData();
   input = input.split(/\n/); //get array of dialogue lines
+  let output = header;
+  //console.log(input);
 
   //let currentName = "";
-  const tlExp = /\[\d\]/;
-  let tlToInput = "";
+  // const tlExp = /\[\d\]/;
+  // let tlToInput = "";
+  let headerImgInsert = false;
   input.forEach(function (line) {
     if (line != "") { //ignore empty lines
-      const firstWord = line.split(" ")[0]; //check if current line has new chara speaking
-      if (!firstWord.includes(":")) { //if not
-        output += line + "\n\n"; //add dialogue line to output
+      if (isFileName(line)) {
+        console.log('isFileName: true');
+        if (!headerImgInsert){ //if image file for the header
+          console.log('headerfile');
+          output = output.replace("HEADERFILE", line.trim());
+          headerImgInsert = true;
+        }
+        else { //if CG or scene change image file
+          console.log('image file');
+          let cgCode = cgRender;
+          output += cgCode.replace("FILENAME", line.trim());
+        }
       }
       else {
-        let character = firstWord.slice(0, -1); //remove colon
-        line = line.slice(line.indexOf(":") + 1).trim(); //get chara's spoken line
-        let renderFile = dialogueRender;
-        let id = "#" + character[0].toUpperCase() + character.slice(1, character.length); //create id to access chara's render file in Renders tab
-        output += renderFile.replace("FILENAME", $(id).val().trim());
-        output += line + "\n\n";
-        // code from when every line had to start with a chara name JIC
-        // var current = exp.slice(0,exp.indexOf(":"));
-        // exp = exp.slice(exp.indexOf(":") + 1).trim();
-        // if(current == currentName){
-        //   output += exp + "\n\n";
-        // }
-        // else if(current != currentName){
-        //   currentName = current;
-        //   var renderFile = dialogueRender;
-        //   var id = "#" + current[0].toUpperCase() + current.slice(1,current.length);
-        //   if(tlToInput!=""){
-        //     console.log(tlToInput)
-        //     output += tlToInput;
-        //     tlToInput = "";
-        //   }
-        //   output += renderFile.replace("FILENAME", $(id).val().trim());
-        //   // output += dialogueRender;
-        //   output += exp + "\n\n";
-        // }
+        const firstWord = line.split(" ")[0];
+        if (!firstWord.includes(":")) { //if dialogue is continuing
+          output += line + "\n\n";
+        }
+        else { //if new character is speaking
+          //console.log('new character');
+          let character = firstWord.slice(0, -1); //remove colon
+          line = line.slice(line.indexOf(":") + 1).trim(); //get chara's spoken line
+          let renderCode = dialogueRender;
+          let id = "#" + character[0].toUpperCase() + character.slice(1, character.length); //create id to access chara's render file in Renders tab
+          output += renderCode.replace("FILENAME", $(id).val().trim());
+          output += line + "\n\n";
+          // code from when every line had to start with a chara name JIC
+          // var current = exp.slice(0,exp.indexOf(":"));
+          // exp = exp.slice(exp.indexOf(":") + 1).trim();
+          // if(current == currentName){
+          //   output += exp + "\n\n";
+          // }
+          // else if(current != currentName){
+          //   currentName = current;
+          //   var renderFile = dialogueRender;
+          //   var id = "#" + current[0].toUpperCase() + current.slice(1,current.length);
+          //   if(tlToInput!=""){
+          //     console.log(tlToInput)
+          //     output += tlToInput;
+          //     tlToInput = "";
+          //   }
+          //   output += renderFile.replace("FILENAME", $(id).val().trim());
+          //   // output += dialogueRender;
+          //   output += exp + "\n\n";
+          // }
+        }
       }
-      var tlMarkers = line.match(tlExp);
-      //console.log(tlMarkers);
-      if (tlMarkers != null) {
-        var note = "\'\'" + tlDict[tlMarkers[0]] + "\'\'" + "\n\n";
-        tlToInput = note;
-      }
-    }
-  });
-  if (tlToInput != "") {
-    output += tlToInput;
-  }
+  //     var tlMarkers = line.match(tlExp);
+  //     //console.log(tlMarkers);
+  //     if (tlMarkers != null) {
+  //       var note = "\'\'" + tlDict[tlMarkers[0]] + "\'\'" + "\n\n";
+  //       tlToInput = note;
+  //     }
+     }
+   });
   output += footer;
 
   //console.log(output);
@@ -247,13 +272,13 @@ function convertText() {
 }
 
 //helper function for convertText
-function getValues(){
+function getValues() {
   const values = {} 
   values.location = $('#location').val().trim();
   values.author = $('#author option:selected').text();
   values.translator = $('#translator').val().trim();
   values.tlLink = $('#tlLink').val().trim();
-  console.log("tlLink: " + values.tlLink);
+  //console.log("tlLink: " + values.tlLink);
   if (values.tlLink === "") { //if TL credit is to a wiki user
     values.translator = `[User:${values.translator}|${values.translator}]`;
   }
@@ -270,13 +295,10 @@ function getValues(){
 //helper function to check if the line is a file
 function isFileName(line) {
   const extensions = ['.png', '.gif', '.jpg', '.jpeg', '.ico', '.pdf', '.svg'];
-  extensions.forEach(function (ext) {
-    if (line.includes(ext)) {
-      if (line.lastIndexof('.') === line.length - 4 ||
-        line.lastIndexof('.') === line.length - 5) { //JIC there is actually an extension in a dialogue line??
-        return true;
-      }
-    }
-  });
+  const endLen4 = line.slice(-4);
+  const endLen5 = line.slice(-5);
+  if(extensions.includes(endLen4) || extensions.includes(endLen5)){
+    return true;
+  }
   return false;
 }

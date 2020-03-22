@@ -129,7 +129,6 @@ p, li {
 .main {
   max-width: 100rem;
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
   align-items: flex-start;
 }
@@ -165,9 +164,10 @@ div.tab button.active {
 
 #input, #output {
     width: 45%;
-    min-width: 22rem;
+    min-width: 21.5rem;
     max-width: 31.25rem;
     height: 31.25rem;
+    margin: 0 1rem;
 }
 
 #output {
@@ -191,17 +191,14 @@ textarea {
 .tabcontent label, span{
     display: inline-block;
     text-align: right; 
-    padding-right: 10px;
+    padding-right: 0.7rem;
 }
 
 .tabcontent .row {
-    margin-bottom: 10px;
+    margin-bottom: 0.7rem;
 }
 
 #inputArea {
-    /* padding:3px; */
-    left:50px;
-    required: true;
     transition: all 0.1s;
     -webkit-transition: all 0.1s;
     -moz-transition: all 0.1s;
@@ -276,14 +273,14 @@ textarea {
 }
 
 #convert {
-    margin: 26.5px 10px 0px 10px;
+    margin: 26.5px 0 0 0;
     background-color: #15c6e0;
     box-sizing: border-box;
     border-radius: 5px;
     border: 1px solid;
     cursor: pointer;
     outline: none;
-    padding: 10px 20px;
+    padding: 0.7rem 1.4rem;
     color: #fff;
     font-size: 1rem;
     transition: all 0.1s ;
@@ -295,21 +292,23 @@ textarea {
     transform: scale(0.9);
 }
 
-@media (max-width: 48em) { /*half-screen window*/
+@media (max-width: 55em) { /*half-screen window*/
     .main {
         flex-direction: column;
         align-items: center;
     }
 
     #convert {
-        margin: 2em 0 0 0;
+        margin: 2rem 0 0 0;
     }
 
     #input, #output {
-        margin-top: 2em;
+        margin-top: 2rem;
         width: 90%;
-        min-width: 22rem;
-        max-width: 40rem;
+        min-width: 21.5rem;
+        max-width: 31.25rem;
+        height: 31.25rem;
+        margin: 1rem 1rem;
     }
 }
 
