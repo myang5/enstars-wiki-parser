@@ -228,7 +228,7 @@ textarea {
     width: 5rem;
 }
 
-#detailArea .spacer[for='tlLink'] {
+#detailArea label[for='tlLink'] {
     display: inline-block;
     text-align: left; 
     width: auto;
@@ -236,9 +236,10 @@ textarea {
     opacity: 0.8;
 }
 
-#detailArea select, input[type='text'] {
-    width: 10rem;
+#detailArea > .row > select, input[type='text'] {
+    width: calc(80% - 5rem - 0.7rem); /* - must be surrounded by whitespace */
     padding: 2px;
+    box-sizing: border-box;
 }
 
 #renderArea {
@@ -256,7 +257,6 @@ textarea {
 #tlArea {
     padding: 3px;
     left: 50px;
-    required: true;
     transition: all 0.1s;
     -webkit-transition: all 0.1s;
     -moz-transition: all 0.1s;
