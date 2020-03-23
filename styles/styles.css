@@ -199,23 +199,6 @@ textarea {
     margin-bottom: 0.7rem;
 }
 
-#inputArea {
-    transition: all 0.1s;
-    -webkit-transition: all 0.1s;
-    -moz-transition: all 0.1s;
-}
-
-#inputArea:focus{
-    outline:none;
-}
-
-#inputArea:focus::placeholder{
-    color: #fff;
-    transition: all 0.1s;
-    -webkit-transition: all 0.1s;
-    -moz-transition: all 0.1s;
-}
-
 #detailArea {
     padding:20px 20px 0px 20px;
     border: 1px solid #19c1ff;
@@ -258,25 +241,6 @@ textarea {
     width: calc(100% - 8rem - 1.4rem); /* - must be surrounded by whitespace */
     padding: 2px;
     box-sizing: border-box;
-}
-
-#tlArea {
-    padding: 3px;
-    left: 50px;
-    transition: all 0.1s;
-    -webkit-transition: all 0.1s;
-    -moz-transition: all 0.1s;
-}
-
-#tlArea:focus{
-    outline:none;
-}
-
-#tlArea:focus::placeholder{
-    color: #fff;
-    transition: all 0.1s;
-    -webkit-transition: all 0.1s;
-    -moz-transition: all 0.1s;
 }
 
 #convert {

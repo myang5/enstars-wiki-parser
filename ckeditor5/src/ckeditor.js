@@ -12,6 +12,7 @@ import FontColor from '@ckeditor/ckeditor5-font/src/fontcolor.js';
 import Essentials from '@ckeditor/ckeditor5-essentials/src/essentials.js';
 import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph.js';
 import Autosave from '@ckeditor/ckeditor5-autosave/src/autosave.js';
+import List from '@ckeditor/ckeditor5-list/src/list.js';
 //import GFMDataProcessor from '@ckeditor/ckeditor5-markdown-gfm/src/gfmdataprocessor';
 import '../../styles/ck-styles.css';
 
@@ -33,22 +34,10 @@ Editor.builtinPlugins = [
 	Essentials,
 	Paragraph,
 	Autosave,
+	List
 ];
 
 BalloonEditor.defaultConfig = {
-	toolbar: {
-	  items: [
-		'bold',
-		'italic',
-		'link',
-		'|',
-		'fontBackgroundColor',
-		'fontColor',
-		'|',
-		'undo',
-		'redo'
-	  ]
-	},
 	language: 'en',
 	licenseKey: '',
   };

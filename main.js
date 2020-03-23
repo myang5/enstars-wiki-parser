@@ -52,37 +52,25 @@ const namesLink = {
   TATSUMI:'Tatsumi_Kazehaya'
 };
 
-// const placeholder =
-//   `Example of dialogue format:
-// (Each line of dialogue is on a new line. Dialogue should indicate when a new character is speaking with their name followed by ":")
-
-// Ritsu: Yes, this is love… No matter when or where, Maa-kun and I are bonded by it.
-  
-// Arashi: Mmhmm, I think so too~ That’s love right there.
-  
-// I’m so jealous~ You have such a wonderful romance…`;
-
-const placeholder1 =
-`THIS AREA IS A WORK IN PROGRESS, NOT YET IMPLEMENTED
-
-Paste the numbered translation notes into here.
-Notes should be numbered and on new lines, like so:
-
-[1] "Day duty" (日直 - nicchoku) is a system at Japanese high schools where each student in a class rotates the duties of cleaning up the classroom, and closing all the windows and doors and such at the end of the day. I'm not sure what other countries use this system, but it's fairly common even in workplaces in Japan.
-[2] High school is not compulsory education in Japan.
-
-And in the dialogue, the placement of the note should be written like so:
-Sora: Haha~♪ HiHi~♪ HuHu~♪
-Hehe~♪ Done with day duty! Good work![1]`;
-
-let userInput;
+let userInput; //ckeditor autosaves input here
 
 function setup() {
   $('#defaultOpen').click();
-  //$('#inputEditor').append(placeholder);
-  $('#tlArea').attr('placeholder', placeholder1);
   BalloonEditor
-    .create(document.querySelector('.editor'), {
+    .create(document.querySelector('#inputEditor'), {
+      toolbar: {
+        items: [
+          'bold',
+          'italic',
+          'link',
+          '|',
+          'fontBackgroundColor',
+          'fontColor',
+          '|',
+          'undo',
+          'redo'
+        ]
+      },
       autosave: {
         save(editor) {
           userInput = editor.getData()
@@ -91,11 +79,33 @@ function setup() {
       }
     })
     .then(editor => {
-      window.editor = editor;
+      window.editor1 = editor;
     })
     .catch(error => {
       console.error(error);
     });
+
+  BalloonEditor
+    .create(document.querySelector('#tlEditor'), {
+      toolbar: {
+        items: [
+          'bold',
+          'italic',
+          'link',
+          'numberedList',
+          '|',
+          'undo',
+          'redo'
+        ]
+      }
+    })
+    .then(editor => {
+      window.editor2 = editor;
+    })
+    .catch(error => {
+      console.error(error);
+    });
+
   $('.editor').attr('spellcheck', 'false');
 }
 
@@ -205,7 +215,7 @@ function convertText() {
 ! colspan="2" style="text-align:center;background-color:${values.bottomCol};color:${values.textCol};" |'''Translation: [${values.translator}] '''
 |}`;
 
-  let input = editor.getData();
+  let input = editor1.getData();
   input = input.split('<p>'); //get array of dialogue lines
   for(let i=0; i<input.length; i++){
     input[i] = input[i].replace('</p>', '');
@@ -277,12 +287,6 @@ function convertText() {
           }
         }
       }
-      //     var tlMarkers = line.match(tlExp);
-      //     //console.log(tlMarkers);
-      //     if (tlMarkers != null) {
-      //       var note = "\'\'" + tlDict[tlMarkers[0]] + "\'\'" + "\n\n";
-      //       tlToInput = note;
-      //     }
     }
   });
 
