@@ -196,9 +196,9 @@ function convertText() {
 `|-
 ! colspan="2" style="text-align:center;" |[[File:FILENAME|center|660px]]
 `;
-  const title = 
+  const heading = 
 `|-
-! colspan="2" style="text-align:center;background-color:${values.locationCol}; color:${values.textCol};" |'''TITLE'''
+! colspan="2" style="text-align:center;background-color:${values.locationCol}; color:${values.textCol};" |'''HEADING'''
 `
   const footer =
 `|-
@@ -221,7 +221,8 @@ function convertText() {
     if (line != "") { //ignore empty lines
       if (isFileName(line)) {
         console.log('isFileName: true');
-        if (!headerImgInsert) { //if image file for the header
+        //ERROR: if there is no image file for the header, the first image in the dialogue becomes the header
+        if (!headerImgInsert) { //if image file for the header 
           console.log('headerfile');
           output = output.replace("HEADERFILE", line.trim());
           headerImgInsert = true;
@@ -239,10 +240,10 @@ function convertText() {
         }
         else { 
           firstWord = firstWord.slice(0, -1); //remove colon
-          if (firstWord.toUpperCase() === 'TITLE') {
-            console.log('new title');
-            let titleCode = title;
-            output += titleCode.replace("TITLE", line.slice(line.indexOf(' ') + 1).trim());
+          if (firstWord.toUpperCase() === 'HEADING') {
+            console.log('new HEADING');
+            let headingCode = heading;
+            output += headingCode.replace("HEADING", line.slice(line.indexOf(' ') + 1).trim());
           }
           else if (namesLink[firstWord.toUpperCase()] != undefined){ //if valid new character is speaking
             console.log('new character: ' + firstWord);
