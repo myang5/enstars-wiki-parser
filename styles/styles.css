@@ -114,7 +114,7 @@ header p {
     transform: rotate(0deg);
 }
 
-p, li {
+p, li, blockquote {
     font-size: 0.875rem;
 }
 
