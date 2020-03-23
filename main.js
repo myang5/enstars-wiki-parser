@@ -198,7 +198,7 @@ function convertText() {
 `;
   const title = 
 `|-
-! colspan="2" style="text-align:center;background-color:#D5B5D2; color:#ffffff;" |'''TITLE'''
+! colspan="2" style="text-align:center;background-color:${values.locationCol}; color:${values.textCol};" |'''TITLE'''
 `
   const footer =
 `|-
@@ -242,7 +242,7 @@ function convertText() {
           if (firstWord.toUpperCase() === 'TITLE') {
             console.log('new title');
             let titleCode = title;
-            output += titleCode.replace("TITLE", line.trim());
+            output += titleCode.replace("TITLE", line.slice(line.indexOf(' ') + 1).trim());
           }
           else if (namesLink[firstWord.toUpperCase()] != undefined){ //if valid new character is speaking
             console.log('new character: ' + firstWord);

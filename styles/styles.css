@@ -236,7 +236,7 @@ textarea {
     opacity: 0.8;
 }
 
-#detailArea > .row > select, input[type='text'] {
+#detailArea select, input:not(.sp-input){
     width: calc(80% - 5rem - 0.7rem); /* - must be surrounded by whitespace */
     padding: 2px;
     box-sizing: border-box;
