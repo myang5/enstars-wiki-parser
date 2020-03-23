@@ -254,6 +254,12 @@ textarea {
     width: 4rem;
 }
 
+#renderForms > .row > input {
+    width: calc(100% - 8rem - 1.4rem); /* - must be surrounded by whitespace */
+    padding: 2px;
+    box-sizing: border-box;
+}
+
 #tlArea {
     padding: 3px;
     left: 50px;
