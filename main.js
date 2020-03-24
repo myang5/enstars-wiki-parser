@@ -232,6 +232,7 @@ function convertText() {
       if (isFileName(line)) {
         console.log('isFileName: true');
         //ERROR: if there is no image file for the header, the first image in the dialogue becomes the header
+        //alert user if there is no header
         if (!headerImgInsert) { //if image file for the header 
           console.log('headerfile');
           output = output.replace("HEADERFILE", line.trim());
