@@ -216,27 +216,25 @@ function convertText() {
 |}`;
 
   let input = editor1.getData();
-  input = input.split('<p>'); //get array of dialogue lines
+  input = input.split('</p>'); //get array of dialogue lines
   for(let i=0; i<input.length; i++){
-    input[i] = input[i].replace('</p>', '');
+    input[i] = input[i].replace(/&nbsp;/g, '');
+    input[i] = input[i].replace('<p>', '').trim();
   }
   let output = header;
   console.log(input);
 
-  //let currentName = "";
-  // const tlExp = /\[\d\]/;
-  // let tlToInput = "";
-  let headerImgInsert = false;
+  //let currentName = ''; //needed for situation where dialogue has name on every line
+  //let tlToInput = '';
   input.forEach(function (line) {
-    if (line != "") { //ignore empty lines
+    if (line != '') { //ignore empty lines
       if (isFileName(line)) {
         console.log('isFileName: true');
         //ERROR: if there is no image file for the header, the first image in the dialogue becomes the header
         //alert user if there is no header
-        if (!headerImgInsert) { //if image file for the header 
+        if (input.indexOf(line) === 0) { //if image file for the header 
           console.log('headerfile');
           output = output.replace("HEADERFILE", line.trim());
-          headerImgInsert = true;
         }
         else { //if CG or scene change image file
           console.log('image file');
@@ -274,10 +272,10 @@ function convertText() {
             //   currentName = current;
             //   var renderFile = dialogueRender;
             //   var id = "#" + current[0].toUpperCase() + current.slice(1,current.length);
-            //   if(tlToInput!=""){
+            //   if(tlToInput!=''){
             //     console.log(tlToInput)
             //     output += tlToInput;
-            //     tlToInput = "";
+            //     tlToInput = '';
             //   }
             //   output += renderFile.replace("FILENAME", $(id).val().trim());
             //   // output += dialogueRender;
@@ -305,7 +303,7 @@ function getValues() {
   values.author = $('#author option:selected').text();
   values.translator = $('#translator').val().trim();
   values.tlLink = $('#tlLink').val().trim();
-  if (values.tlLink === "") { //if TL credit is to a wiki user
+  if (values.tlLink === '') { //if TL credit is to a wiki user
     values.translator = `[User:${values.translator}|${values.translator}]`;
   }
   else { //if TL credit is to an external wiki user

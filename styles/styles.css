@@ -118,6 +118,10 @@ p, li, blockquote {
     font-size: 0.875rem;
 }
 
+li {
+    margin: 0.25em 0;
+}
+
 @media (min-width: 20em) {
     body {
         padding: 2rem;
@@ -277,7 +281,7 @@ textarea {
         margin-top: 2rem;
         width: 90%;
         min-width: 21.5rem;
-        max-width: 31.25rem;
+        max-width: 49rem;
         height: 31.25rem;
         margin: 1rem 1rem;
     }
