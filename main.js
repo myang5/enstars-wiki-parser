@@ -243,14 +243,15 @@ function convertText() {
           output += cgCode.replace("FILENAME", line.trim());
         }
       }
-      else {
+      else { //if dialogue line or header
+        line = formatTlMarker(line); //formats tl markers if they exist
         let firstWord = line.split(" ")[0];
         if (!firstWord.includes(":")) { //if dialogue is continuing
           output += line + "\n\n";
         }
-        else { 
+        else {
           firstWord = firstWord.slice(0, -1); //remove colon
-          if (firstWord.toUpperCase() === 'HEADING') {
+          if (firstWord.toUpperCase() === 'HEADING') { //if heading
             console.log('new HEADING');
             let headingCode = heading;
             output += headingCode.replace("HEADING", line.slice(line.indexOf(' ') + 1).trim());
@@ -287,12 +288,13 @@ function convertText() {
           }
         }
       }
+
     }
   });
 
+  output += formatTlNotes(editor2.getData());
   output += footer;
   $('#output').val(output);
-  return false;
 }
 
 //helper function for convertText
@@ -316,12 +318,67 @@ function getValues() {
 }
 
 //helper function to check if the line is a file
-function isFileName(line) {
+function isFileName(line){
   const extensions = ['.png', '.gif', '.jpg', '.jpeg', '.ico', '.pdf', '.svg'];
-  const endLen4 = line.slice(-4);
-  const endLen5 = line.slice(-5);
-  if(extensions.includes(endLen4) || extensions.includes(endLen5)){
-    return true;
+  for(let i=0; i<extensions.length; i++){
+    if(line.toLowerCase().endsWith(extensions[i])){
+      return true;
+    }
   }
   return false;
+}
+
+//helper function to get and format chapter title from tl notes
+//assumes the editor has some data
+function getChapTitle(data){
+  if(data.includes('<ol>') && data.includes('<p>')){ //editor already has the <p> in it, so user must input some sort of new <p> (the chapter title) and an <ol> (the TL notes)
+    let title = data.split('</p>')[0];
+    title = title.replace('<p>', '');
+    title = title.replace(' ', '');
+    return title;
+  }
+  else {
+    //ERROR: add alert to let user know they didn't provide a chapter title
+    console.log('Please make sure to include a title in the TL Notes section')
+  }
+}
+
+//helper function to format tl note markers
+function formatTlMarker(line) {
+  if (line.search(/\[\d+\]/) != -1) { //if there is a tlMarker
+    let title = getChapTitle(editor2.getData());
+    if (title != undefined) {
+      let tlCode = `<span id='${title}RefNUM'>[[#${title}NoteNUM|<sup>[NUM]</sup>]]</span>`;
+      const markers = line.match(/\[\d+\]/g);
+      markers.forEach(function (marker) {
+        let num = marker.substring(marker.indexOf('[') + 1, marker.indexOf(']'));
+        let newTlCode = tlCode.replace(/NUM/g, num);
+        line = line.replace(marker, newTlCode)
+      });
+    }
+  }
+  return line;
+}
+
+
+//helper function to format TlNotes
+//assumes that there is a valid title and correct number of TL notes
+function formatTlNotes(data){
+  let title = getChapTitle(data);
+  if (title != undefined) {
+    let output =
+`|-
+| colspan="2"|`;
+    let tlCode = `<span id='${title}NoteNUM'>NUM.[[#${title}RefNUM|↑]] TEXT</span><br />`;
+    let notes = data.substring(data.indexOf('<li>'), data.lastIndexOf('</li>'))
+    notes = notes.split('</li>');
+    for(let i=0; i<notes.length; i++){
+      notes[i] = notes[i].replace('<li>', '');
+      let newTlCode = tlCode.replace(/NUM/g, i+1);
+      output += newTlCode.replace('TEXT', notes[i]);
+    }
+    output = output.replace(/<br \/>$/m, "\n");
+    return output;
+  }
+  else return ''
 }

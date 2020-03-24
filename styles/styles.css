@@ -306,6 +306,12 @@ h3 {
     text-transform: uppercase;
 }
 
+blockquote {
+    border-left: 1px solid #15c6e0;
+    padding: 0.5rem 1rem;
+
+}
+
 img {
   width: 30.125rem;
 }
