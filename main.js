@@ -224,13 +224,12 @@ function convertText() {
   let output = header;
   console.log(input);
 
-  //let currentName = ''; //needed for situation where dialogue has name on every line
-  //let tlToInput = '';
+  let currentName = ''; //needed for case where dialogue has name on every line
+  let tlToInput = '';
   input.forEach(function (line) {
     if (line != '') { //ignore empty lines
       if (isFileName(line)) {
-        console.log('isFileName: true');
-        //ERROR: if there is no image file for the header, the first image in the dialogue becomes the header
+        console.log('isFileName: true...');
         //alert user if there is no header
         if (input.indexOf(line) === 0) { //if image file for the header 
           console.log('headerfile');
@@ -240,47 +239,38 @@ function convertText() {
           console.log('image file');
           let cgCode = cgRender;
           output += cgCode.replace("FILENAME", line.trim());
+          currentName = ''; //since its new section
         }
       }
       else { //if dialogue line or header
-        line = formatTlMarker(line); //formats tl markers if they exist
+        line = formatLine(line);
         let firstWord = line.split(" ")[0];
-        if (!firstWord.includes(":")) { //if dialogue is continuing
+        if (!firstWord.includes(":")) { //if no colon --> continuing dialogue line
+          console.log('no colon, continue dialogue');
           output += line + "\n\n";
         }
         else {
+          console.log('has colon...')
           firstWord = firstWord.slice(0, -1); //remove colon
           if (firstWord.toUpperCase() === 'HEADING') { //if heading
             console.log('new HEADING');
             let headingCode = heading;
-            output += headingCode.replace("HEADING", line.slice(line.indexOf(' ') + 1).trim());
+            output += headingCode.replace("HEADING", line.slice(line.indexOf(':') + 1).trim());
+            currentName = ''; //since its new section
           }
-          else if (namesLink[firstWord.toUpperCase()] != undefined){ //if valid new character is speaking
-            console.log('new character: ' + firstWord);
+          else if (namesLink[firstWord.toUpperCase()] != undefined){ //if valid character is speaking
+            console.log('character speaking... ' + firstWord);
+            if (firstWord !== currentName){ //if new character is speaking
+              console.log('new character detected')
+              //add dialogueRender code to output
+              let renderCode = dialogueRender;
+              let id = "#" + firstWord[0].toUpperCase() + firstWord.slice(1, firstWord.length); //create id to access chara's render file in Renders tab
+              output += renderCode.replace("FILENAME", $(id).val().trim());
+              //update currentName
+              currentName = firstWord;
+            }
             line = line.slice(line.indexOf(":") + 1).trim(); //get chara's spoken line
-            let renderCode = dialogueRender;
-            let id = "#" + firstWord[0].toUpperCase() + firstWord.slice(1, firstWord.length); //create id to access chara's render file in Renders tab
-            output += renderCode.replace("FILENAME", $(id).val().trim());
             output += line + "\n\n";
-            // code from when every line had to start with a chara name JIC
-            // var current = exp.slice(0,exp.indexOf(":"));
-            // exp = exp.slice(exp.indexOf(":") + 1).trim();
-            // if(current == currentName){
-            //   output += exp + "\n\n";
-            // }
-            // else if(current != currentName){
-            //   currentName = current;
-            //   var renderFile = dialogueRender;
-            //   var id = "#" + current[0].toUpperCase() + current.slice(1,current.length);
-            //   if(tlToInput!=''){
-            //     console.log(tlToInput)
-            //     output += tlToInput;
-            //     tlToInput = '';
-            //   }
-            //   output += renderFile.replace("FILENAME", $(id).val().trim());
-            //   // output += dialogueRender;
-            //   output += exp + "\n\n";
-            // }
           }
           else {
             console.log('Formatter was unable to process this name: ' + firstWord);
@@ -327,19 +317,21 @@ function isFileName(line){
   return false;
 }
 
-//helper function to get and format chapter title from tl notes
-//assumes the editor has some data
-function getChapTitle(data){
-  if(data.includes('<ol>') && data.includes('<p>')){ //editor already has the <p> in it, so user must input some sort of new <p> (the chapter title) and an <ol> (the TL notes)
-    let title = data.split('</p>')[0];
-    title = title.replace('<p>', '');
-    title = title.replace(' ', '');
-    return title;
-  }
-  else {
-    //ERROR: add alert to let user know they didn't provide a chapter title
-    console.log('Please make sure to include a title in the TL Notes section')
-  }
+//helper function to format bold, italics, links, and TL markers
+function formatLine(line){
+  line = line.replace(/<\/*strong>/g, "'''") //bold in wiki is like '''this'''
+  line = line.replace(/<\/*i>/g, "''") //italic in wiki is like ''this''
+  line = formatLink(line);
+  line = formatTlMarker(line);
+  return line;
+}
+
+//helper function to format external links
+function formatLink(line){ //link is like this <a href="url">text</a> --> [url text]
+  line = line.replace(/<a href="/g, '[');
+  line = line.replace(/">/g, ' ');
+  line = line.replace(/<\/a>/g, ']');
+  return line;
 }
 
 //helper function to format tl note markers
@@ -359,11 +351,25 @@ function formatTlMarker(line) {
   return line;
 }
 
+//helper function to get and format chapter title from tl notes
+//assumes the editor has some data
+function getChapTitle(data){
+  if(data.includes('<ol>') && data.includes('<p>')){ //editor already has the <p> in it, so user must input some sort of new <p> (the chapter title) and an <ol> (the TL notes)
+    let title = data.split('</p>')[0];
+    title = title.replace('<p>', '');
+    title = title.replace(' ', '');
+    return title;
+  }
+  else {
+    //ERROR: add alert to let user know they didn't provide a chapter title
+    console.log('Please make sure to include a title in the TL Notes section')
+  }
+}
 
 //helper function to format TlNotes
 //assumes that there is a valid title and correct number of TL notes
 function formatTlNotes(data){
-  let title = getChapTitle(data);
+  let title = getChapTitle(data); //ERROR: only do this if there are tl notes available
   if (title != undefined) {
     let output =
 `|-
@@ -373,6 +379,7 @@ function formatTlNotes(data){
     notes = notes.split('</li>');
     for(let i=0; i<notes.length; i++){
       notes[i] = notes[i].replace('<li>', '');
+      notes[i] = formatLine(notes[i]);
       let newTlCode = tlCode.replace(/NUM/g, i+1);
       output += newTlCode.replace('TEXT', notes[i]);
     }
