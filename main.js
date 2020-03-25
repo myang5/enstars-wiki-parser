@@ -1,55 +1,55 @@
 const namesLink = {
-  TETORA:'Tetora_Nagumo',
-  HAJIME:'Hajime_Shino',
-  TOMOYA:'Tomoya_Mashiro',
-  HINATA:'Hinata_Aoi',
-  MIDORI:'Midori_Takamine',
-  TORI:'Tori_Himemiya',
-  SHINOBU:'Shinobu_Sengoku',
-  MITSURU:'Mitsuru_Tenma',
-  YUTA:'Yuta_Aoi',
-  TSUKASA:'Tsukasa_Suou',
-  SORA:'Sora_Harukawa',
-  SUBARU:'Subaru_Akehoshi',
-  HOKUTO:'Hokuto_Hidaka',
-  MAKOTO:'Makoto_Yuuki',
-  SOUMA:'Souma_Kanzaki',
-  ADONIS:'Adonis_Otogari',
-  NATSUME:'Natsume_Sakasaki',
-  KOGA:'Koga_Oogami',
-  RITSU:'Ritsu_Sakuma',
-  MAO:'Mao_Isara',
-  YUZURU:'Yuzuru_Fushimi',
-  ARASHI:'Arashi_Narukami',
-  MIKA:'Mika_Kagehira',
-  EICHI:'Eichi_Tenshouin',
-  KEITO:'Keito_Hasumi',
-  KAORU:'Kaoru_Hakaze',
-  IZUMI:'Izumi_Sena',
-  CHIAKI:'Chiaki_Morisawa',
-  SHU:'Shu_Itsuki',
-  MADARA:'Madara_Mikejima',
-  KURO:'Kuro_Kiryu',
-  WATARU:'Wataru_Hibiki',
-  KANATA:'Kanata_Shinkai',
-  REI:'Rei_Sakuma',
-  NAZUNA:'Nazuna_Nito',
-  LEO:'Leo_Tsukinaga',
-  TSUMUGI:'Tsumugi_Aoba',
-  JIN:'Jin_Sagami',
-  AKIOMI:'Akiomi_Kunugi',
-  HIYORI:'Hiyori_Tomoe',
-  JUN:'Jun_Sazanami',
-  NAGISA:'Nagisa_Ran',
-  IBARA:'Ibara_Saegusa',
-  RINNE:'Rinne_Amagi',
-  HIMERU:'HiMERU',
-  KOHAKU:'Kohaku_Oukawa', 
-  NIKI:'Niki_Shiina',
-  HIIRO:'Hiiro_Amagi',
-  AIRA:'Aira_Shiratori',
-  MAYOI:'Mayoi_Ayase',
-  TATSUMI:'Tatsumi_Kazehaya'
+  TETORA: 'Tetora_Nagumo',
+  HAJIME: 'Hajime_Shino',
+  TOMOYA: 'Tomoya_Mashiro',
+  HINATA: 'Hinata_Aoi',
+  MIDORI: 'Midori_Takamine',
+  TORI: 'Tori_Himemiya',
+  SHINOBU: 'Shinobu_Sengoku',
+  MITSURU: 'Mitsuru_Tenma',
+  YUTA: 'Yuta_Aoi',
+  TSUKASA: 'Tsukasa_Suou',
+  SORA: 'Sora_Harukawa',
+  SUBARU: 'Subaru_Akehoshi',
+  HOKUTO: 'Hokuto_Hidaka',
+  MAKOTO: 'Makoto_Yuuki',
+  SOUMA: 'Souma_Kanzaki',
+  ADONIS: 'Adonis_Otogari',
+  NATSUME: 'Natsume_Sakasaki',
+  KOGA: 'Koga_Oogami',
+  RITSU: 'Ritsu_Sakuma',
+  MAO: 'Mao_Isara',
+  YUZURU: 'Yuzuru_Fushimi',
+  ARASHI: 'Arashi_Narukami',
+  MIKA: 'Mika_Kagehira',
+  EICHI: 'Eichi_Tenshouin',
+  KEITO: 'Keito_Hasumi',
+  KAORU: 'Kaoru_Hakaze',
+  IZUMI: 'Izumi_Sena',
+  CHIAKI: 'Chiaki_Morisawa',
+  SHU: 'Shu_Itsuki',
+  MADARA: 'Madara_Mikejima',
+  KURO: 'Kuro_Kiryu',
+  WATARU: 'Wataru_Hibiki',
+  KANATA: 'Kanata_Shinkai',
+  REI: 'Rei_Sakuma',
+  NAZUNA: 'Nazuna_Nito',
+  LEO: 'Leo_Tsukinaga',
+  TSUMUGI: 'Tsumugi_Aoba',
+  JIN: 'Jin_Sagami',
+  AKIOMI: 'Akiomi_Kunugi',
+  HIYORI: 'Hiyori_Tomoe',
+  JUN: 'Jun_Sazanami',
+  NAGISA: 'Nagisa_Ran',
+  IBARA: 'Ibara_Saegusa',
+  RINNE: 'Rinne_Amagi',
+  HIMERU: 'HiMERU',
+  KOHAKU: 'Kohaku_Oukawa',
+  NIKI: 'Niki_Shiina',
+  HIIRO: 'Hiiro_Amagi',
+  AIRA: 'Aira_Shiratori',
+  MAYOI: 'Mayoi_Ayase',
+  TATSUMI: 'Tatsumi_Kazehaya'
 };
 
 let userInput; //ckeditor autosaves input here
@@ -73,7 +73,7 @@ function setup() {
       },
       autosave: {
         save(editor) {
-          userInput = editor.getData()
+          userInput = clearGDocSpan(editor.getData());
           renders();
         }
       }
@@ -117,10 +117,27 @@ function openTab(btn, tabName) {
   $(btn).addClass("active");
 }
 
-function copyToClip(){
-    $('#output').select();
-    document.execCommand("copy");
-    $('#copyBtn').text('Copied');
+function copyToClip() {
+  $('#output').select();
+  document.execCommand("copy");
+  $('#copyBtn').text('Copied');
+}
+
+function clearGDocSpan(data) { //resolving issue with Google Docs adding transparent span to every line 
+  const editorDom = new DOMParser().parseFromString(data, 'text/html')
+  editorDom.querySelectorAll('span').forEach(function (span) {
+    if (span.style.backgroundColor === 'transparent') {
+      span.replaceWith(span.innerHTML);
+    }
+    //want to be able to have spans for different text colors later...
+  });
+
+  const paragraphs = editorDom.body.querySelectorAll('p');
+  const input = []
+  paragraphs.forEach(function (p) {
+    input.push(p.innerHTML.replace(/&nbsp;/g, ''));
+  });
+  return input;
 }
 
 //Updating Renders tab based on dialogue input
@@ -129,26 +146,26 @@ function updateRenders() {
   const namesSet = new Set();
 
   //trying to use closure! wow
-  return function() {
+  return function () {
     //console.log('running renders');
 
-    const input = userInput.split('<p>'); //get array of dialogue lines
+    const input = userInput;
     //get first word in each line and check if there's a colon
     const namesRaw = new Set(); //add "key" of each line if there is one
-    input.forEach(function(line){
+    input.forEach(function (line) {
       let nameRaw = line.split(' ')[0]; //get first word in the line
       //console.log('nameRaw: ' + nameRaw);
-      if(nameRaw.includes(':')){ //if there is a colon
+      if (nameRaw.includes(':')) { //if there is a colon
         namesRaw.add(nameRaw.slice(0, nameRaw.indexOf(':'))); //get text up until colon
       }
     });
-    
+
     const names = new Set() //get set of valid names
-    namesRaw.forEach(function(name){
+    namesRaw.forEach(function (name) {
       let nameClean = name.replace(/<\w+>/g, ''); //remove opening html tags
       nameClean = nameClean.replace(/<.\w+>/g, ''); //remove ending html tags
       //console.log('nameClean: ' + nameClean);
-      if (namesLink[nameClean.toUpperCase()] != undefined){ //if valid name
+      if (namesLink[nameClean.toUpperCase()] != undefined) { //if valid name
         nameClean = nameClean[0].toUpperCase() + nameClean.slice(1, nameClean.length); //format name ex. arashi --> Arashi
         names.add(nameClean);
       }
@@ -198,7 +215,7 @@ function convertText() {
 
   //format wiki code with user input
   const header =
-`{| class="article-table" cellspacing="1/6" cellpadding="2" border="1" align="center" width="100%"
+    `{| class="article-table" cellspacing="1/6" cellpadding="2" border="1" align="center" width="100%"
 ! colspan="2" style="text-align:center;background-color:${values.writerCol}; color:${values.textCol};" |'''Writer:''' ${values.author}
 |-
 | colspan="2" |[[File:HEADERFILE|660px|link=|center]]
@@ -206,34 +223,28 @@ function convertText() {
 ! colspan="2" style="text-align:center;background-color:${values.locationCol}; color:${values.textCol};" |'''Location: ${values.location}'''
 `;
   const dialogueRender =
-`|-
+    `|-
 |[[File:FILENAME|x200px|link=|center]]
 |
 `;
   const cgRender =
-`|-
+    `|-
 ! colspan="2" style="text-align:center;" |[[File:FILENAME|center|660px]]
 `;
-  const heading = 
-`|-
+  const heading =
+    `|-
 ! colspan="2" style="text-align:center;background-color:${values.locationCol}; color:${values.textCol};" |'''HEADING'''
 `
   const footer =
-`|-
+    `|-
 ! colspan="2" style="text-align:center;background-color:${values.bottomCol};color:${values.textCol};" |'''Translation: [${values.translator}] '''
 |}`;
 
-  let input = editor1.getData();
-  input = input.split('</p>'); //get array of dialogue lines
-  for(let i=0; i<input.length; i++){
-    input[i] = input[i].replace(/&nbsp;/g, '');
-    input[i] = input[i].replace('<p>', '').trim();
-  }
+  let input = userInput;
   let output = header;
-  console.log(input);
+  //console.log(input);
 
   let currentName = ''; //needed for case where dialogue has name on every line
-  let tlToInput = '';
   input.forEach(function (line) {
     if (line != '') { //ignore empty lines
       if (isFileName(line)) {
@@ -266,9 +277,9 @@ function convertText() {
             output += headingCode.replace("HEADING", line.slice(line.indexOf(':') + 1).trim());
             currentName = ''; //since its new section
           }
-          else if (namesLink[firstWord.toUpperCase()] != undefined){ //if valid character is speaking
+          else if (namesLink[firstWord.toUpperCase()] != undefined) { //if valid character is speaking
             console.log('character speaking... ' + firstWord);
-            if (firstWord !== currentName){ //if new character is speaking
+            if (firstWord !== currentName) { //if new character is speaking
               console.log('new character detected')
               //add dialogueRender code to output
               let renderCode = dialogueRender;
@@ -285,8 +296,8 @@ function convertText() {
           }
         }
       }
-
     }
+
   });
 
   output += formatTlNotes(editor2.getData());
@@ -296,7 +307,7 @@ function convertText() {
 
 //helper function for convertText
 function getValues() {
-  const values = {} 
+  const values = {}
   values.location = $('#location').val().trim();
   values.author = $('#author option:selected').text();
   values.translator = $('#translator').val().trim();
@@ -315,10 +326,10 @@ function getValues() {
 }
 
 //helper function to check if the line is a file
-function isFileName(line){
+function isFileName(line) {
   const extensions = ['.png', '.gif', '.jpg', '.jpeg', '.ico', '.pdf', '.svg'];
-  for(let i=0; i<extensions.length; i++){
-    if(line.toLowerCase().endsWith(extensions[i])){
+  for (let i = 0; i < extensions.length; i++) {
+    if (line.toLowerCase().endsWith(extensions[i])) {
       return true;
     }
   }
@@ -326,7 +337,7 @@ function isFileName(line){
 }
 
 //helper function to format bold, italics, links, and TL markers
-function formatLine(line){
+function formatLine(line) {
   line = line.replace(/<\/*strong>/g, "'''") //bold in wiki is like '''this'''
   line = line.replace(/<\/*i>/g, "''") //italic in wiki is like ''this''
   line = formatLink(line);
@@ -335,7 +346,7 @@ function formatLine(line){
 }
 
 //helper function to format external links
-function formatLink(line){ //link is like this <a href="url">text</a> --> [url text]
+function formatLink(line) { //link is like this <a href="url">text</a> --> [url text]
   line = line.replace(/<a href="/g, '[');
   line = line.replace(/">/g, ' ');
   line = line.replace(/<\/a>/g, ']');
@@ -361,8 +372,8 @@ function formatTlMarker(line) {
 
 //helper function to get and format chapter title from tl notes
 //assumes the editor has some data
-function getChapTitle(data){
-  if(data.includes('<ol>') && data.includes('<p>')){ //editor already has the <p> in it, so user must input some sort of new <p> (the chapter title) and an <ol> (the TL notes)
+function getChapTitle(data) {
+  if (data.includes('<ol>') && data.includes('<p>')) { //editor already has the <p> in it, so user must input some sort of new <p> (the chapter title) and an <ol> (the TL notes)
     let title = data.split('</p>')[0];
     title = title.replace('<p>', '');
     title = title.replace(' ', '');
@@ -376,19 +387,19 @@ function getChapTitle(data){
 
 //helper function to format TlNotes
 //assumes that there is a valid title and correct number of TL notes
-function formatTlNotes(data){
+function formatTlNotes(data) {
   let title = getChapTitle(data); //ERROR: only do this if there are tl notes available
   if (title != undefined) {
     let output =
-`|-
+      `|-
 | colspan="2"|`;
     let tlCode = `<span id='${title}NoteNUM'>NUM.[[#${title}RefNUM|↑]] TEXT</span><br />`;
     let notes = data.substring(data.indexOf('<li>'), data.lastIndexOf('</li>'))
     notes = notes.split('</li>');
-    for(let i=0; i<notes.length; i++){
+    for (let i = 0; i < notes.length; i++) {
       notes[i] = notes[i].replace('<li>', '');
       notes[i] = formatLine(notes[i]);
-      let newTlCode = tlCode.replace(/NUM/g, i+1);
+      let newTlCode = tlCode.replace(/NUM/g, i + 1);
       output += newTlCode.replace('TEXT', notes[i]);
     }
     output = output.replace(/<br \/>$/m, "\n");

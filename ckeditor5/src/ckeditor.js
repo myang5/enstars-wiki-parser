@@ -13,13 +13,7 @@ import Essentials from '@ckeditor/ckeditor5-essentials/src/essentials.js';
 import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph.js';
 import Autosave from '@ckeditor/ckeditor5-autosave/src/autosave.js';
 import List from '@ckeditor/ckeditor5-list/src/list.js';
-//import GFMDataProcessor from '@ckeditor/ckeditor5-markdown-gfm/src/gfmdataprocessor';
 import '../../styles/ck-styles.css';
-
-// Simple plugin which loads the data processor.
-function Markdown( editor ) {
-    editor.data.processor = new GFMDataProcessor( editor.editing.view.document );
-}
 
 export default class Editor extends BalloonEditor {}
 
@@ -41,3 +35,6 @@ BalloonEditor.defaultConfig = {
 	language: 'en',
 	licenseKey: '',
   };
+
+
+  
