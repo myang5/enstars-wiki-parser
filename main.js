@@ -117,6 +117,12 @@ function openTab(btn, tabName) {
   $(btn).addClass("active");
 }
 
+function copyToClip(){
+    $('#output').select();
+    document.execCommand("copy");
+    $('#copyBtn').text('Copied');
+}
+
 //Updating Renders tab based on dialogue input
 function updateRenders() {
 
@@ -185,6 +191,8 @@ function makeLink(name) {
 }
 
 function convertText() {
+
+  $('#copyBtn').text('Copy Output');
 
   values = getValues(); //get user input from all the tabs
 

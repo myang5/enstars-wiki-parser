@@ -205,7 +205,6 @@ textarea {
 
 #detailArea {
     padding:20px 20px 0px 20px;
-    border: 1px solid #19c1ff;
     display: flex;
     flex-direction: column;
 }
@@ -247,24 +246,42 @@ textarea {
     box-sizing: border-box;
 }
 
-#convert {
+#btnArea{
+    display: flex;
+    flex-direction: column;
     margin: 26.5px 0 0 0;
-    background-color: #15c6e0;
-    box-sizing: border-box;
-    border-radius: 5px;
-    border: 1px solid;
+}
+
+#btnArea button{
+    width: 8.7em;
     cursor: pointer;
     outline: none;
-    padding: 0.7rem 1.4rem;
-    color: #fff;
     font-size: 1rem;
+    margin: 0 0 1em 0;
+    padding: 0.7em 1.4em;
     transition: all 0.1s ;
     -webkit-transition: all 0.1s;
     -moz-transition: all 0.1s;
 }
 
-#convert:active {
+#btnArea button:active {
     transform: scale(0.9);
+}
+
+#btnArea #convertBtn{
+    background-color: #15c6e0;
+    box-sizing: border-box;
+    border-radius: 5px;
+    border: 1px solid;
+    color: #fff;
+}
+
+#btnArea #copyBtn{
+    background-color: #fff;
+    box-sizing: border-box;
+    border-radius: 5px;
+    border: 1px solid;
+    color: #15c6e0;
 }
 
 @media (max-width: 55em) { /*half-screen window*/
@@ -283,8 +300,17 @@ textarea {
         min-width: 21.5rem;
         max-width: 49rem;
         height: 31.25rem;
-        margin: 1rem 1rem;
+        margin: 1rem;
     }
+    #btnArea{
+        margin: 0 0 0 0;
+        flex-direction: row;
+    }
+
+    #btnArea button{
+        margin: 26.5px 0.5em 0 0.5em;
+    }
+
 }
 
 /*---------------------------------HOWTO.HTML AND PLANS.HTML---------------------------------*/

@@ -4,7 +4,8 @@
 
 <head>
   <meta name="keywords" content="enstars, ensemble stars, ensemble stars wiki">
-  <meta name="description" content="A text formatter for more efficiently uploading event/gacha stories to the Ensemble Stars Wiki.">
+  <meta name="description"
+    content="A text formatter for more efficiently uploading event/gacha stories to the Ensemble Stars Wiki.">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Story Formatter</title>
 
@@ -51,26 +52,28 @@
       <!---INPUT TAB!--->
       <div id="inputArea" class="tabcontent">
         <div id="inputEditor" class="editor">
-          <p>If this is your first time using the formatter , please check the <a href='howto.html'>Text Guidelines</a> to make
+          <p>If this is your first time using the formatter , please check the <a href='howto.html'>Text Guidelines</a>
+            to make
             sure your text is ready.</p>
-          <p>UPDATE: Header images, CGs, and scene change headings can now be included. Please check Text Guidelines for more info.</p>
+          <p>UPDATE: Header images, CGs, and scene change headings can now be included. Please check Text Guidelines for
+            more info.</p>
         </div>
       </div>
-      
+
       <!---DETAILS TAB!--->
       <div id="detailArea" class="tabcontent">
 
-        <div class="row"> 
+        <div class="row">
           <h3>Story Details</h3>
         </div>
 
         <div class="row">
-          <label class = 'spacer' for="location">Location</label>
+          <label class='spacer' for="location">Location</label>
           <input type="text" id="location">
         </div>
 
         <div class="row">
-          <label class = 'spacer' for="author">Writer</label>
+          <label class='spacer' for="author">Writer</label>
           <select id="author">
             <option value="akira">日日日 (Akira)</option>
             <option value="yuuki">結城由乃 (Yuuki Yoshino)</option>
@@ -82,35 +85,35 @@
         </div>
 
         <div class="row">
-          <label class = 'spacer' for="translator">Translator</label>
+          <label class='spacer' for="translator">Translator</label>
           <input type="text" id="translator">
         </div>
         <div class="row">
-          <span class = 'spacer'></span>
-          <label class = 'spacer' for="tlLink">External link for TL credit (optional)
+          <span class='spacer'></span>
+          <label class='spacer' for="tlLink">External link for TL credit (optional)
         </div>
         <div class="row">
-          <span class = 'spacer'></span>
+          <span class='spacer'></span>
           <input type="text" id="tlLink">
         </div>
 
-        <div class="row"> 
+        <div class="row">
           <h3>Title Colors</h3>
         </div>
         <div class="row">
-          <label class = 'spacer' >Writer</label>
+          <label class='spacer'>Writer</label>
           <input class="jscolor" name="writerCol" value="#fff">
         </div>
         <div class="row">
-          <label class = 'spacer' >Location</label>
+          <label class='spacer'>Location</label>
           <input class="jscolor" name="locationCol" value="#fff">
         </div>
         <div class="row">
-          <label class = 'spacer' >Bottom</label>
+          <label class='spacer'>Bottom</label>
           <input class="jscolor" name="bottomCol" value="#fff">
         </div>
         <div class="row">
-          <label class = 'spacer' >Text</label>
+          <label class='spacer'>Text</label>
           <input class="jscolor" name="textCol" value="#fff">
         </div>
       </div>
@@ -118,7 +121,8 @@
       <!---RENDERTAB!--->
       <div id="renderArea" class="tabcontent">
         <p>
-          Please paste in the file names of the dialogue renders as written in the wiki (ex. Tsukasa Suou School Dialogue Render.png)<br>
+          Please paste in the file names of the dialogue renders as written in the wiki (ex. Tsukasa Suou School
+          Dialogue Render.png)<br>
           (This tab will fill out once you paste dialogue into the Text tab)
         </p>
         <div id="renderForms"></div>
@@ -127,20 +131,24 @@
       <!---TLNOTETAB!--->
       <div id="tlArea" class="tabcontent">
         <div id="tlEditor" class="editor">
-          <p>If this is your first time using the formatter, please check the <a href='howto.html#tlNotesSection'>Text Guidelines</a> for how to add translation notes.</p>
+          <p>If this is your first time using the formatter, please check the <a href='howto.html#tlNotesSection'>Text
+              Guidelines</a> for how to add translation notes.</p>
         </div>
       </div>
 
     </div>
 
-    <button onclick="convertText()" id="convert">CONVERT</button>
+    <div id="btnArea">
+      <button onclick="convertText()" id="convertBtn">CONVERT</button>
+      <button onclick="copyToClip()" id="copyBtn">Copy Output</button>
+    </div>
 
     <textarea id="output"></textarea>
 
   </div>
 
   <script src="ckeditor5/build/ckeditor.js"></script>
-  
+
   <script>
     $(".jscolor").spectrum({
       flat: false,
