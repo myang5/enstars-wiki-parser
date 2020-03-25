@@ -33,11 +33,9 @@ header .horizontal {
 }
 
 header h1 {
-    text-align: center;
     font-size: 2.5rem;
     margin: 0;
     margin-bottom: 8px;
-    text-decoration: none;
 }
 
 header a {
@@ -58,8 +56,8 @@ header h1 a:after {
     content: '★';
     position: absolute;
     opacity: 0;
-    top: -2px;
-    right: -20px;
+    top: -0.04em;
+    right: -0.5em;
     transition: 0.4s ease-out;
     transform: rotate(-90deg);
 }
@@ -84,13 +82,11 @@ header p {
 }
 
 #navbar li {
-    /* padding: 1px 0; */
     text-align: left;
     list-style-type: none;
 }
 
 #navbar a {
-    text-align: left;
     font-size: 1rem;
 }
 
@@ -102,15 +98,15 @@ header p {
     content: '☆';
     position: absolute;
     opacity: 0;
-    top: -1px;
-    right: -6px;
+    top: -0.0625em;
+    right: -0.375em;
     transition: 0.4s ease-out;
     transform: rotate(-90deg);
 }
 
 #navbar a:hover:after {
     opacity: 1;
-    right: -14px;
+    right: -0.875em;
     transform: rotate(0deg);
 }
 
@@ -125,6 +121,51 @@ li {
 @media (min-width: 20em) {
     body {
         padding: 2rem;
+    }
+}
+
+/* editing position of star after title */
+@media (min-width: 25em) and (max-width: 40.5em) {
+    header h1 a:after {
+        top: 1.33em;   
+    }
+}
+
+@media (max-width: 25em) {
+    header h1 a:after {
+        top: 2.7em;   
+    }
+}
+
+/* resize header */
+@media (max-width: 38em) { 
+    header .horizontal {
+        flex-direction: column;
+    }
+
+    header p {
+        text-align: center;
+    }
+
+    #navbar {
+        padding-left: 0;
+    }
+
+    #navbar li{
+        display: inline-block;
+        margin: 1em;
+        text-align: center;
+    }
+}
+
+@media (max-width: 30em) {
+    #navbar li{
+        display: list-item;
+        margin: auto;
+    }
+
+    #navbar {
+        margin-top: 0.5rem;
     }
 }
 
