@@ -129,15 +129,15 @@ function convertToDom(data) {
 //resolving issue with Google Docs adding transparent span to every line
 //params: editorDom - editor data converted to a DOM object
 //returns the editor data as a DOM object with transparent spans removed
-function clearGDocSpan(editorDom) {
-  editorDom.querySelectorAll('span').forEach(function (span) {
-    if (span.style.backgroundColor === 'transparent') {
-      span.replaceWith(span.innerHTML);
-    }
-    //want to be able to have spans for different text colors later...
-  });
-  return editorDom;
-}
+// function clearGDocSpan(editorDom) {
+//   editorDom.querySelectorAll('span').forEach(function (span) {
+//     if (span.style.backgroundColor === 'transparent') {
+//       span.replaceWith(span.innerHTML);
+//     }
+//     //want to be able to have spans for different text colors later...
+//   });
+//   return editorDom;
+// }
 
 //each line in CKEditor has <p> wrapper
 //params: editorDom - editor data already converted to DOM object
@@ -161,8 +161,8 @@ function updateRenders(editor) {
   return function () {
     //console.log('running renders');
 
-    let input = clearGDocSpan(convertToDom(editor1.getData()));
-    input = getTextFromDom(input);
+    //let input = clearGDocSpan(convertToDom(editor1.getData()));
+    let input = getTextFromDom(convertToDom(editor1.getData()));
     //get first word in each line and check if there's a colon
     const namesRaw = new Set(); //add "key" of each line if there is one
     input.forEach(function (line) {
@@ -253,7 +253,7 @@ function convertText() {
 |}`;
 
   let inputDom = formatStyling(convertToDom(editor1.getData()));
-  inputDom = clearGDocSpan(inputDom);
+  //inputDom = clearGDocSpan(inputDom);
   let input = getTextFromDom(inputDom);
   let output = header;
   //console.log(input);
@@ -389,7 +389,8 @@ function formatTlMarker(line) {
 //assumes the editor has some data
 function getChapTitle(data) {
   if (data.includes('<ol>') && data.includes('<p>')) { //editor already has the <p> in it, so user must input some sort of new <p> (the chapter title) and an <ol> (the TL notes)
-    let inputDom = clearGDocSpan(convertToDom(data).querySelector('p'));
+    //let inputDom = clearGDocSpan(convertToDom(data).querySelector('p'));
+    let inputDom = (convertToDom(data).querySelector('p'));
     let title = inputDom.innerText;
     title = title.replace(' ', '');
     return title;
@@ -406,7 +407,6 @@ function formatTlNotes() {
   let title = getChapTitle(editor2.getData()); //ERROR: only do this if there are tl notes available
   if (title != undefined) {
     let inputDom = formatStyling(convertToDom(editor2.getData()));
-    inputDom = clearGDocSpan(inputDom);
     let notes = []
     const listItems = inputDom.querySelectorAll('li');
     listItems.forEach(function (li) {
