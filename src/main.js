@@ -52,8 +52,6 @@ const namesLink = {
   TATSUMI: 'Tatsumi_Kazehaya'
 };
 
-let userInput; //ckeditor autosaves input here
-
 function setup() {
   $('#defaultOpen').click();
   BalloonEditor
@@ -73,8 +71,7 @@ function setup() {
       },
       autosave: {
         save(editor) {
-          userInput = clearGDocSpan(editor.getData());
-          renders();
+          renders(editor);
         }
       }
     })
@@ -117,22 +114,36 @@ function openTab(btn, tabName) {
   $(btn).addClass("active");
 }
 
+//copies text to clipboard
 function copyToClip() {
   $('#output').select();
   document.execCommand("copy");
   $('#copyBtn').text('Copied');
 }
 
-function clearGDocSpan(data) { //resolving issue with Google Docs adding transparent span to every line 
-  const editorDom = new DOMParser().parseFromString(data, 'text/html')
+//lmao
+function convertToDom(data) {
+  return new DOMParser().parseFromString(data, 'text/html');
+}
+
+//resolving issue with Google Docs adding transparent span to every line
+//params: editorDom - editor data converted to a DOM object
+//returns the editor data as a DOM object with transparent spans removed
+function clearGDocSpan(editorDom) {
   editorDom.querySelectorAll('span').forEach(function (span) {
     if (span.style.backgroundColor === 'transparent') {
       span.replaceWith(span.innerHTML);
     }
     //want to be able to have spans for different text colors later...
   });
+  return editorDom;
+}
 
-  const paragraphs = editorDom.body.querySelectorAll('p');
+//each line in CKEditor has <p> wrapper
+//params: editorDom - editor data already converted to DOM object
+//returns an Array of each line of text
+function getTextFromDom(editorDom) {
+  const paragraphs = editorDom.querySelectorAll('p');
   const input = []
   paragraphs.forEach(function (p) {
     input.push(p.innerHTML.replace(/&nbsp;/g, ''));
@@ -141,7 +152,8 @@ function clearGDocSpan(data) { //resolving issue with Google Docs adding transpa
 }
 
 //Updating Renders tab based on dialogue input
-function updateRenders() {
+//Called by autosave property of BalloonEditor
+function updateRenders(editor) {
 
   const namesSet = new Set();
 
@@ -149,7 +161,8 @@ function updateRenders() {
   return function () {
     //console.log('running renders');
 
-    const input = userInput;
+    let input = clearGDocSpan(convertToDom(editor1.getData()));
+    input = getTextFromDom(input);
     //get first word in each line and check if there's a colon
     const namesRaw = new Set(); //add "key" of each line if there is one
     input.forEach(function (line) {
@@ -197,7 +210,6 @@ function updateRenders() {
     });
   }
 }
-
 const renders = updateRenders(); //closure!!
 
 function makeLink(name) {
@@ -211,7 +223,7 @@ function convertText() {
 
   $('#copyBtn').text('Copy Output');
 
-  values = getValues(); //get user input from all the tabs
+  const values = getValues(); //get user input from all the tabs
 
   //format wiki code with user input
   const header =
@@ -240,7 +252,9 @@ function convertText() {
 ! colspan="2" style="text-align:center;background-color:${values.bottomCol};color:${values.textCol};" |'''Translation: [${values.translator}] '''
 |}`;
 
-  let input = userInput;
+  let inputDom = formatStyling(convertToDom(editor1.getData()));
+  inputDom = clearGDocSpan(inputDom);
+  let input = getTextFromDom(inputDom);
   let output = header;
   //console.log(input);
 
@@ -262,7 +276,7 @@ function convertText() {
         }
       }
       else { //if dialogue line or header
-        line = formatLine(line);
+        line = formatTlMarker(line);
         let firstWord = line.split(" ")[0];
         if (!firstWord.includes(":")) { //if no colon --> continuing dialogue line
           console.log('no colon, continue dialogue');
@@ -326,6 +340,8 @@ function getValues() {
 }
 
 //helper function to check if the line is a file
+//params: line - a String
+//returns a boolean value representing if the string is a file name
 function isFileName(line) {
   const extensions = ['.png', '.gif', '.jpg', '.jpeg', '.ico', '.pdf', '.svg'];
   for (let i = 0; i < extensions.length; i++) {
@@ -336,21 +352,20 @@ function isFileName(line) {
   return false;
 }
 
-//helper function to format bold, italics, links, and TL markers
-function formatLine(line) {
-  line = line.replace(/<\/*strong>/g, "'''") //bold in wiki is like '''this'''
-  line = line.replace(/<\/*i>/g, "''") //italic in wiki is like ''this''
-  line = formatLink(line);
-  line = formatTlMarker(line);
-  return line;
-}
-
-//helper function to format external links
-function formatLink(line) { //link is like this <a href="url">text</a> --> [url text]
-  line = line.replace(/<a href="/g, '[');
-  line = line.replace(/">/g, ' ');
-  line = line.replace(/<\/a>/g, ']');
-  return line;
+//helper function to format bold, italics, links based on HTML tags
+//params: editorDom - editor data already converted to DOM object
+//returns a DOM object with specified HTML tags converted to wiki code equivalent
+function formatStyling(editorDom) {
+  editorDom.querySelectorAll('strong').forEach(function (strong) {
+    strong.replaceWith(`'''${strong.innerText}'''`);
+  });
+  editorDom.querySelectorAll('i').forEach(function (italic) {
+    italic.replaceWith(`''${italic.innerText}''`);
+  });
+  editorDom.querySelectorAll('a').forEach(function (link) {
+    link.replaceWith(`[${link.href} ${link.innerText}]`);
+  });
+  return editorDom;
 }
 
 //helper function to format tl note markers
@@ -374,8 +389,8 @@ function formatTlMarker(line) {
 //assumes the editor has some data
 function getChapTitle(data) {
   if (data.includes('<ol>') && data.includes('<p>')) { //editor already has the <p> in it, so user must input some sort of new <p> (the chapter title) and an <ol> (the TL notes)
-    let title = data.split('</p>')[0];
-    title = title.replace('<p>', '');
+    let inputDom = clearGDocSpan(convertToDom(data).querySelector('p'));
+    let title = inputDom.innerText;
     title = title.replace(' ', '');
     return title;
   }
@@ -387,18 +402,21 @@ function getChapTitle(data) {
 
 //helper function to format TlNotes
 //assumes that there is a valid title and correct number of TL notes
-function formatTlNotes(data) {
-  let title = getChapTitle(data); //ERROR: only do this if there are tl notes available
+function formatTlNotes() {
+  let title = getChapTitle(editor2.getData()); //ERROR: only do this if there are tl notes available
   if (title != undefined) {
+    let inputDom = formatStyling(convertToDom(editor2.getData()));
+    inputDom = clearGDocSpan(inputDom);
+    let notes = []
+    const listItems = inputDom.querySelectorAll('li');
+    listItems.forEach(function (li) {
+      notes.push(li.innerHTML.replace(/&nbsp;/g, ''));
+    });
     let output =
       `|-
 | colspan="2"|`;
     let tlCode = `<span id='${title}NoteNUM'>NUM.[[#${title}RefNUM|↑]] TEXT</span><br />`;
-    let notes = data.substring(data.indexOf('<li>'), data.lastIndexOf('</li>'))
-    notes = notes.split('</li>');
     for (let i = 0; i < notes.length; i++) {
-      notes[i] = notes[i].replace('<li>', '');
-      notes[i] = formatLine(notes[i]);
       let newTlCode = tlCode.replace(/NUM/g, i + 1);
       output += newTlCode.replace('TEXT', notes[i]);
     }
@@ -407,3 +425,21 @@ function formatTlNotes(data) {
   }
   else return ''
 }
+
+//helper function to format bold, italics, links, and TL markers
+//params: line - a String
+// function formatLine(line) {
+//   line = line.replace(/<\/*strong>/g, "'''") //bold in wiki is like '''this'''
+//   line = line.replace(/<\/*i>/g, "''") //italic in wiki is like ''this''
+//   line = formatLink(line);
+//   line = formatTlMarker(line);
+//   return line;
+// }
+
+//helper function to format external links
+// function formatLink(line) { //link is like this <a href="url">text</a> --> [url text]
+//   line = line.replace(/<a href="/g, '[');
+//   line = line.replace(/">/g, ' ');
+//   line = line.replace(/<\/a>/g, ']');
+//   return line;
+// }
