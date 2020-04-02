@@ -192,6 +192,7 @@ li {
     cursor: pointer;
     outline: none;
     padding: 5px 14px;
+    margin-right: 5px;
     color: #15c6e0;
     transition: all 0.1s;
     -webkit-transition: all 0.1s;
