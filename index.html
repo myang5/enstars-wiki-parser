@@ -12,20 +12,9 @@
   <script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
 
-  <script src="https://code.jquery.com/jquery-3.4.1.min.js"
-    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-    crossorigin="anonymous"></script>
-
-  <script src='spectrum/spectrum.js'></script>
-  <link rel='stylesheet' href='spectrum/spectrum.css' />
+  <script src='jscolor-2.0.5/jscolor.js'></script>
 
   <script src="ckeditor5/build/ckeditor.js"></script>
-
-
-  <script type="text/javascript" src="dist/main.js"></script>
-
 
   <link rel="icon" href="./assets/favicon.ico" type="image/x-icon">
   <link href="https://fonts.googleapis.com/css?family=Nunito&display=swap" rel="stylesheet">
@@ -36,6 +25,7 @@
 <body>
 
   <script type="text/javascript" src="dist/header.js"></script>
+  <script type="text/javascript" src="dist/main.js"></script>
 
   <div class="main">
     <div id="input">
@@ -95,23 +85,7 @@
         <div class="row">
           <h3>Title Colors</h3>
         </div>
-        <div class="row">
-          <label class='spacer'>Writer</label>
-          <input class="jscolor" name="writerCol" value="#fff">
-        </div>
-        <div class="row">
-          <label class='spacer'>Location</label>
-          <input class="jscolor" name="locationCol" value="#fff">
-        </div>
-        <div class="row">
-          <label class='spacer'>Bottom</label>
-          <input class="jscolor" name="bottomCol" value="#fff">
-        </div>
-        <div class="row">
-          <label class='spacer'>Text</label>
-          <input class="jscolor" name="textCol" value="#fff">
-        </div>
-      </div>
+        <div id='colorinputs'></div></div>
 
       <!---RENDERTAB!--->
       <div id="renderArea" class="tabcontent">
@@ -144,19 +118,7 @@
 
   <script type="text/javascript" src="dist/setup.js"></script>
 
-  <script>
-    $(".jscolor").spectrum({
-      flat: false,
-      showInput: true,
-      className: "full-spectrum",
-      showInitial: true,
-      preferredFormat: "hex",
-    });
-
-    setup();
-
-  </script>
-
+  <script>setup();</script>
 
 </body>
 

@@ -54,9 +54,9 @@ var namesLink = {
 
 //copies text to clipboard
 function copyToClip() {
-  $('#output').select();
+  document.querySelector('#output').select();
   document.execCommand("copy");
-  $('#copyBtn').text('Copied');
+  document.querySelector('#copyBtn').innerHTML = 'Copied';
 }
 
 //lmao
@@ -78,7 +78,7 @@ function getTextFromDom(editorDom) {
 
 function convertText() {
 
-  $('#copyBtn').text('Copy Output');
+  document.querySelector('#copyBtn').innerHTML = 'Copy Output';
 
   var values = getValues(); //get user input from all the tabs
 
@@ -90,10 +90,8 @@ function convertText() {
   var footer = '|-\n! colspan="2" style="text-align:center;background-color:' + values.bottomCol + ';color:' + values.textCol + ';" |\'\'\'Translation: [' + values.translator + '] \'\'\'\n|}';
 
   var inputDom = formatStyling(convertToDom(editor1.getData()));
-  //inputDom = clearGDocSpan(inputDom);
   var input = getTextFromDom(inputDom);
   var output = header;
-  //console.log(input);
 
   var currentName = ''; //needed for case where dialogue has name on every line
   input.forEach(function (line) {
@@ -139,7 +137,7 @@ function convertText() {
               //add dialogueRender code to output
               var renderCode = dialogueRender;
               var id = "#" + firstWord[0].toUpperCase() + firstWord.slice(1, firstWord.length); //create id to access chara's render file in Renders tab
-              output += renderCode.replace("FILENAME", $(id).val().trim());
+              output += renderCode.replace("FILENAME", document.querySelector(id).value.trim());
               //update currentName
               currentName = firstWord;
             }
@@ -155,16 +153,17 @@ function convertText() {
 
   output += formatTlNotes(editor2.getData());
   output += footer;
-  $('#output').val(output);
+  document.querySelector('#output').value = output;
 }
 
 //helper function for convertText
 function getValues() {
   var values = {};
-  values.location = $('#location').val().trim();
-  values.author = $('#author option:selected').text();
-  values.translator = $('#translator').val().trim();
-  values.tlLink = $('#tlLink').val().trim();
+  values.location = document.querySelector('#location').value.trim();
+  var select = document.querySelector('#author');
+  values.author = select.options[select.selectedIndex].text;
+  values.translator = document.querySelector('#translator').value.trim();
+  values.tlLink = document.querySelector('#tlLink').value.trim();
   if (values.tlLink === '') {
     //if TL credit is to a wiki user
     values.translator = '[User:' + values.translator + '|' + values.translator + ']';
@@ -172,10 +171,10 @@ function getValues() {
     //if TL credit is to an external wiki user
     values.translator = values.tlLink + ' ' + values.translator;
   }
-  values.writerCol = $('input[name=writerCol]').val();
-  values.locationCol = $("input[name=locationCol]").val();
-  values.bottomCol = $('input[name=bottomCol]').val();
-  values.textCol = $('input[name=textCol]').val();
+  values.writerCol = '#' + document.querySelector('input[name=writerCol]').value;
+  values.locationCol = '#' + document.querySelector("input[name=locationCol]").value;
+  values.bottomCol = '#' + document.querySelector('input[name=bottomCol]').value;
+  values.textCol = '#' + document.querySelector('input[name=textCol]').value;
   return values;
 }
 

@@ -178,11 +178,6 @@ li {
   align-items: flex-start;
 }
 
-.main h3:nth-of-type(1) {
-    margin-top: 0;
-    margin-bottom: 1rem;
-}
-
 .tab button {
     background-color: #fff;
     border-width: 1px 1px 0 1px;
@@ -251,6 +246,11 @@ textarea {
     flex-direction: column;
 }
 
+#detailArea h3:nth-of-type(1) {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
 #detailArea .spacer {
     display: inline-block;
     width: 5rem;
@@ -264,10 +264,19 @@ textarea {
     opacity: 0.8;
 }
 
-#detailArea select, input:not(.sp-input){
+#detailArea select, input{
+  padding: 4px;
+  box-sizing: border-box;
+}
+
+#detailArea select, input:not(.jscolor){
     width: calc(80% - 5rem - 0.7rem); /* - must be surrounded by whitespace */
-    padding: 2px;
-    box-sizing: border-box;
+}
+
+#detailArea .jscolor{
+  width: 6em;
+  border: 0.5px #adadad;
+  border-style: solid;
 }
 
 #renderArea {

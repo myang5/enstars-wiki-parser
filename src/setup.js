@@ -20,11 +20,11 @@ class TabMenu extends React.Component {
 
   openTab(btn, tabName) {
     const tabcontent = document.querySelectorAll('.tabcontent');
-    for(let i=0; i<tabcontent.length; i++){
+    for (let i = 0; i < tabcontent.length; i++) {
       tabcontent[i].style.display = 'none';
     }
     const active = document.querySelectorAll('.tablink');
-    for(let i=0; i<active.length; i++){
+    for (let i = 0; i < active.length; i++) {
       active[i].classList.remove = 'active';
     }
     let tabId = "#" + tabName;
@@ -34,14 +34,14 @@ class TabMenu extends React.Component {
 
   render() {
     const buttons = Object.keys(this.state.buttonInfo);
-    const tabs = buttons.map((btn) => 
+    const tabs = buttons.map((btn) =>
       <TabLink key={btn}
         value={btn}
         className={'tablink' + (this.state.clicked === btn ? ' active' : '')}
         text={btn}
-        onClick={() => this.openTab(btn, this.state.buttonInfo[btn])} 
-        />
-    )     
+        onClick={() => this.openTab(btn, this.state.buttonInfo[btn])}
+      />
+    )
     return tabs;
   }
 }
@@ -119,10 +119,24 @@ function RenderLink(props) {
     </a>)
 }
 
+function ColorInputs(props) {
+  const labels = props.labels;
+  return (
+    labels.map(label =>
+      <div className='row'>
+        <label className='spacer'>{label[0].toUpperCase() + label.slice(1, label.length)}</label>
+        <input className="jscolor {width:101, padding:0, shadow:false, borderWidth:0, backgroundColor:'transparent', position:'right'}"
+          spellcheck='false'
+          name={label + 'Col'} />
+      </div>
+    )
+  )
+}
+
 function setup() {
   ReactDOM.render(<TabMenu />, document.querySelector('.tab'));
-  ReactDOM.render(<RenderForms ref={(element) => {window.renderForms = element}}/>, document.querySelector('#renderForms'));
-  //$('.active').click();
+  ReactDOM.render(<ColorInputs labels={['writer', 'location', 'bottom', 'text']}/>, document.querySelector('#colorinputs'))
+  ReactDOM.render(<RenderForms ref={(element) => { window.renderForms = element }} />, document.querySelector('#renderForms'));
   BalloonEditor
     .create(document.querySelector('#inputEditor'), {
       toolbar: {

@@ -164,12 +164,30 @@ function RenderLink(props) {
   );
 }
 
+function ColorInputs(props) {
+  var labels = props.labels;
+  return labels.map(function (label) {
+    return React.createElement(
+      'div',
+      { className: 'row' },
+      React.createElement(
+        'label',
+        { className: 'spacer' },
+        label[0].toUpperCase() + label.slice(1, label.length)
+      ),
+      React.createElement('input', { className: 'jscolor {width:101, padding:0, shadow:false, borderWidth:0, backgroundColor:\'transparent\', position:\'right\'}',
+        spellcheck: 'false',
+        name: label + 'Col' })
+    );
+  });
+}
+
 function setup() {
   ReactDOM.render(React.createElement(TabMenu, null), document.querySelector('.tab'));
+  ReactDOM.render(React.createElement(ColorInputs, { labels: ['writer', 'location', 'bottom', 'text'] }), document.querySelector('#colorinputs'));
   ReactDOM.render(React.createElement(RenderForms, { ref: function ref(element) {
       window.renderForms = element;
     } }), document.querySelector('#renderForms'));
-  //$('.active').click();
   BalloonEditor.create(document.querySelector('#inputEditor'), {
     toolbar: {
       items: ['bold', 'italic', 'link', '|', 'fontBackgroundColor', 'fontColor', '|', 'undo', 'redo']
