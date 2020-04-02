@@ -9,8 +9,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Story Formatter</title>
 
-<script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
-<script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
 
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"
     integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
@@ -23,23 +23,19 @@
 
   <script src="ckeditor5/build/ckeditor.js"></script>
 
-  <script type="text/javascript" src="main.js"></script>
+
+  <script type="text/javascript" src="dist/main.js"></script>
+
 
   <link rel="icon" href="./assets/favicon.ico" type="image/x-icon">
   <link href="https://fonts.googleapis.com/css?family=Nunito&display=swap" rel="stylesheet">
   <link href="styles/styles.css" rel="stylesheet">
 
-  <script>
-    $(function () {
-      $("#header").load("header.html");
-    });
-  </script>
-
 </head>
 
 <body>
 
-  <div id="header"></div>
+  <script type="text/javascript" src="dist/header.js"></script>
 
   <div class="main">
     <div id="input">
@@ -146,8 +142,7 @@
 
   </div>
 
-  <script type="text/javascript" src="setup.js"></script>
-  
+  <script type="text/javascript" src="dist/setup.js"></script>
 
   <script>
     $(".jscolor").spectrum({
