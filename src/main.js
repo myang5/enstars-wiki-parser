@@ -117,14 +117,14 @@ function convertText() {
   input.forEach(function (line) {
     if (line != '') { //ignore empty lines
       if (isFileName(line)) {
-        console.log('isFileName: true...');
+        //console.log('isFileName: true...');
         //alert user if there is no header
         if (input.indexOf(line) === 0) { //if image file for the header 
-          console.log('headerfile');
+          //console.log('headerfile');
           output = output.replace("HEADERFILE", line.trim());
         }
         else { //if CG or scene change image file
-          console.log('image file');
+          //console.log('image file');
           let cgCode = cgRender;
           output += cgCode.replace("FILENAME", line.trim());
           currentName = ''; //since its new section
@@ -134,22 +134,22 @@ function convertText() {
         line = formatTlMarker(line);
         let firstWord = line.split(" ")[0];
         if (!firstWord.includes(":")) { //if no colon --> continuing dialogue line
-          console.log('no colon, continue dialogue');
+          //console.log('no colon, continue dialogue');
           output += line + "\n\n";
         }
         else {
-          console.log('has colon...')
+          //console.log('has colon...')
           firstWord = firstWord.slice(0, -1); //remove colon
           if (firstWord.toUpperCase() === 'HEADING') { //if heading
-            console.log('new HEADING');
+            //console.log('new HEADING');
             let headingCode = heading;
             output += headingCode.replace("HEADING", line.slice(line.indexOf(':') + 1).trim());
             currentName = ''; //since its new section
           }
           else if (namesLink[firstWord.toUpperCase()] != undefined) { //if valid character is speaking
-            console.log('character speaking... ' + firstWord);
+            //console.log('character speaking... ' + firstWord);
             if (firstWord !== currentName) { //if new character is speaking
-              console.log('new character detected')
+              //console.log('new character detected')
               //add dialogueRender code to output
               let renderCode = dialogueRender;
               let id = "#" + firstWord[0].toUpperCase() + firstWord.slice(1, firstWord.length); //create id to access chara's render file in Renders tab
@@ -161,7 +161,7 @@ function convertText() {
             output += line + "\n\n";
           }
           else {
-            console.log('Formatter was unable to process this name: ' + firstWord);
+            //console.log('Formatter was unable to process this name: ' + firstWord);
           }
         }
       }
@@ -253,7 +253,7 @@ function getChapTitle(data) {
   }
   else {
     //ERROR: add alert to let user know they didn't provide a chapter title
-    console.log('Please make sure to include a title in the TL Notes section')
+    //console.log('Please make sure to include a title in the TL Notes section')
   }
 }
 
