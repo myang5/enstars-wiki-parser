@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+
+<head>
+  <meta name="keywords" content="enstars, ensemble stars, ensemble stars wiki">
+  <meta name="description"
+    content="A text formatter for more efficiently uploading event/gacha stories to the Ensemble Stars Wiki.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Story Formatter</title>
+
+  <script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+
+  <script src='../jscolor-2.0.5/jscolor.js'></script>
+
+  <script src="../ckeditor5/build/ckeditor.js"></script>
+
+  <link rel="icon" href="../assets/favicon.ico" type="image/x-icon">
+  <link href="https://fonts.googleapis.com/css?family=Nunito&display=swap" rel="stylesheet">
+  <link href="../styles/styles.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+  <script type="text/javascript" src="../dist/header.js"></script>
+  <script type="text/javascript" src="../dist/main.js"></script>
+
+  <div class="main">
+    <div id="input">
+      <!---TABS ON TOP OF INPUT!--->
+      <div class="tab"></div>
+
+      <!---CONTENTS OF TABS!--->
+
+      <!---INPUT TAB!--->
+      <div id="inputArea" class="tabcontent">
+        <div id="inputEditor" class="editor">
+          <p>If this is your first time using the formatter, please check the <a href='howto.html'>Text Guidelines</a>
+            to make
+            sure your text is ready.</p>
+          <p>UPDATE: Header images, CGs, and scene change headings can now be included. Please check Text Guidelines for
+            more info.</p>
+        </div>
+      </div>
+
+      <!---DETAILS TAB!--->
+      <div id="detailArea" class="tabcontent">
+
+        <div class="row">
+          <h3>Story Details</h3>
+        </div>
+
+        <div class="row">
+          <label class='spacer' for="location">Location</label>
+          <input type="text" id="location">
+        </div>
+
+        <div class="row">
+          <label class='spacer' for="author">Writer</label>
+          <select id="author">
+            <option>日日日 (Akira)</option>
+            <option>結城由乃 (Yuuki Yoshino)</option>
+            <option>西岡麻衣子 (Nishioka Maiko)</option>
+            <option>ゆーます (Yuumasu)</option>
+            <option>木野誠太郎 (Kinosei Tarou)</option>
+            <option>Happy Elements株式会社 (Happy Elements K.K)</option>
+          </select>
+        </div>
+
+        <div class="row">
+          <label class='spacer' for="translator">Translator</label>
+          <input type="text" id="translator">
+        </div>
+        <div class="row">
+          <span class='spacer'></span>
+          <label class='spacer' for="tlLink">External link for TL credit (optional)
+        </div>
+        <div class="row">
+          <span class='spacer'></span>
+          <input type="text" id="tlLink">
+        </div>
+
+        <div class="row">
+          <h3>Title Colors</h3>
+        </div>
+        <div id='colorinputs'></div></div>
+
+      <!---RENDERTAB!--->
+      <div id="renderArea" class="tabcontent">
+        <p>
+          Please paste in the file names of the dialogue renders as written in the wiki (ex. Tsukasa Suou School
+          Dialogue Render.png)<br>
+          (This tab will fill out once you paste dialogue into the Text tab)
+        </p>
+        <div id="renderForms"></div>
+      </div>
+
+      <!---TLNOTETAB!--->
+      <div id="tlArea" class="tabcontent">
+        <div id="tlEditor" class="editor">
+          <p>If this is your first time using the formatter, please check the <a href='howto.html#tlNotesSection'>Text
+              Guidelines</a> for how to add translation notes.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div id="btnArea">
+      <button onclick="convertText()" id="convertBtn">CONVERT</button>
+      <button onclick="copyToClip()" id="copyBtn">Copy Output</button>
+    </div>
+
+    <textarea id="output"></textarea>
+
+  </div>
+
+  <script type="text/javascript" src="../dist/setup.js"></script>
+
+  <script>setup();</script>
+
+</body>
+
+</html>

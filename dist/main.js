@@ -52,68 +52,17 @@ var namesLink = {
   TATSUMI: 'Tatsumi_Kazehaya'
 };
 
-function setup() {
-  $('#defaultOpen').click();
-  BalloonEditor.create(document.querySelector('#inputEditor'), {
-    toolbar: {
-      items: ['bold', 'italic', 'link', '|', 'fontBackgroundColor', 'fontColor', '|', 'undo', 'redo']
-    },
-    autosave: {
-      save: function save(editor) {
-        renders(editor);
-      }
-    }
-  }).then(function (editor) {
-    window.editor1 = editor;
-  }).catch(function (error) {
-    console.error(error);
-  });
-
-  BalloonEditor.create(document.querySelector('#tlEditor'), {
-    toolbar: {
-      items: ['bold', 'italic', 'link', 'numberedList', '|', 'undo', 'redo']
-    }
-  }).then(function (editor) {
-    window.editor2 = editor;
-  }).catch(function (error) {
-    console.error(error);
-  });
-
-  $('.editor').attr('spellcheck', 'false');
-}
-
-function openTab(btn, tabName) {
-  $('.tabcontent').hide();
-  $('.tablink').removeClass("active");
-  var tabId = "#" + tabName;
-  $(tabId).css('display', "block");
-  $(btn).addClass("active");
-}
-
 //copies text to clipboard
 function copyToClip() {
-  $('#output').select();
+  document.querySelector('#output').select();
   document.execCommand("copy");
-  $('#copyBtn').text('Copied');
+  document.querySelector('#copyBtn').innerHTML = 'Copied';
 }
 
 //lmao
 function convertToDom(data) {
   return new DOMParser().parseFromString(data, 'text/html');
 }
-
-//resolving issue with Google Docs adding transparent span to every line
-//params: editorDom - editor data converted to a DOM object
-//returns the editor data as a DOM object with transparent spans removed
-// function clearGDocSpan(editorDom) {
-//   editorDom.querySelectorAll('span').forEach(function (span) {
-//     if (span.style.backgroundColor === 'transparent') {
-//       span.replaceWith(span.innerHTML);
-//     }
-//     //want to be able to have spans for different text colors later...
-//   });
-//   return editorDom;
-// }
 
 //each line in CKEditor has <p> wrapper
 //params: editorDom - editor data already converted to DOM object
@@ -127,80 +76,9 @@ function getTextFromDom(editorDom) {
   return input;
 }
 
-//Updating Renders tab based on dialogue input
-//Called by autosave property of BalloonEditor
-function updateRenders(editor) {
-
-  var namesSet = new Set();
-
-  //trying to use closure! wow
-  return function () {
-    //console.log('running renders');
-
-    //let input = clearGDocSpan(convertToDom(editor1.getData()));
-    var input = getTextFromDom(convertToDom(editor1.getData()));
-    //get first word in each line and check if there's a colon
-    var namesRaw = new Set(); //add "key" of each line if there is one
-    input.forEach(function (line) {
-      var nameRaw = line.split(' ')[0]; //get first word in the line
-      //console.log('nameRaw: ' + nameRaw);
-      if (nameRaw.includes(':')) {
-        //if there is a colon
-        namesRaw.add(nameRaw.slice(0, nameRaw.indexOf(':'))); //get text up until colon
-      }
-    });
-
-    var names = new Set(); //get set of valid names
-    namesRaw.forEach(function (name) {
-      var nameClean = name.replace(/<\w+>/g, ''); //remove opening html tags
-      nameClean = nameClean.replace(/<.\w+>/g, ''); //remove ending html tags
-      //console.log('nameClean: ' + nameClean);
-      if (namesLink[nameClean.toUpperCase()] != undefined) {
-        //if valid name
-        nameClean = nameClean[0].toUpperCase() + nameClean.slice(1, nameClean.length); //format name ex. arashi --> Arashi
-        names.add(nameClean);
-      }
-    });
-
-    //if the character no longer exists in the new chapter,
-    //delete character from the Renders options
-    namesSet.forEach(function (name) {
-      if (!names.has(name)) {
-        namesSet.delete(name);
-        var cls = "." + name; // row has the name as a class
-        $(cls).remove();
-        $('option:contains(' + name + ')').remove();
-      }
-    });
-
-    //add character to Renders menu if they don't exist
-    names.forEach(function (name) {
-      if (!namesSet.has(name)) {
-        //keep the previously existing rows so that renders don't have to be re-entered
-        namesSet.add(name);
-        //make row with input box for the chara's render
-        var newRow = $("<div></div>").addClass('row ' + name);
-        var newLabel = $("<label class = 'spacer'></label>").append(makeLink(name)).attr("for", name);
-        var newInput = $("<input>").attr("id", name);
-        $(newRow).append(newLabel);
-        $(newRow).append(newInput);
-        $('#renderForms').append(newRow);
-      }
-    });
-  };
-}
-var renders = updateRenders(); //closure!!
-
-function makeLink(name) {
-  var link = namesLink[name.toUpperCase()];
-  var url = 'http://ensemble-stars.wikia.com/wiki/' + link + '/Gallery#Render';
-  var a = $("<a></a>").text(name).attr("href", url).attr("target", "_blank");
-  return a;
-}
-
 function convertText() {
 
-  $('#copyBtn').text('Copy Output');
+  document.querySelector('#copyBtn').innerHTML = 'Copy Output';
 
   var values = getValues(); //get user input from all the tabs
 
@@ -212,10 +90,8 @@ function convertText() {
   var footer = '|-\n! colspan="2" style="text-align:center;background-color:' + values.bottomCol + ';color:' + values.textCol + ';" |\'\'\'Translation: [' + values.translator + '] \'\'\'\n|}';
 
   var inputDom = formatStyling(convertToDom(editor1.getData()));
-  //inputDom = clearGDocSpan(inputDom);
   var input = getTextFromDom(inputDom);
   var output = header;
-  //console.log(input);
 
   var currentName = ''; //needed for case where dialogue has name on every line
   input.forEach(function (line) {
@@ -261,7 +137,7 @@ function convertText() {
               //add dialogueRender code to output
               var renderCode = dialogueRender;
               var id = "#" + firstWord[0].toUpperCase() + firstWord.slice(1, firstWord.length); //create id to access chara's render file in Renders tab
-              output += renderCode.replace("FILENAME", $(id).val().trim());
+              output += renderCode.replace("FILENAME", document.querySelector(id).value.trim());
               //update currentName
               currentName = firstWord;
             }
@@ -277,16 +153,17 @@ function convertText() {
 
   output += formatTlNotes(editor2.getData());
   output += footer;
-  $('#output').val(output);
+  document.querySelector('#output').value = output;
 }
 
 //helper function for convertText
 function getValues() {
   var values = {};
-  values.location = $('#location').val().trim();
-  values.author = $('#author option:selected').text();
-  values.translator = $('#translator').val().trim();
-  values.tlLink = $('#tlLink').val().trim();
+  values.location = document.querySelector('#location').value.trim();
+  var select = document.querySelector('#author');
+  values.author = select.options[select.selectedIndex].text;
+  values.translator = document.querySelector('#translator').value.trim();
+  values.tlLink = document.querySelector('#tlLink').value.trim();
   if (values.tlLink === '') {
     //if TL credit is to a wiki user
     values.translator = '[User:' + values.translator + '|' + values.translator + ']';
@@ -294,10 +171,10 @@ function getValues() {
     //if TL credit is to an external wiki user
     values.translator = values.tlLink + ' ' + values.translator;
   }
-  values.writerCol = $('input[name=writerCol]').val();
-  values.locationCol = $("input[name=locationCol]").val();
-  values.bottomCol = $('input[name=bottomCol]').val();
-  values.textCol = $('input[name=textCol]').val();
+  values.writerCol = '#' + document.querySelector('input[name=writerCol]').value;
+  values.locationCol = '#' + document.querySelector("input[name=locationCol]").value;
+  values.bottomCol = '#' + document.querySelector('input[name=bottomCol]').value;
+  values.textCol = '#' + document.querySelector('input[name=textCol]').value;
   return values;
 }
 
@@ -385,21 +262,3 @@ function formatTlNotes() {
     return output;
   } else return '';
 }
-
-//helper function to format bold, italics, links, and TL markers
-//params: line - a String
-// function formatLine(line) {
-//   line = line.replace(/<\/*strong>/g, "'''") //bold in wiki is like '''this'''
-//   line = line.replace(/<\/*i>/g, "''") //italic in wiki is like ''this''
-//   line = formatLink(line);
-//   line = formatTlMarker(line);
-//   return line;
-// }
-
-//helper function to format external links
-// function formatLink(line) { //link is like this <a href="url">text</a> --> [url text]
-//   line = line.replace(/<a href="/g, '[');
-//   line = line.replace(/">/g, ' ');
-//   line = line.replace(/<\/a>/g, ']');
-//   return line;
-// }

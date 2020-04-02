@@ -1,0 +1,58 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+
+<head>
+  <!--Code to be executed before page is displayed/rendered!-->
+  <meta name="keywords" content="enstars, ensemble stars, ensemble stars wiki">
+  <meta name="description" content="A text formatter for more efficiently uploading event/gacha stories to the Ensemble Stars Wiki.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Story Formatter</title>
+
+  <script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+  
+  <link rel="icon" href="../assets/favicon.ico" type="image/x-icon">
+  <link href="https://fonts.googleapis.com/css?family=Nunito&display=swap" rel="stylesheet">
+  <link href="../styles/styles.css" rel="stylesheet">
+  
+</head>
+
+<body>
+
+  <script type="text/javascript" src="../dist/header.js"></script>
+
+  <div id="container">
+    <h3>Text formatting</h3>
+    <ul id="list">
+      <li>Use color picker to choose color for new headings by setting the font background, otherwise use Location color</li>
+      <li>Catch user errors: invalid/misspelled names, not enough TL markers, TL markers out of order (could be intentional?), no header image (could be intentional?) </li>
+    </ul>
+    <h3>Translator notes</h3>
+    <ul id="list">
+      <li>Catch user errors: no chapter title, not enough TL notes/too many TL notes</li>
+    </ul>
+    <h3>Choosing renders</h3>
+    <ul id="list">
+      <li>Instead of pasting in name of render file, have a dropdown list with all the possible renders for that
+        character</li>
+      <li>Would require somehow pulling that list from the wiki</li>
+      <li>What about renders that haven't been uploaded yet?</li>
+    </ul>
+    <h3>Responsive design</h3>
+    <ul id="list">
+      <li>Change px units to em/rem in CSS where applicable</li>
+      <li>Does anyone use the formatter on mobile??</li>
+    </ul>
+    <h3>Other</h3>
+    <ul id="list">
+      <li>The font is kind of uglee</li>
+      <li>Tweak design of Create a Wiki Page section and get updated screenshots</li>
+    </ul>
+  </div>
+
+  <footer></footer>
+
+</body>
+
+</html>
