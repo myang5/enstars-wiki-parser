@@ -190,13 +190,11 @@ function setup() {
     } }), document.querySelector('#renderForms'));
   BalloonEditor.create(document.querySelector('#inputEditor'), {
     toolbar: {
-      items: ['bold', 'italic', 'link', '|', 'fontBackgroundColor', 'fontColor', '|', 'undo', 'redo']
+      items: ['bold', 'italic', 'link', '|', 'undo', 'redo']
     },
     //callback funtion when editor content changes
     autosave: {
       save: function save(editor) {
-        //idk what goes here?
-        //do I just render a new component like this:
         window.renderForms.updateNames(editor);
       }
     }

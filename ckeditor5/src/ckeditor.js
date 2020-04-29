@@ -7,8 +7,6 @@ import Bold from '@ckeditor/ckeditor5-basic-styles/src/bold.js';
 import Italic from '@ckeditor/ckeditor5-basic-styles/src/italic.js';
 import Link from '@ckeditor/ckeditor5-link/src/link.js';
 import PasteFromOffice from '@ckeditor/ckeditor5-paste-from-office/src/pastefromoffice';
-import FontBackgroundColor from '@ckeditor/ckeditor5-font/src/fontbackgroundcolor.js';
-import FontColor from '@ckeditor/ckeditor5-font/src/fontcolor.js';
 import Essentials from '@ckeditor/ckeditor5-essentials/src/essentials.js';
 import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph.js';
 import Autosave from '@ckeditor/ckeditor5-autosave/src/autosave.js';
@@ -23,8 +21,6 @@ Editor.builtinPlugins = [
 	Italic,
 	Link,
 	PasteFromOffice,
-	FontBackgroundColor,
-	FontColor,
 	Essentials,
 	Paragraph,
 	Autosave,

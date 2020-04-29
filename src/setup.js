@@ -145,9 +145,6 @@ function setup() {
           'italic',
           'link',
           '|',
-          'fontBackgroundColor',
-          'fontColor',
-          '|',
           'undo',
           'redo'
         ]
@@ -155,8 +152,6 @@ function setup() {
       //callback funtion when editor content changes
       autosave: {
         save(editor) {
-          //idk what goes here?
-          //do I just render a new component like this:
           window.renderForms.updateNames(editor);
         }
       }

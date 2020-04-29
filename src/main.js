@@ -114,6 +114,7 @@ function convertText() {
   let output = header;
 
   let currentName = ''; //needed for case where dialogue has name on every line
+  const invalidLabel = [];
   input.forEach(function (line) {
     if (line != '') { //ignore empty lines
       if (isFileName(line)) {
@@ -138,40 +139,53 @@ function convertText() {
           output += line + "\n\n";
         }
         else {
-          //console.log('has colon...')
-          firstWord = firstWord.slice(0, -1); //remove colon
-          if (firstWord.toUpperCase() === 'HEADING') { //if heading
+          //console.log('has colon...');
+          //NOTE: TLers may paste in text with bolded names so -->
+          let label = firstWord.replace(/'/g, '') //get rid of any bold/italic formatting marks
+          label = label.replace(':', ''); //remove colon
+          if (label.toUpperCase() === 'HEADING') { //if heading
             //console.log('new HEADING');
             let headingCode = heading;
             output += headingCode.replace("HEADING", line.slice(line.indexOf(':') + 1).trim());
             currentName = ''; //since its new section
           }
-          else if (namesLink[firstWord.toUpperCase()] != undefined) { //if valid character is speaking
+          else if (namesLink[label.toUpperCase()] != undefined) { //if valid character is speaking
             //console.log('character speaking... ' + firstWord);
-            if (firstWord !== currentName) { //if new character is speaking
+            if (label !== currentName) { //if new character is speaking
               //console.log('new character detected')
               //add dialogueRender code to output
               let renderCode = dialogueRender;
-              let id = "#" + firstWord[0].toUpperCase() + firstWord.slice(1, firstWord.length); //create id to access chara's render file in Renders tab
+              let id = "#" + label[0].toUpperCase() + label.slice(1, label.length); //create id to access chara's render file in Renders tab
               output += renderCode.replace("FILENAME", document.querySelector(id).value.trim());
               //update currentName
-              currentName = firstWord;
+              currentName = label;
             }
-            line = line.slice(line.indexOf(":") + 1).trim(); //get chara's spoken line
+            line = line.split(' ').slice(1).join(' ').trim(); //get chara's spoken line
+
             output += line + "\n\n";
           }
           else {
-            //console.log('Formatter was unable to process this name: ' + firstWord);
+            invalidLabel.push(label);
           }
         }
       }
     }
-
   });
-
+  
   output += formatTlNotes(editor2.getData());
   output += footer;
   document.querySelector('#output').value = output;
+  if (invalidLabel.length > 0) {
+    //Formatter was unable to process these names:
+    // 1. truncate after certain length
+    let alertMsg = 'Formatter was unable to process these names:';
+    for (let i = 0; i < invalidLabel.length; i++) {
+      alertMsg += `\n${i + 1}. ${invalidLabel[i].slice(0, 200)}`
+      if (invalidLabel[i].length > 200) { alertMsg += '...' }
+      alertMsg += '\n\nIf this is a problem other than a typo, please contact Midori.'
+    }
+    alert(alertMsg);
+  }
 }
 
 //helper function for convertText
