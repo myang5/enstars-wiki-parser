@@ -139,15 +139,32 @@ function convertText() {
 ! colspan="2" style="text-align:center;background-color:${values.bottomCol};color:${values.textCol};" |'''Translation: [${values.translator}] '''
 |}`;
 
+  function alertOnce() {
+    let counter = 0;
+    return function () {
+      if (counter < 1) {
+        const alertMsg =
+          `The formatter detected a TL marker in the dialogue but no chapter title in the TL Notes section.
+Make sure the first line in the TL Notes section is a chapter title.
+If this is an error, please contact Midori.`
+        alert(alertMsg)
+        counter++;
+      }
+    }
+  }
+
+  const alertNoTitleOnce = alertOnce(); //otherwise user will get multiple alerts for same error
+
   let inputDom = convertToDom(editor1.getData());
   let input = inputDom.querySelectorAll('p');
   let output = header;
 
   let currentName = ''; //needed for case where dialogue has name on every line
   const invalidLabel = [];
+  let tlMarkerCount = 0;
   for (let i = 0; i < input.length; i++) {
     let line = input[i].innerText; //ignore possible text styles but keep DOM elements intact to add back dialogue styling
-    console.log(line);
+    //console.log(line);
     if (line != '') { //ignore empty lines
       if (isFileName(line)) {
         //console.log('isFileName: true...');
@@ -163,7 +180,8 @@ function convertText() {
         }
       }
       else { //if dialogue line or header
-        line = formatTlMarker(line);
+        input[i].innerHTML = formatTlMarker(input[i].innerHTML, alertNoTitleOnce);
+        tlMarkerCount += countTlMarkers(line);
         let firstWord = line.split(" ")[0];
         if (!firstWord.includes(":")) { //if no colon --> continuing dialogue line
           //console.log('no colon, continue dialogue');
@@ -171,7 +189,6 @@ function convertText() {
         }
         else {
           //console.log('has colon...');
-          //NOTE: TLers may paste in text with bolded names so -->
           let label = firstWord.replace(':', ''); //remove colon
           if (label.toUpperCase() === 'HEADING') { //if heading
             //console.log('new HEADING');
@@ -183,7 +200,6 @@ function convertText() {
             //console.log('character speaking... ' + firstWord);
             if (label !== currentName) { //if new character is speaking
               //console.log('new character detected')
-              //add dialogueRender code to output
               let renderCode = dialogueRender;
               let id = "#" + label[0].toUpperCase() + label.slice(1, label.length); //create id to access chara's render file in Renders tab
               output += renderCode.replace("FILENAME", document.querySelector(id).value.trim());
@@ -192,7 +208,7 @@ function convertText() {
             }
             let htmlStr = input[i].childNodes[0].innerHTML.replace(firstWord, '').trim(); //get HTMLString of <p> first ChildNode and remove label
             if (htmlStr.length === 0) { input[i].childNodes[0].remove(); } //if first ChildNode was just the label then remove node
-            else { input[i].childNodes[0].innerHTML = htmlStr; } //set ChildNode content
+            else { input[i].childNodes[0].innerHTML = htmlStr; } //set ChildNode HTML
             output += formatStyling(input[i]).innerHTML.trim() + "\n\n";
           }
           else {
@@ -203,7 +219,7 @@ function convertText() {
     }
   }
 
-  output += formatTlNotes(editor2.getData());
+  if (tlMarkerCount > 0) { output += formatTlNotes(editor2.getData(), tlMarkerCount, alertNoTitleOnce); }
   output += footer;
   document.querySelector('#output').value = output;
   if (invalidLabel.length > 0) {
@@ -270,11 +286,15 @@ function formatStyling(editorDom) {
   return editorDom;
 }
 
+function countTlMarkers(line) {
+  return line.match(/\[\d+\]/g) ? line.match(/\[\d+\]/g).length : 0;
+}
+
 //helper function to format tl note markers
-function formatTlMarker(line) {
-  if (line.search(/\[\d+\]/) != -1) { //if there is a tlMarker
-    let title = getChapTitle(editor2.getData());
-    if (title != undefined) {
+function formatTlMarker(line, error) {
+  if (line.search(/\[\d+\]/) > 0) { //if there is a tlMarker
+    let title = getChapTitle(convertToDom(editor2.getData()), error);
+    if (title) {
       let tlCode = `<span id='${title}RefNUM'>[[#${title}NoteNUM|<sup>[NUM]</sup>]]</span>`;
       const markers = line.match(/\[\d+\]/g);
       markers.forEach(function (marker) {
@@ -287,43 +307,69 @@ function formatTlMarker(line) {
   return line;
 }
 
+//TL Notes tab is supposed to contain an <ol> but when TLers paste in content it usually just becomes <p>
+//Users don't always read instructions so need to account for user input wow i love UX design
+//Editor already contains 1 <p> with the default text "If this is your first time using the formatter..."
+//If there are TL Notes, there would be
+//  1. A second <p> starting with a number
+//  2. One <p> and one <ol> if notes are in numbered list
+//Chapter title is first ChildNode of the editor DOM if child is <p> and innerText doesn't match default text or start with a number
+//Detect if user forgot chapter title and alert user
+//Get TL Notes which are the rest of the <p> elements or <li> elements
+//If <p> elements start with number, then new TL note
+//If not, then multi-paragraph TL note and add <p> content to current TL note
+//Only gets called if there are TL markers in the dialogue
+function formatTlNotes(data, count, error) {
+  let inputDom = convertToDom(data);
+  let title = getChapTitle(inputDom, error); //ERROR: only do this if there are tl notes available
+  if (title) {
+    inputDom.body.firstChild.remove(); //take out title
+    let notes = [];
+    if (inputDom.body.firstChild) { //if there is still more text
+      if (inputDom.body.firstChild.tagName === 'OL') {
+        formatStyling(inputDom);
+        const listItems = Array.from(inputDom.querySelectorAll('li')).map((item) => item.innerHTML.replace(/&nbsp;/g, '').trim());
+        listItemsFiltered = listItems.filter((item) => item.length.trim() > 0); //filter out empty lines
+        notes = listItemsFiltered;
+      } else { //if TL notes are in <p>
+        //ERROR: this doesn't account for possible bolded numbers
+        formatStyling(inputDom);
+        const paras = Array.from(inputDom.querySelectorAll('p')).map((item) => {
+          //ERROR: doesn't account for multi-paragraph notes
+          if (!isNaN(item.innerHTML[0])) { //ERROR: assumes the number is separated by space as in "1. note" vs. "1.note"
+            return item.innerHTML.split(' ').slice(1).join(' ').replace(/&nbsp;/g, '').trim()
+          }
+        });
+        parasFiltered = paras.filter((para) => para ? true : false); //filter out empty lines
+        notes = parasFiltered;
+      }
+      if (notes.length === count) {
+        let output =
+          `|-
+| colspan="2"|`;
+        let tlCode = `<span id='${title}NoteNUM'>NUM.[[#${title}RefNUM|↑]] TEXT</span><br />`;
+        for (let i = 0; i < notes.length; i++) {
+          let newTlCode = tlCode.replace(/NUM/g, i + 1);
+          output += newTlCode.replace('TEXT', notes[i]);
+        }
+        output = output.replace(/<br \/>$/m, "\n");
+        return output;
+      } else { alert('The formatter detected an unequal number of TL markers and TL notes.')}
+    } else { alert('The formatter detected a TL marker in the dialogue but no TL Notes in the tab.') }
+  }
+  else return ''
+}
+
 //helper function to get and format chapter title from tl notes
-//assumes the editor has some data
-function getChapTitle(data) {
-  if (data.includes('<ol>') && data.includes('<p>')) { //editor already has the <p> in it, so user must input some sort of new <p> (the chapter title) and an <ol> (the TL notes)
-    //let inputDom = clearGDocSpan(convertToDom(data).querySelector('p'));
-    let inputDom = (convertToDom(data).querySelector('p'));
-    let title = inputDom.innerText;
-    title = title.replace(' ', '');
+function getChapTitle(inputDom, error) {
+  let firstElt = inputDom.body.firstChild;
+  if (firstElt.tagName === 'P'
+    && firstElt.innerText.indexOf('If this is your first time using the formatter') < 0
+    && isNaN(firstElt.innerText[0])) {
+    const title = firstElt.innerText.replace(/ /g, '');
     return title;
   }
   else {
-    //ERROR: add alert to let user know they didn't provide a chapter title
-    //console.log('Please make sure to include a title in the TL Notes section')
+    error();
   }
-}
-
-//helper function to format TlNotes
-//assumes that there is a valid title and correct number of TL notes
-function formatTlNotes() {
-  let title = getChapTitle(editor2.getData()); //ERROR: only do this if there are tl notes available
-  if (title != undefined) {
-    let inputDom = formatStyling(convertToDom(editor2.getData()));
-    let notes = []
-    const listItems = inputDom.querySelectorAll('li');
-    listItems.forEach(function (li) {
-      notes.push(li.innerHTML.replace(/&nbsp;/g, ''));
-    });
-    let output =
-      `|-
-| colspan="2"|`;
-    let tlCode = `<span id='${title}NoteNUM'>NUM.[[#${title}RefNUM|↑]] TEXT</span><br />`;
-    for (let i = 0; i < notes.length; i++) {
-      let newTlCode = tlCode.replace(/NUM/g, i + 1);
-      output += newTlCode.replace('TEXT', notes[i]);
-    }
-    output = output.replace(/<br \/>$/m, "\n");
-    return output;
-  }
-  else return ''
 }
