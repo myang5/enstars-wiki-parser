@@ -13,8 +13,7 @@ function Header(props) {
         </p>
         <ul id="navbar">
           <li><a href="./howto.html">HOW TO USE</a></li>
-          <li><a href="./plans.html">DESIGN PLANS</a></li>
-          <li><a target="_blank" href="https://goo.gl/forms/Xu42LLAgWKxVYV873">FEEDBACK</a></li>
+          <li><a target="_blank" href="https://goo.gl/forms/Xu42LLAgWKxVYV873">CONTACT</a></li>
         </ul>
       </div>
     </header>
