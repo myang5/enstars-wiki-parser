@@ -65,10 +65,10 @@ function convertToDom(data) {
 }
 
 //each line in CKEditor has <p> wrapper
-//params: editorDom - editor data already converted to DOM object
+//editorDom: editor data already converted to DOM object
 //returns an Array of each line of text
 function getTextFromDom(editorDom) {
-  var paragraphs = editorDom.querySelectorAll('p');
+  var paragraphs = editorDom.querySelectorAll('p'); //NodeList of all p elements
   var input = [];
   paragraphs.forEach(function (p) {
     input.push(p.innerHTML.replace(/&nbsp;/g, ''));
@@ -76,33 +76,63 @@ function getTextFromDom(editorDom) {
   return input;
 }
 
+//How formatter converts text (a rough summary)
+//Types of lines:
+//  Filename (for images) - formatter checks if file extension like .png exists in line (since this probably wouldn't show up in a dialogue line)
+//  Dialogue line (no label) - formatter checks if first word has no colon. Formatter assumes label-less lines that aren't filenames are dialogue lines
+//  Location: label
+//  Heading: label
+//  Name: label
+//Formatter identifies labels by checking if first word has a colon character (str.split(' '))
+//Formatter assumes the label is only one word long
+//Formatter assumes all the other words are part of the line/heading
+
+//need to account for text styling and how it might interfere with parsing
+//code has to handle partial line styling and whole line styling
+//TLers may paste code from their dreamwidth accounts where they bold/italicize names/headings
+//case 1: no styling, <p> only contains text
+//case 3: styling on non-label lines
+//case 3a: styling on filenames ex. <p><strong>filename</strong></p>
+//case 3b: styling in dialogue lines (probably intentional) ex. <p><strong>dialogue line</strong></p>
+//case 3c: partial styling on dialogue lines ex. <p>dialogue <strong>line</strong></p>
+//case 4: styling on label lines
+//case 4a: styling on labels ex. <p><strong>Ritsu:</strong> dialogue line</p>
+//case 4b: styling on informational headings <p><strong>Location: Hallway</strong</p>
+//case 4c: other partial styling variations
+
+//What styling should be kept?
+//Only styling on the dialogue lines (excluding labels)
+//How to detect dialogue line styling vs. other styling?
+//Evaluate <p>.innerText and then decide from there
+
 function convertText() {
 
   document.querySelector('#copyBtn').innerHTML = 'Copy Output';
 
   var values = getValues(); //get user input from all the tabs
 
-  //format wiki code with user input
+  //wiki code templates
   var header = '{| class="article-table" cellspacing="1/6" cellpadding="2" border="1" align="center" width="100%"\n! colspan="2" style="text-align:center;background-color:' + values.writerCol + '; color:' + values.textCol + ';" |\'\'\'Writer:\'\'\' ' + values.author + '\n|-\n| colspan="2" |[[File:HEADERFILE|660px|link=|center]]\n|-\n! colspan="2" style="text-align:center;background-color:' + values.locationCol + '; color:' + values.textCol + ';" |\'\'\'Location: ' + values.location + '\'\'\'\n';
   var dialogueRender = '|-\n|[[File:FILENAME|x200px|link=|center]]\n|\n';
   var cgRender = '|-\n! colspan="2" style="text-align:center;" |[[File:FILENAME|center|660px]]\n';
   var heading = '|-\n! colspan="2" style="text-align:center;background-color:' + values.locationCol + '; color:' + values.textCol + ';" |\'\'\'HEADING\'\'\'\n';
   var footer = '|-\n! colspan="2" style="text-align:center;background-color:' + values.bottomCol + ';color:' + values.textCol + ';" |\'\'\'Translation: [' + values.translator + '] \'\'\'\n|}';
 
-  var inputDom = formatStyling(convertToDom(editor1.getData()));
-  var input = getTextFromDom(inputDom);
+  var inputDom = convertToDom(editor1.getData());
+  var input = inputDom.querySelectorAll('p');
   var output = header;
 
   var currentName = ''; //needed for case where dialogue has name on every line
   var invalidLabel = [];
-  input.forEach(function (line) {
+  for (var i = 0; i < input.length; i++) {
+    var line = input[i].innerText; //ignore possible text styles but keep DOM elements intact to add back dialogue styling
+    console.log(line);
     if (line != '') {
       //ignore empty lines
       if (isFileName(line)) {
         //console.log('isFileName: true...');
-        //alert user if there is no header
-        if (input.indexOf(line) === 0) {
-          //if image file for the header 
+        if (i === 0) {
+          //if first line --> header file
           //console.log('headerfile');
           output = output.replace("HEADERFILE", line.trim());
         } else {
@@ -119,12 +149,11 @@ function convertText() {
         if (!firstWord.includes(":")) {
           //if no colon --> continuing dialogue line
           //console.log('no colon, continue dialogue');
-          output += line + "\n\n";
+          output += formatStyling(input[i]).innerHTML + "\n\n"; //convert styling to source wiki notation
         } else {
           //console.log('has colon...');
           //NOTE: TLers may paste in text with bolded names so -->
-          var label = firstWord.replace(/'/g, ''); //get rid of any bold/italic formatting marks
-          label = label.replace(':', ''); //remove colon
+          var label = firstWord.replace(':', ''); //remove colon
           if (label.toUpperCase() === 'HEADING') {
             //if heading
             //console.log('new HEADING');
@@ -144,16 +173,21 @@ function convertText() {
               //update currentName
               currentName = label;
             }
-            line = line.split(' ').slice(1).join(' ').trim(); //get chara's spoken line
-
-            output += line + "\n\n";
+            var htmlStr = input[i].childNodes[0].innerHTML.replace(firstWord, '').trim(); //get HTMLString of <p> first ChildNode and remove label
+            if (htmlStr.length === 0) {
+              input[i].childNodes[0].remove();
+            } //if first ChildNode was just the label then remove node
+            else {
+                input[i].childNodes[0].innerHTML = htmlStr;
+              } //set ChildNode content
+            output += formatStyling(input[i]).innerHTML.trim() + "\n\n";
           } else {
             invalidLabel.push(label);
           }
         }
       }
     }
-  });
+  }
 
   output += formatTlNotes(editor2.getData());
   output += footer;
@@ -162,12 +196,13 @@ function convertText() {
     //Formatter was unable to process these names:
     // 1. truncate after certain length
     var alertMsg = 'Formatter was unable to process these names:';
-    for (var i = 0; i < invalidLabel.length; i++) {
-      alertMsg += '\n' + (i + 1) + '. ' + invalidLabel[i].slice(0, 200);
-      if (invalidLabel[i].length > 200) {
+    for (var _i = 0; _i < invalidLabel.length; _i++) {
+      alertMsg += '\n' + (_i + 1) + '. ' + invalidLabel[_i].slice(0, 200);
+      if (invalidLabel[_i].length > 200) {
         alertMsg += '...';
       }
-      alertMsg += '\n\nIf this is a problem other than a typo, please contact Midori.';
+      alertMsg += '\n\nDialogue lines should be labeled with character names or "Heading" for scene changes/headings.';
+      alertMsg += '\nIf this is a problem other than a typo, please contact Midori.';
     }
     alert(alertMsg);
   }
