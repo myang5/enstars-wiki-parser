@@ -57,17 +57,29 @@ function TabLink(props) {
 class RenderForms extends React.Component {
   constructor(props) {
     super(props);
-    this.updateNames = this.updateNames.bind(this);
     this.state = {
-      namesSet: new Set(),
+      namesValue: {},
+      currentNames: new Set(),
+
     }
+    this.updateNames = this.updateNames.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange(event) {
+    event.persist();
+    this.setState(state => {
+      const newValue = {...state.namesValue};
+      console.log(event.target);
+      newValue[event.target.id] = event.target.value;
+      return {namesValue: newValue};
+    });
   }
 
   //function that handles editor from data
   updateNames(editor) {
     let inputDom = extractBr(convertToDom(editor.getData()))
     let input = getTextFromDom(inputDom);
-    console.log('UPDATE NAMES', input)
     const names = new Set(); //add "key" of each line if there is one
     input.forEach(function (line) {
       let name = line.split(' ')[0]; //get first word in the line
@@ -79,28 +91,18 @@ class RenderForms extends React.Component {
         }
       }
     });
-    console.log('UPDATE NAMES name set', names);
-    const currentNames = this.state.namesSet;
-    currentNames.forEach(function (name) {
-      if (!names.has(name)) {
-        currentNames.delete(name);
-      }
-    });
-    names.forEach(function (name) {
-      if (!currentNames.has(name)) { //keep the previously existing rows so that renders don't have to be re-entered
-        currentNames.add(name);
-      }
-    });
-    console.log('UPDATE NAMES currentNames', currentNames);
-    this.setState({ namesSet: currentNames });
+    this.setState({ currentNames: names });
   }
 
   render() {
-    //console.log(this.state.namesSet);
-    const rows = Array.from(this.state.namesSet).map(name =>
-      <RenderRow key={name} name={name} link={namesLink[name.toUpperCase()]} />
+    const rows = Array.from(this.state.currentNames).map(name =>
+      <RenderRow key={name} 
+      name={name} 
+      value={this.state.namesValue[name]}
+      link={namesLink[name.toUpperCase()]} 
+      handleChange={this.handleChange} />
     );
-    return rows
+    return rows;
   }
 }
 
@@ -110,7 +112,7 @@ function RenderRow(props) {
       <label className='spacer'>
         <RenderLink link={props.link} name={props.name} />
       </label>
-      <input id={props.name} />
+      <input id={props.name} onChange={props.handleChange} defaultValue={props.value ? props.value : ''} />
     </div>
   )
 }

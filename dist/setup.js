@@ -87,22 +87,35 @@ var RenderForms = function (_React$Component2) {
 
     var _this3 = _possibleConstructorReturn(this, (RenderForms.__proto__ || Object.getPrototypeOf(RenderForms)).call(this, props));
 
-    _this3.updateNames = _this3.updateNames.bind(_this3);
     _this3.state = {
-      namesSet: new Set()
+      namesValue: {},
+      currentNames: new Set()
+
     };
+    _this3.updateNames = _this3.updateNames.bind(_this3);
+    _this3.handleChange = _this3.handleChange.bind(_this3);
     return _this3;
   }
 
-  //function that handles editor from data
-
-
   _createClass(RenderForms, [{
+    key: 'handleChange',
+    value: function handleChange(event) {
+      event.persist();
+      this.setState(function (state) {
+        var newValue = Object.assign({}, state.namesValue);
+        console.log(event.target);
+        newValue[event.target.id] = event.target.value;
+        return { namesValue: newValue };
+      });
+    }
+
+    //function that handles editor from data
+
+  }, {
     key: 'updateNames',
     value: function updateNames(editor) {
       var inputDom = extractBr(convertToDom(editor.getData()));
       var input = getTextFromDom(inputDom);
-      console.log('UPDATE NAMES', input);
       var names = new Set(); //add "key" of each line if there is one
       input.forEach(function (line) {
         var name = line.split(' ')[0]; //get first word in the line
@@ -116,28 +129,19 @@ var RenderForms = function (_React$Component2) {
           }
         }
       });
-      console.log('UPDATE NAMES name set', names);
-      var currentNames = this.state.namesSet;
-      currentNames.forEach(function (name) {
-        if (!names.has(name)) {
-          currentNames.delete(name);
-        }
-      });
-      names.forEach(function (name) {
-        if (!currentNames.has(name)) {
-          //keep the previously existing rows so that renders don't have to be re-entered
-          currentNames.add(name);
-        }
-      });
-      console.log('UPDATE NAMES currentNames', currentNames);
-      this.setState({ namesSet: currentNames });
+      this.setState({ currentNames: names });
     }
   }, {
     key: 'render',
     value: function render() {
-      //console.log(this.state.namesSet);
-      var rows = Array.from(this.state.namesSet).map(function (name) {
-        return React.createElement(RenderRow, { key: name, name: name, link: namesLink[name.toUpperCase()] });
+      var _this4 = this;
+
+      var rows = Array.from(this.state.currentNames).map(function (name) {
+        return React.createElement(RenderRow, { key: name,
+          name: name,
+          value: _this4.state.namesValue[name],
+          link: namesLink[name.toUpperCase()],
+          handleChange: _this4.handleChange });
       });
       return rows;
     }
@@ -155,7 +159,7 @@ function RenderRow(props) {
       { className: 'spacer' },
       React.createElement(RenderLink, { link: props.link, name: props.name })
     ),
-    React.createElement('input', { id: props.name })
+    React.createElement('input', { id: props.name, onChange: props.handleChange, defaultValue: props.value ? props.value : '' })
   );
 }
 
