@@ -85,7 +85,7 @@ function getTextFromDom(editorDom) {
 function extractBr(inputDom) {
   let hasBr = inputDom.querySelectorAll('br');
   if (hasBr.length > 0) {
-    console.log('has br tags');
+    //console.log('has br tags');
     for (let i = 0; i < hasBr.length; i++) {
       let parent = hasBr[i].parentNode;
       let insertInto = parent.parentNode;
@@ -364,16 +364,15 @@ function formatTlNotes(data, count, error) {
     if (inputDom.body.firstChild) { //if there is still more text
       //ERROR: this doesn't account for possible bolded numbers
       formatStyling(inputDom);
-      console.log('TL NOTES', inputDom)
+      //console.log('TL NOTES', inputDom)
       if (inputDom.body.firstChild.tagName.toUpperCase() === 'OL') { //if TL notes are in <li> 
         let listItems = Array.from(inputDom.querySelectorAll('li'));
-        console.log('TL NOTES li', listItems);
+        //console.log('TL NOTES li', listItems);
         listItems = listItems.map((item) => item.textContent.replace(/&nbsp;/g, '').trim());
         listItemsFiltered = listItems.filter((item) => item.trim().length > 0); //filter out empty lines
         notes = listItemsFiltered;
       } else { //if TL notes are in <p>  
         let paras = Array.from(inputDom.querySelectorAll('p'));
-        //console.log('TL NOTES p', paras);
         paras = paras.map((item) => {
           //ERROR: doesn't account for multi-paragraph notes
           if (!isNaN(item.textContent[0])) { //ERROR: assumes the number is separated by space as in "1. note" vs. "1.note"
@@ -381,7 +380,7 @@ function formatTlNotes(data, count, error) {
           }
           return item.textContent;
         });
-        console.log('TL NOTES p', paras);
+        //console.log('TL NOTES p', paras);
         parasFiltered = paras.filter((para) => para.trim().length ? true : false); //filter out empty lines
         notes = parasFiltered;
       }

@@ -85,7 +85,7 @@ function getTextFromDom(editorDom) {
 function extractBr(inputDom) {
   var hasBr = inputDom.querySelectorAll('br');
   if (hasBr.length > 0) {
-    console.log('has br tags');
+    //console.log('has br tags');
     for (var i = 0; i < hasBr.length; i++) {
       var parent = hasBr[i].parentNode;
       var insertInto = parent.parentNode;
@@ -353,11 +353,11 @@ function formatTlNotes(data, count, error) {
       //if there is still more text
       //ERROR: this doesn't account for possible bolded numbers
       formatStyling(inputDom);
-      console.log('TL NOTES', inputDom);
+      //console.log('TL NOTES', inputDom)
       if (inputDom.body.firstChild.tagName.toUpperCase() === 'OL') {
         //if TL notes are in <li> 
         var listItems = Array.from(inputDom.querySelectorAll('li'));
-        console.log('TL NOTES li', listItems);
+        //console.log('TL NOTES li', listItems);
         listItems = listItems.map(function (item) {
           return item.textContent.replace(/&nbsp;/g, '').trim();
         });
@@ -368,7 +368,6 @@ function formatTlNotes(data, count, error) {
       } else {
         //if TL notes are in <p>  
         var paras = Array.from(inputDom.querySelectorAll('p'));
-        //console.log('TL NOTES p', paras);
         paras = paras.map(function (item) {
           //ERROR: doesn't account for multi-paragraph notes
           if (!isNaN(item.textContent[0])) {
@@ -377,7 +376,7 @@ function formatTlNotes(data, count, error) {
           }
           return item.textContent;
         });
-        console.log('TL NOTES p', paras);
+        //console.log('TL NOTES p', paras);
         parasFiltered = paras.filter(function (para) {
           return para.trim().length ? true : false;
         }); //filter out empty lines
