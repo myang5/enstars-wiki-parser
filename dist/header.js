@@ -46,17 +46,8 @@ function Header(props) {
           null,
           React.createElement(
             "a",
-            { href: "./plans.html" },
-            "DESIGN PLANS"
-          )
-        ),
-        React.createElement(
-          "li",
-          null,
-          React.createElement(
-            "a",
             { target: "_blank", href: "https://goo.gl/forms/Xu42LLAgWKxVYV873" },
-            "FEEDBACK"
+            "CONTACT"
           )
         )
       )

@@ -162,10 +162,11 @@ If this is an error, please contact Midori.`
   let currentName = ''; //needed for case where dialogue has name on every line
   const invalidLabel = [];
   let tlMarkerCount = 0;
+  console.log('INPUT', input);
   for (let i = 0; i < input.length; i++) {
     let line = input[i].innerText; //ignore possible text styles but keep DOM elements intact to add back dialogue styling
-    //console.log(line);
-    if (line != '') { //ignore empty lines
+    console.log('PROCESSING LINE', input[i].innerHTML);
+    if (line.replace(/&nbsp;/g, '').trim() != '') { //ignore empty lines
       if (isFileName(line)) {
         //console.log('isFileName: true...');
         if (i === 0) { //if first line --> header file
@@ -206,10 +207,17 @@ If this is an error, please contact Midori.`
               //update currentName
               currentName = label;
             }
-            let htmlStr = input[i].childNodes[0].innerHTML.replace(firstWord, '').trim(); //get HTMLString of <p> first ChildNode and remove label
-            if (htmlStr.length === 0) { input[i].childNodes[0].remove(); } //if first ChildNode was just the label then remove node
-            else { input[i].childNodes[0].innerHTML = htmlStr; } //set ChildNode HTML
-            output += formatStyling(input[i]).innerHTML.trim() + "\n\n";
+            //input[i].childNodes[0] might be an element or a text node so use textContent instead of innerHTML or innerText
+            let contents = input[i].childNodes[0].textContent;
+            console.log('CONTENTS OF FIRST CHILDNODE:', contents);
+            contents = contents.replace(firstWord, '').trim(); //get HTMLString of <p> first ChildNode and remove label
+            if (contents.length === 0) { input[i].childNodes[0].remove(); } //if first ChildNode was just the label then remove node
+            else { 
+                input[i].childNodes[0].textContent = contents;
+            } //set ChildNode HTML
+            let newLine = formatStyling(input[i]);
+            //console.log('AFTER STYLING', newLine)
+            output += newLine.innerHTML.trim() + "\n\n";
           }
           else {
             invalidLabel.push(label);
