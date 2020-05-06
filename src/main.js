@@ -76,6 +76,31 @@ function getTextFromDom(editorDom) {
   return input;
 }
 
+//every line in CKEditor will always be in a <p> element
+//<br> tags will always be in a <p> element
+//goal is to identify new lines, move them into <p> elements, and add them to the document body in the correct order
+//pasting from dreamwidth seems to add 2 <br> tags per double line
+//possible case includes nested <p> tags but I haven't seen that yet, assume all <br> tags have <p> parents which are childNodes of body
+//https://javascript.info/selection-range
+function extractBr(inputDom) {
+  let hasBr = inputDom.querySelectorAll('br');
+  if (hasBr.length > 0) {
+    console.log('has br tags');
+    for (let i = 0; i < hasBr.length; i++) {
+      let parent = hasBr[i].parentNode;
+      let insertInto = parent.parentNode;
+      let range = new Range()
+      range.setStart(hasBr[i].parentNode, 0);
+      range.setEndAfter(hasBr[i]);
+      let newP = document.createElement(parent.tagName.toLowerCase());
+      newP.append(range.extractContents());
+      insertInto.insertBefore(newP, parent);
+      hasBr[i].remove();
+    }
+    //console.log(inputDom);
+  }
+  return inputDom;
+}
 
 //How formatter converts text (a rough summary)
 //Types of lines:
@@ -156,16 +181,18 @@ If this is an error, please contact Midori.`
   const alertNoTitleOnce = alertOnce(); //otherwise user will get multiple alerts for same error
 
   let inputDom = convertToDom(editor1.getData());
+  extractBr(inputDom);
+
   let input = inputDom.querySelectorAll('p');
   let output = header;
 
   let currentName = ''; //needed for case where dialogue has name on every line
   const invalidLabel = [];
   let tlMarkerCount = 0;
-  console.log('INPUT', input);
+  //console.log('INPUT', input);
   for (let i = 0; i < input.length; i++) {
     let line = input[i].innerText; //ignore possible text styles but keep DOM elements intact to add back dialogue styling
-    console.log('PROCESSING LINE', input[i].innerHTML);
+    //console.log('PROCESSING LINE', input[i].innerHTML);
     if (line.replace(/&nbsp;/g, '').trim() != '') { //ignore empty lines
       if (isFileName(line)) {
         //console.log('isFileName: true...');
@@ -209,11 +236,11 @@ If this is an error, please contact Midori.`
             }
             //input[i].childNodes[0] might be an element or a text node so use textContent instead of innerHTML or innerText
             let contents = input[i].childNodes[0].textContent;
-            console.log('CONTENTS OF FIRST CHILDNODE:', contents);
+            //console.log('CONTENTS OF FIRST CHILDNODE:', contents);
             contents = contents.replace(firstWord, '').trim(); //get HTMLString of <p> first ChildNode and remove label
             if (contents.length === 0) { input[i].childNodes[0].remove(); } //if first ChildNode was just the label then remove node
-            else { 
-                input[i].childNodes[0].textContent = contents;
+            else {
+              input[i].childNodes[0].textContent = contents;
             } //set ChildNode HTML
             let newLine = formatStyling(input[i]);
             //console.log('AFTER STYLING', newLine)
@@ -332,23 +359,30 @@ function formatTlNotes(data, count, error) {
   let title = getChapTitle(inputDom, error); //ERROR: only do this if there are tl notes available
   if (title) {
     inputDom.body.firstChild.remove(); //take out title
+    extractBr(inputDom);
     let notes = [];
     if (inputDom.body.firstChild) { //if there is still more text
-      if (inputDom.body.firstChild.tagName === 'OL') {
-        formatStyling(inputDom);
-        const listItems = Array.from(inputDom.querySelectorAll('li')).map((item) => item.innerHTML.replace(/&nbsp;/g, '').trim());
-        listItemsFiltered = listItems.filter((item) => item.length.trim() > 0); //filter out empty lines
+      //ERROR: this doesn't account for possible bolded numbers
+      formatStyling(inputDom);
+      console.log('TL NOTES', inputDom)
+      if (inputDom.body.firstChild.tagName.toUpperCase() === 'OL') { //if TL notes are in <li> 
+        let listItems = Array.from(inputDom.querySelectorAll('li'));
+        console.log('TL NOTES li', listItems);
+        listItems = listItems.map((item) => item.textContent.replace(/&nbsp;/g, '').trim());
+        listItemsFiltered = listItems.filter((item) => item.trim().length > 0); //filter out empty lines
         notes = listItemsFiltered;
-      } else { //if TL notes are in <p>
-        //ERROR: this doesn't account for possible bolded numbers
-        formatStyling(inputDom);
-        const paras = Array.from(inputDom.querySelectorAll('p')).map((item) => {
+      } else { //if TL notes are in <p>  
+        let paras = Array.from(inputDom.querySelectorAll('p'));
+        //console.log('TL NOTES p', paras);
+        paras = paras.map((item) => {
           //ERROR: doesn't account for multi-paragraph notes
-          if (!isNaN(item.innerHTML[0])) { //ERROR: assumes the number is separated by space as in "1. note" vs. "1.note"
-            return item.innerHTML.split(' ').slice(1).join(' ').replace(/&nbsp;/g, '').trim()
+          if (!isNaN(item.textContent[0])) { //ERROR: assumes the number is separated by space as in "1. note" vs. "1.note"
+            return item.textContent.split(' ').slice(1).join(' ').replace(/&nbsp;/g, '').trim()
           }
+          return item.textContent;
         });
-        parasFiltered = paras.filter((para) => para ? true : false); //filter out empty lines
+        console.log('TL NOTES p', paras);
+        parasFiltered = paras.filter((para) => para.trim().length ? true : false); //filter out empty lines
         notes = parasFiltered;
       }
       if (notes.length === count) {
@@ -362,10 +396,10 @@ function formatTlNotes(data, count, error) {
         }
         output = output.replace(/<br \/>$/m, "\n");
         return output;
-      } else { alert('The formatter detected an unequal number of TL markers and TL notes.')}
+      } else { alert('The formatter detected an unequal number of TL markers and TL notes.') }
     } else { alert('The formatter detected a TL marker in the dialogue but no TL Notes in the tab.') }
   }
-  else return ''
+  return ''
 }
 
 //helper function to get and format chapter title from tl notes

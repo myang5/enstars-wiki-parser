@@ -66,7 +66,8 @@ class RenderForms extends React.Component {
   //function that handles editor from data
   updateNames(editor) {
     const currentNames = this.state.namesSet;
-    let input = getTextFromDom(convertToDom(editor.getData()));
+    let inputDom = extractBr(convertToDom(editor.getData()))
+    let input = getTextFromDom(inputDom);
     const names = new Set(); //add "key" of each line if there is one
     input.forEach(function (line) {
       let name = line.split(' ')[0]; //get first word in the line

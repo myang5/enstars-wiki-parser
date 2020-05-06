@@ -101,7 +101,8 @@ var RenderForms = function (_React$Component2) {
     key: 'updateNames',
     value: function updateNames(editor) {
       var currentNames = this.state.namesSet;
-      var input = getTextFromDom(convertToDom(editor.getData()));
+      var inputDom = extractBr(convertToDom(editor.getData()));
+      var input = getTextFromDom(inputDom);
       var names = new Set(); //add "key" of each line if there is one
       input.forEach(function (line) {
         var name = line.split(' ')[0]; //get first word in the line
