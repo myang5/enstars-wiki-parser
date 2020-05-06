@@ -100,16 +100,15 @@ var RenderForms = function (_React$Component2) {
   _createClass(RenderForms, [{
     key: 'updateNames',
     value: function updateNames(editor) {
-      var currentNames = this.state.namesSet;
       var inputDom = extractBr(convertToDom(editor.getData()));
       var input = getTextFromDom(inputDom);
+      console.log('UPDATE NAMES', input);
       var names = new Set(); //add "key" of each line if there is one
       input.forEach(function (line) {
         var name = line.split(' ')[0]; //get first word in the line
         if (name.includes(':')) {
           //if there is a colon
           name = name.slice(0, name.indexOf(':')); //get text up until colon
-          name = name.replace(/<\/*\w+>/g, ''); //remove html tags
           if (namesLink[name.toUpperCase()] != undefined) {
             //if valid name
             name = name[0].toUpperCase() + name.slice(1, name.length); //format name ex. arashi --> Arashi
@@ -117,6 +116,8 @@ var RenderForms = function (_React$Component2) {
           }
         }
       });
+      console.log('UPDATE NAMES name set', names);
+      var currentNames = this.state.namesSet;
       currentNames.forEach(function (name) {
         if (!names.has(name)) {
           currentNames.delete(name);
@@ -128,6 +129,7 @@ var RenderForms = function (_React$Component2) {
           currentNames.add(name);
         }
       });
+      console.log('UPDATE NAMES currentNames', currentNames);
       this.setState({ namesSet: currentNames });
     }
   }, {
@@ -135,7 +137,7 @@ var RenderForms = function (_React$Component2) {
     value: function render() {
       //console.log(this.state.namesSet);
       var rows = Array.from(this.state.namesSet).map(function (name) {
-        return React.createElement(RenderRow, { key: name, name: name, link: namesLink[name] });
+        return React.createElement(RenderRow, { key: name, name: name, link: namesLink[name.toUpperCase()] });
       });
       return rows;
     }

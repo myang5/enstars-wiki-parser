@@ -71,7 +71,7 @@ function getTextFromDom(editorDom) {
   var paragraphs = editorDom.querySelectorAll('p'); //NodeList of all p elements
   var input = [];
   paragraphs.forEach(function (p) {
-    input.push(p.innerHTML.replace(/&nbsp;/g, ''));
+    input.push(p.textContent.replace(/&nbsp;/g, ''));
   });
   return input;
 }
