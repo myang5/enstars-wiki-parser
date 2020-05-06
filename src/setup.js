@@ -70,7 +70,6 @@ class RenderForms extends React.Component {
     event.persist();
     this.setState(state => {
       const newValue = {...state.namesValue};
-      console.log(event.target);
       newValue[event.target.id] = event.target.value;
       return {namesValue: newValue};
     });

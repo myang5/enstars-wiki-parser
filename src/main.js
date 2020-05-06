@@ -384,19 +384,20 @@ function formatTlNotes(data, count, error) {
         parasFiltered = paras.filter((para) => para.trim().length ? true : false); //filter out empty lines
         notes = parasFiltered;
       }
-      if (notes.length === count) {
-        let output =
-          `|-
+      if (notes.length !== count) {
+        alert('The formatter detected an unequal number of TL markers and TL notes.')
+      }
+      let output =
+        `|-
 | colspan="2"|`;
-        let tlCode = `<span id='${title}NoteNUM'>NUM.[[#${title}RefNUM|↑]] TEXT</span><br />`;
-        for (let i = 0; i < notes.length; i++) {
-          let newTlCode = tlCode.replace(/NUM/g, i + 1);
-          output += newTlCode.replace('TEXT', notes[i]);
-        }
-        output = output.replace(/<br \/>$/m, "\n");
-        return output;
-      } else { alert('The formatter detected an unequal number of TL markers and TL notes.') }
-    } else { alert('The formatter detected a TL marker in the dialogue but no TL Notes in the tab.') }
+      let tlCode = `<span id='${title}NoteNUM'>NUM.[[#${title}RefNUM|↑]] TEXT</span><br />`;
+      for (let i = 0; i < notes.length; i++) {
+        let newTlCode = tlCode.replace(/NUM/g, i + 1);
+        output += newTlCode.replace('TEXT', notes[i]);
+      }
+      output = output.replace(/<br \/>$/m, "\n");
+      return output;
+    } else { alert('The formatter detected a TL marker in the dialogue but no TL Notes/chapter title in the tab.') }
   }
   return ''
 }
@@ -404,13 +405,17 @@ function formatTlNotes(data, count, error) {
 //helper function to get and format chapter title from tl notes
 function getChapTitle(inputDom, error) {
   let firstElt = inputDom.body.firstChild;
-  if (firstElt.tagName === 'P'
-    && firstElt.innerText.indexOf('If this is your first time using the formatter') < 0
-    && isNaN(firstElt.innerText[0])) {
-    const title = firstElt.innerText.replace(/ /g, '');
-    return title;
+  if (firstElt) {
+    if (firstElt.tagName === 'P'
+      && firstElt.innerText.indexOf('If this is your first time using the formatter') < 0
+      && firstElt.innerText.length < 100 //ERROR: Assuming somewhat dangerously that titles would not be longer than 100 characters
+      && isNaN(firstElt.innerText[0])) {
+      const title = firstElt.innerText.replace(/ /g, '');
+      return title;
+    }
   }
   else {
     error();
+    return null;
   }
 }

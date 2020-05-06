@@ -103,7 +103,6 @@ var RenderForms = function (_React$Component2) {
       event.persist();
       this.setState(function (state) {
         var newValue = Object.assign({}, state.namesValue);
-        console.log(event.target);
         newValue[event.target.id] = event.target.value;
         return { namesValue: newValue };
       });
