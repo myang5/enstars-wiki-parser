@@ -9,7 +9,7 @@ function Header(props) {
           A website to more easily upload event/gacha stories from the mobile idol game Ensemble Stars to the fandom wiki.
           <br />It takes formats your story chapter into text that can be pasted directly into the "source"
         section of the page.
-          <br />Developed by <a target="_blank" href="https://twitter.com/gayandasleep">midori</a> (last updated 5/6/20).
+          <br />Developed by <a target="_blank" href="https://twitter.com/gayandasleep">midori</a> (last updated 6/7/20).
         </p>
         <ul id="navbar">
           <li><a href="./howto.html">HOW TO USE</a></li>

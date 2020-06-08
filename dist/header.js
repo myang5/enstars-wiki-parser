@@ -27,7 +27,7 @@ function Header(props) {
           { target: "_blank", href: "https://twitter.com/gayandasleep" },
           "midori"
         ),
-        " (last updated 5/6/20)."
+        " (last updated 6/7/20)."
       ),
       React.createElement(
         "ul",

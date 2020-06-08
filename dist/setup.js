@@ -194,6 +194,12 @@ function setup() {
   ReactDOM.render(React.createElement(RenderForms, { ref: function ref(element) {
       window.renderForms = element;
     } }), document.querySelector('#renderForms'));
+
+  document.querySelector('#translator').value = localStorage.getItem('translator');
+  document.querySelector('#tlLink').value = localStorage.getItem('tlLink');
+  document.querySelector('#editor').value = localStorage.getItem('editor');
+  document.querySelector('#edLink').value = localStorage.getItem('edLink');
+
   BalloonEditor.create(document.querySelector('#inputEditor'), {
     toolbar: {
       items: ['bold', 'italic', 'link', '|', 'undo', 'redo']

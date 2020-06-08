@@ -141,6 +141,12 @@ function setup() {
   ReactDOM.render(<TabMenu />, document.querySelector('.tab'));
   ReactDOM.render(<ColorInputs labels={['writer', 'location', 'bottom', 'text']}/>, document.querySelector('#colorinputs'))
   ReactDOM.render(<RenderForms ref={(element) => { window.renderForms = element }} />, document.querySelector('#renderForms'));
+  
+  document.querySelector('#translator').value = localStorage.getItem('translator');
+  document.querySelector('#tlLink').value = localStorage.getItem('tlLink');
+  document.querySelector('#editor').value = localStorage.getItem('editor');
+  document.querySelector('#edLink').value = localStorage.getItem('edLink');
+
   BalloonEditor
     .create(document.querySelector('#inputEditor'), {
       toolbar: {

@@ -88,7 +88,8 @@ function convertText() {
   var dialogueRender = '|-\n|[[File:FILENAME|x200px|link=|center]]\n|\n';
   var cgRender = '|-\n! colspan="2" style="text-align:center;" |[[File:FILENAME|center|660px]]\n';
   var heading = '|-\n! colspan="2" style="text-align:center;background-color:' + values.locationCol + '; color:' + values.textCol + ';" |\'\'\'HEADING\'\'\'\n';
-  var translator = '|-\n! colspan="2" style="text-align:center;background-color:' + values.bottomCol + ';color:' + values.textCol + ';" |\'\'\'Translation: [' + values.translator + '] \'\'\'\n|}';
+  var translator = '|-\n! colspan="2" style="text-align:center;background-color:' + values.bottomCol + ';color:' + values.textCol + ';" |\'\'\'Translation: [' + values.translator + '] \'\'\'\n';
+  var editor = '|-\n! colspan="2" style="text-align:center;background-color:' + values.bottomCol + ';color:' + values.textCol + ';" |\'\'\'Proofreading: [' + values.editor + '] \'\'\'\n';
 
   function alertOnce() {
     var counter = 0;
@@ -140,6 +141,7 @@ function convertText() {
           //console.log('no colon, continue dialogue');
           output += formatStyling(input[i]).innerHTML + "\n\n"; //convert styling to source wiki notation
         } else {
+          //if new character is speaking
           //console.log('has colon...');
           var label = firstWord.replace(':', ''); //remove colon
           if (label.toUpperCase() === 'HEADING') {
@@ -179,10 +181,10 @@ function convertText() {
     }
   }
 
-  if (tlMarkerCount > 0) {
-    output += formatTlNotes(editor2.getData(), tlMarkerCount, alertNoTitleOnce);
-  }
+  if (tlMarkerCount > 0) output += formatTlNotes(editor2.getData(), tlMarkerCount, alertNoTitleOnce);
   output += translator;
+  if (values.editor) output += editor;
+  output += '|}';
   document.querySelector('#output').value = output;
   //Error message seems to be more annoying than helpful
   //if (invalidLabel.length > 0) {
@@ -200,18 +202,38 @@ function convertText() {
 }
 
 //helper function for convertText
+//also saves certain values in localStorage for convenience
 function getValues() {
   var values = {};
   values.location = document.querySelector('#location').value.trim();
   var select = document.querySelector('#author');
   values.author = select.options[select.selectedIndex].text;
-  values.translator = document.querySelector('#translator').value.trim();
+  var translator = document.querySelector('#translator').value.trim();
   var tlLink = document.querySelector('#tlLink').value.trim();
-  values.translator = tlLink === '' ? '[User:' + values.translator + '|' + values.translator + ']' : tlLink + ' ' + values.translator;
+  values.translator = tlLink === '' ? '[User:' + translator + '|' + translator + ']' : tlLink + ' ' + translator;
+  var editor = document.querySelector('#editor').value.trim();
+  if (editor.length > 0) {
+    var _edLink = document.querySelector('#edLink').value.trim();
+    values.editor = _edLink === '' ? '[User:' + editor + '|' + editor + ']' : _edLink + ' ' + editor;
+  }
   values.writerCol = '#' + document.querySelector('input[name=writerCol]').value;
   values.locationCol = '#' + document.querySelector("input[name=locationCol]").value;
   values.bottomCol = '#' + document.querySelector('input[name=bottomCol]').value;
   values.textCol = '#' + document.querySelector('input[name=textCol]').value;
+
+  if (translator.length > 0 && translator !== localStorage.getItem('translator')) {
+    localStorage.setItem('translator', translator);
+  }
+  if (tlLink.length > 0 && tlLink !== localStorage.getItem('tlLink')) {
+    localStorage.setItem('tlLink', tlLink);
+  }
+  if (editor.length > 0 && editor !== localStorage.getItem('editor')) {
+    localStorage.setItem('editor', editor);
+  }
+  if (edLink.length > 0 && edLink !== localStorage.getItem('edLink')) {
+    localStorage.setItem('edLink', edLink);
+  }
+
   return values;
 }
 
