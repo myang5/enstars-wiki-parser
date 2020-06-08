@@ -26,6 +26,7 @@
 
   <script type="text/javascript" src="./dist/header.js"></script>
   <script type="text/javascript" src="./dist/main.js"></script>
+  <script type="text/javascript" src="./dist/data.js"></script>
 
   <div class="main">
     <div id="input">
@@ -40,18 +41,20 @@
           <p>If this is your first time using the formatter, please check the <a href='./howto.html'>Text Guidelines</a>
             to make
             sure your text is ready.</p>
-          <p>UPDATE: Header images, CGs, and scene change headings can now be included. Please check Text Guidelines for
-            more info.</p>
+          <p>---EXAMPLE DIALOGUE---</p>
+          <p>The header image.png</p>
+          <p><strong>Person A:</strong> This is a line said by Person A! Their line starts with their name followed by a colon.</p>
+          <p><strong>Person B:</strong> This is a line said by another person!</p>
+          <p>Heading: Location: Hallway (will format to "Location: Hallway")</p>
+          <p>A screenshot of the game.jpeg</p>
+          <p><strong>Person A:</strong> Another line from Person A.</p>
         </div>
       </div>
 
       <!---DETAILS TAB!--->
       <div id="detailArea" class="tabcontent">
 
-        <div class="row">
-          <h3>Story Details</h3>
-        </div>
-
+        <h3>Story Details</h3>
         <div class="row">
           <label class='spacer' for="location">Location</label>
           <input type="text" id="location">
@@ -64,27 +67,31 @@
             <option>結城由乃 (Yuuki Yoshino)</option>
             <option>西岡麻衣子 (Nishioka Maiko)</option>
             <option>ゆーます (Yuumasu)</option>
-            <option>木野誠太郎 (Kinosei Tarou)</option>
+            <option>木野誠太郎 (Kino Seitaro)</option>
             <option>Happy Elements株式会社 (Happy Elements K.K)</option>
           </select>
         </div>
-
+        <div class="row label">
+          <span class="spacer"></span>
+          <label class="halfWidth" for="translator">Name</label>
+          <label class="halfWidth" for="tlLink">Credit link (optional)</label>
+        </div>
         <div class="row">
           <label class='spacer' for="translator">Translator</label>
-          <input type="text" id="translator">
+          <input class="halfWidth" type="text" id="translator">
+          <input class="halfWidth" type="text" id="tlLink">
+        </div>
+        <div class="row label">
+          <span class="spacer"></span>
+          <label class="halfWidth" for="Editor">Name</label>
+          <label class="halfWidth" for="edLink">Credit link (optional)</label>
         </div>
         <div class="row">
-          <span class='spacer'></span>
-          <label class='spacer' for="tlLink">External link for TL credit (optional)
+          <label class='spacer' for="translator">Editor</label>
+          <input class="halfWidth" type="text" id="editor">
+          <input class="halfWidth" type="text" id="edLink">
         </div>
-        <div class="row">
-          <span class='spacer'></span>
-          <input type="text" id="tlLink">
-        </div>
-
-        <div class="row">
-          <h3>Title Colors</h3>
-        </div>
+        <h3>Heading Colors</h3>
         <div id='colorinputs'></div></div>
 
       <!---RENDERTAB!--->
@@ -117,7 +124,6 @@
   </div>
 
   <script type="text/javascript" src="./dist/setup.js"></script>
-
   <script>setup();</script>
 
 </body>

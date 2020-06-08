@@ -1,56 +1,3 @@
-var namesLink = {
-  TETORA: 'Tetora_Nagumo',
-  HAJIME: 'Hajime_Shino',
-  TOMOYA: 'Tomoya_Mashiro',
-  HINATA: 'Hinata_Aoi',
-  MIDORI: 'Midori_Takamine',
-  TORI: 'Tori_Himemiya',
-  SHINOBU: 'Shinobu_Sengoku',
-  MITSURU: 'Mitsuru_Tenma',
-  YUTA: 'Yuta_Aoi',
-  TSUKASA: 'Tsukasa_Suou',
-  SORA: 'Sora_Harukawa',
-  SUBARU: 'Subaru_Akehoshi',
-  HOKUTO: 'Hokuto_Hidaka',
-  MAKOTO: 'Makoto_Yuuki',
-  SOUMA: 'Souma_Kanzaki',
-  ADONIS: 'Adonis_Otogari',
-  NATSUME: 'Natsume_Sakasaki',
-  KOGA: 'Koga_Oogami',
-  RITSU: 'Ritsu_Sakuma',
-  MAO: 'Mao_Isara',
-  YUZURU: 'Yuzuru_Fushimi',
-  ARASHI: 'Arashi_Narukami',
-  MIKA: 'Mika_Kagehira',
-  EICHI: 'Eichi_Tenshouin',
-  KEITO: 'Keito_Hasumi',
-  KAORU: 'Kaoru_Hakaze',
-  IZUMI: 'Izumi_Sena',
-  CHIAKI: 'Chiaki_Morisawa',
-  SHU: 'Shu_Itsuki',
-  MADARA: 'Madara_Mikejima',
-  KURO: 'Kuro_Kiryu',
-  WATARU: 'Wataru_Hibiki',
-  KANATA: 'Kanata_Shinkai',
-  REI: 'Rei_Sakuma',
-  NAZUNA: 'Nazuna_Nito',
-  LEO: 'Leo_Tsukinaga',
-  TSUMUGI: 'Tsumugi_Aoba',
-  JIN: 'Jin_Sagami',
-  AKIOMI: 'Akiomi_Kunugi',
-  HIYORI: 'Hiyori_Tomoe',
-  JUN: 'Jun_Sazanami',
-  NAGISA: 'Nagisa_Ran',
-  IBARA: 'Ibara_Saegusa',
-  RINNE: 'Rinne_Amagi',
-  HIMERU: 'HiMERU',
-  KOHAKU: 'Kohaku_Oukawa',
-  NIKI: 'Niki_Shiina',
-  HIIRO: 'Hiiro_Amagi',
-  AIRA: 'Aira_Shiratori',
-  MAYOI: 'Mayoi_Ayase',
-  TATSUMI: 'Tatsumi_Kazehaya'
-};
 
 //copies text to clipboard
 function copyToClip() {
@@ -106,7 +53,6 @@ function extractBr(inputDom) {
 //Types of lines:
 //  Filename (for images) - formatter checks if file extension like .png exists in line (since this probably wouldn't show up in a dialogue line)
 //  Dialogue line (no label) - formatter checks if first word has no colon. Formatter assumes label-less lines that aren't filenames are dialogue lines
-//  Location: label
 //  Heading: label
 //  Name: label
 //Formatter identifies labels by checking if first word has a colon character (str.split(' '))
@@ -142,7 +88,7 @@ function convertText() {
   var dialogueRender = '|-\n|[[File:FILENAME|x200px|link=|center]]\n|\n';
   var cgRender = '|-\n! colspan="2" style="text-align:center;" |[[File:FILENAME|center|660px]]\n';
   var heading = '|-\n! colspan="2" style="text-align:center;background-color:' + values.locationCol + '; color:' + values.textCol + ';" |\'\'\'HEADING\'\'\'\n';
-  var footer = '|-\n! colspan="2" style="text-align:center;background-color:' + values.bottomCol + ';color:' + values.textCol + ';" |\'\'\'Translation: [' + values.translator + '] \'\'\'\n|}';
+  var translator = '|-\n! colspan="2" style="text-align:center;background-color:' + values.bottomCol + ';color:' + values.textCol + ';" |\'\'\'Translation: [' + values.translator + '] \'\'\'\n|}';
 
   function alertOnce() {
     var counter = 0;
@@ -164,7 +110,6 @@ function convertText() {
   var output = header;
 
   var currentName = ''; //needed for case where dialogue has name on every line
-  var invalidLabel = [];
   var tlMarkerCount = 0;
   //console.log('INPUT', input);
   for (var i = 0; i < input.length; i++) {
@@ -228,8 +173,6 @@ function convertText() {
             var newLine = formatStyling(input[i]);
             //console.log('AFTER STYLING', newLine)
             output += newLine.innerHTML.trim() + "\n\n";
-          } else {
-            invalidLabel.push(label);
           }
         }
       }
@@ -239,22 +182,21 @@ function convertText() {
   if (tlMarkerCount > 0) {
     output += formatTlNotes(editor2.getData(), tlMarkerCount, alertNoTitleOnce);
   }
-  output += footer;
+  output += translator;
   document.querySelector('#output').value = output;
-  if (invalidLabel.length > 0) {
-    //Formatter was unable to process these names:
-    // 1. truncate after certain length
-    var alertMsg = 'Formatter was unable to process these names:';
-    for (var _i = 0; _i < invalidLabel.length; _i++) {
-      alertMsg += '\n' + (_i + 1) + '. ' + invalidLabel[_i].slice(0, 200);
-      if (invalidLabel[_i].length > 200) {
-        alertMsg += '...';
-      }
-      alertMsg += '\n\nDialogue lines should be labeled with character names or "Heading" for scene changes/headings.';
-      alertMsg += '\nIf this is a problem other than a typo, please contact Midori.';
-    }
-    alert(alertMsg);
-  }
+  //Error message seems to be more annoying than helpful
+  //if (invalidLabel.length > 0) {
+  //  //Formatter was unable to process these names:
+  //  // 1. truncate after certain length
+  //  let alertMsg = 'Formatter was unable to process these names:';
+  //  for (let i = 0; i < invalidLabel.length; i++) {
+  //    alertMsg += `\n${i + 1}. ${invalidLabel[i].slice(0, 200)}`
+  //    if (invalidLabel[i].length > 200) { alertMsg += '...' }
+  //    alertMsg += '\n\nDialogue lines should be labeled with character names or "Heading" for scene changes/headings.'
+  //    alertMsg += '\nIf this is a problem other than a typo, please contact Midori.'
+  //  }
+  //  alert(alertMsg);
+  //}
 }
 
 //helper function for convertText
@@ -264,14 +206,8 @@ function getValues() {
   var select = document.querySelector('#author');
   values.author = select.options[select.selectedIndex].text;
   values.translator = document.querySelector('#translator').value.trim();
-  values.tlLink = document.querySelector('#tlLink').value.trim();
-  if (values.tlLink === '') {
-    //if TL credit is to a wiki user
-    values.translator = '[User:' + values.translator + '|' + values.translator + ']';
-  } else {
-    //if TL credit is to an external wiki user
-    values.translator = values.tlLink + ' ' + values.translator;
-  }
+  var tlLink = document.querySelector('#tlLink').value.trim();
+  values.translator = tlLink === '' ? '[User:' + values.translator + '|' + values.translator + ']' : tlLink + ' ' + values.translator;
   values.writerCol = '#' + document.querySelector('input[name=writerCol]').value;
   values.locationCol = '#' + document.querySelector("input[name=locationCol]").value;
   values.bottomCol = '#' + document.querySelector('input[name=bottomCol]').value;

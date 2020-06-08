@@ -237,13 +237,28 @@ textarea {
 }
 
 .tabcontent .row {
-    margin-bottom: 0.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: calc(100% - 4.5rem);
+  min-width: 300px;
+}
+
+.tabcontent .row:not(.label) {
+  margin-bottom: 0.7rem;
+}
+
+#detailArea .spacer {
+  display: inline-block;
+  flex: 0 0 4.5rem;
 }
 
 #detailArea {
-    padding:20px 20px 0px 20px;
-    display: flex;
-    flex-direction: column;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 #detailArea h3:nth-of-type(1) {
@@ -251,26 +266,29 @@ textarea {
   margin-bottom: 1rem;
 }
 
-#detailArea .spacer {
-    display: inline-block;
-    width: 5rem;
-}
-
-#detailArea label[for='tlLink'] {
-    display: inline-block;
-    text-align: left; 
-    width: auto;
-    font-size: 0.85rem;
-    opacity: 0.8;
-}
-
-#detailArea select, input{
+#detailArea select, #detailArea input{
   padding: 4px;
   box-sizing: border-box;
+  min-width: 0;
 }
 
-#detailArea select, input:not(.jscolor){
-    width: calc(80% - 5rem - 0.7rem); /* - must be surrounded by whitespace */
+#detailArea select, #detailArea input:not(.jscolor){
+  flex: 1 1 auto;
+}
+
+#detailArea .halfWidth{
+  width: 50%;
+}
+
+#detailArea .halfWidth ~ .halfWidth{
+  margin-left: 5px;
+}
+
+#detailArea .row.label {
+  text-align: left; 
+  margin-left: 2px;
+  font-size: 0.8rem;
+  opacity: 0.7;
 }
 
 #detailArea .jscolor{
