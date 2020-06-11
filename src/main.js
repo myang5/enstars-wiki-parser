@@ -18,7 +18,7 @@ function getTextFromDom(editorDom) {
   const paragraphs = editorDom.querySelectorAll('p'); //NodeList of all p elements
   const input = []
   paragraphs.forEach(function (p) {
-    input.push(p.textContent.replace(/&nbsp;/g, ''));
+    input.push(p.textContent.replace(/&nbsp;/g, ' '));
   });
   return input;
 }
@@ -138,19 +138,14 @@ If this is an error, please contact Midori.`
 
   let currentName = ''; //needed for case where dialogue has name on every line
   let tlMarkerCount = 0;
-  //console.log('INPUT', input);
   for (let i = 0; i < input.length; i++) {
     let line = input[i].innerText; //ignore possible text styles but keep DOM elements intact to add back dialogue styling
-    //console.log('PROCESSING LINE', input[i].innerHTML);
-    if (line.replace(/&nbsp;/g, '').trim() != '') { //ignore empty lines
+    if (line.replace(/&nbsp;/g, ' ').trim() != '') { //ignore empty lines
       if (isFileName(line)) {
-        //console.log('isFileName: true...');
         if (i === 0) { //if first line --> header file
-          //console.log('headerfile');
           output = output.replace("HEADERFILE", line.trim());
         }
         else { //if CG or scene change image file
-          //console.log('image file');
           let cgCode = cgRender;
           output += cgCode.replace("FILENAME", line.trim());
           currentName = ''; //since its new section
@@ -161,22 +156,17 @@ If this is an error, please contact Midori.`
         tlMarkerCount += countTlMarkers(line);
         let firstWord = line.split(" ")[0];
         if (!firstWord.includes(":")) { //if no colon --> continuing dialogue line
-          //console.log('no colon, continue dialogue');
           output += formatStyling(input[i]).innerHTML + "\n\n"; //convert styling to source wiki notation
         }
-        else { //if new character is speaking
-          //console.log('has colon...');
+        else { //if new character is speaking or heading
           let label = firstWord.replace(':', ''); //remove colon
           if (label.toUpperCase() === 'HEADING') { //if heading
-            //console.log('new HEADING');
             let headingCode = heading;
             output += headingCode.replace("HEADING", line.slice(line.indexOf(':') + 1).trim());
             currentName = ''; //since its new section
           }
           else if (namesLink[label.toUpperCase()] != undefined) { //if valid character is speaking
-            //console.log('character speaking... ' + firstWord);
             if (label !== currentName) { //if new character is speaking
-              //console.log('new character detected')
               let renderCode = dialogueRender;
               let id = "#" + label[0].toUpperCase() + label.slice(1, label.length); //create id to access chara's render file in Renders tab
               output += renderCode.replace("FILENAME", document.querySelector(id).value.trim());
@@ -185,14 +175,12 @@ If this is an error, please contact Midori.`
             }
             //input[i].childNodes[0] might be an element or a text node so use textContent instead of innerHTML or innerText
             let contents = input[i].childNodes[0].textContent;
-            //console.log('CONTENTS OF FIRST CHILDNODE:', contents);
-            contents = contents.replace(firstWord, '').trim(); //get HTMLString of <p> first ChildNode and remove label
-            if (contents.length === 0) { input[i].childNodes[0].remove(); } //if first ChildNode was just the label then remove node
-            else {
+            contents = contents.replace(firstWord, ''); //get HTMLString of <p> first ChildNode and remove label
+            if (contents.trim().length === 0) { input[i].childNodes[0].remove(); } //if first ChildNode was just the label then remove node
+            else { //set ChildNode HTML
               input[i].childNodes[0].textContent = contents;
-            } //set ChildNode HTML
+            } 
             let newLine = formatStyling(input[i]);
-            //console.log('AFTER STYLING', newLine)
             output += newLine.innerHTML.trim() + "\n\n";
           }
         }
@@ -328,11 +316,9 @@ function formatTlNotes(data, count, error) {
     if (inputDom.body.firstChild) { //if there is still more text
       //ERROR: this doesn't account for possible bolded numbers
       formatStyling(inputDom);
-      //console.log('TL NOTES', inputDom)
       if (inputDom.body.firstChild.tagName.toUpperCase() === 'OL') { //if TL notes are in <li> 
         let listItems = Array.from(inputDom.querySelectorAll('li'));
-        //console.log('TL NOTES li', listItems);
-        listItems = listItems.map((item) => item.textContent.replace(/&nbsp;/g, '').trim());
+        listItems = listItems.map((item) => item.textContent.replace(/&nbsp;/g, ' ').trim());
         listItemsFiltered = listItems.filter((item) => item.trim().length > 0); //filter out empty lines
         notes = listItemsFiltered;
       } else { //if TL notes are in <p>  
@@ -340,11 +326,10 @@ function formatTlNotes(data, count, error) {
         paras = paras.map((item) => {
           //ERROR: doesn't account for multi-paragraph notes
           if (!isNaN(item.textContent[0])) { //ERROR: assumes the number is separated by space as in "1. note" vs. "1.note"
-            return item.textContent.split(' ').slice(1).join(' ').replace(/&nbsp;/g, '').trim()
+            return item.textContent.split(' ').slice(1).join(' ').replace(/&nbsp;/g, ' ').trim()
           }
           return item.textContent;
         });
-        //console.log('TL NOTES p', paras);
         parasFiltered = paras.filter((para) => para.trim().length ? true : false); //filter out empty lines
         notes = parasFiltered;
       }
