@@ -113,7 +113,7 @@ function convertText() {
     `|-
 ! colspan="2" style="text-align:center;background-color:${values.bottomCol};color:${values.textCol};" |'''Proofreading: [${values.editor}] '''
 `;
-    
+
   function alertOnce() {
     let counter = 0;
     return function () {
@@ -179,7 +179,7 @@ If this is an error, please contact Midori.`
             if (contents.trim().length === 0) { input[i].childNodes[0].remove(); } //if first ChildNode was just the label then remove node
             else { //set ChildNode HTML
               input[i].childNodes[0].textContent = contents;
-            } 
+            }
             let newLine = formatStyling(input[i]);
             output += newLine.innerHTML.trim() + "\n\n";
           }
@@ -219,8 +219,8 @@ function getValues() {
   const tlLink = document.querySelector('#tlLink').value.trim();
   values.translator = tlLink === '' ? `[User:${translator}|${translator}]` : `${tlLink} ${translator}`;
   const editor = document.querySelector('#editor').value.trim();
+  const edLink = document.querySelector('#edLink').value.trim();
   if (editor.length > 0) {
-    const edLink = document.querySelector('#edLink').value.trim();
     values.editor = edLink === '' ? `[User:${editor}|${editor}]` : `${edLink} ${editor}`;
   }
   values.writerCol = '#' + document.querySelector('input[name=writerCol]').value;
@@ -228,20 +228,22 @@ function getValues() {
   values.bottomCol = '#' + document.querySelector('input[name=bottomCol]').value;
   values.textCol = '#' + document.querySelector('input[name=textCol]').value;
 
-  if (translator.length > 0 && translator !== localStorage.getItem('translator')) {
-    localStorage.setItem('translator', translator);
-  }
-  if (tlLink.length > 0 && tlLink !== localStorage.getItem('tlLink')) {
-    localStorage.setItem('tlLink', tlLink);
-  }
-  if (editor.length > 0 && editor !== localStorage.getItem('editor')) {
-    localStorage.setItem('editor', editor);
-  }
-  if (edLink.length > 0 && edLink !== localStorage.getItem('edLink')) {
-    localStorage.setItem('edLink', edLink);
-  }
+  updateLocalStorage('translator', translator);
+  updateLocalStorage('tlLink', tlLink);
+  updateLocalStorage('editor', editor);
+  updateLocalStorage('edLink', edLink);
 
   return values;
+}
+
+function updateLocalStorage(key, value) {
+  console.log(key, value);
+  if (value.length > 0 && value !== localStorage.getItem(key)) {
+    localStorage.setItem(key, value);
+  }
+  else if (value.length === 0) {
+    localStorage.removeItem(key);
+  }
 }
 
 //helper function to check if the line is a file
@@ -297,10 +299,12 @@ function formatTlMarker(line, error) {
 //TL Notes tab is supposed to contain an <ol> but when TLers paste in content it usually just becomes <p>
 //Users don't always read instructions so need to account for user input wow i love UX design
 //Editor already contains 1 <p> with the default text "If this is your first time using the formatter..."
-//If there are TL Notes, there would be
+//If there are TL Notes, assume there would be
 //  1. A second <p> starting with a number
 //  2. One <p> and one <ol> if notes are in numbered list
-//Chapter title is first ChildNode of the editor DOM if child is <p> and innerText doesn't match default text or start with a number
+//Chapter title is correctly input if:
+//  - first ChildNode of the editor DOM if child is <p> 
+//  - innerText doesn't match default text or start with a number
 //Detect if user forgot chapter title and alert user
 //Get TL Notes which are the rest of the <p> elements or <li> elements
 //If <p> elements start with number, then new TL note
@@ -323,15 +327,15 @@ function formatTlNotes(data, count, error) {
         notes = listItemsFiltered;
       } else { //if TL notes are in <p>  
         let paras = Array.from(inputDom.querySelectorAll('p'));
-        paras = paras.map((item) => {
-          //ERROR: doesn't account for multi-paragraph notes
-          if (!isNaN(item.textContent[0])) { //ERROR: assumes the number is separated by space as in "1. note" vs. "1.note"
-            return item.textContent.split(' ').slice(1).join(' ').replace(/&nbsp;/g, ' ').trim()
+        notes = paras.reduce((acc, item) => {
+          let text = item.textContent.replace(/&nbsp;/g, ' ').trim()
+          if (!isNaN(text[0])) { //ERROR: assumes the number is separated by space as in "1. note" vs. "1.note"
+            acc.push(text.split(' ').slice(1).join(' '))
           }
-          return item.textContent;
-        });
-        parasFiltered = paras.filter((para) => para.trim().length ? true : false); //filter out empty lines
-        notes = parasFiltered;
+          else if (text.length > 0) {acc[acc.length - 1] += `\n${text}`}
+          return acc;
+        }, []);
+        //parasFiltered = paras.filter((para) => para.trim().length ? true : false); //filter out empty lines
       }
       if (notes.length !== count) {
         alert('The formatter detected an unequal number of TL markers and TL notes.')

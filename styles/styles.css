@@ -8,6 +8,12 @@ body {
     font-family: 'Nunito', sans-serif;
 }
 
+@media (max-width: 736px) {
+  body {
+      padding: 2.5rem 0.5rem;
+  }
+}
+
 a {
     color: #15c6e0;
     text-decoration: none;
@@ -118,27 +124,21 @@ li {
     margin: 0.25em 0;
 }
 
-@media (min-width: 20em) {
-    body {
-        padding: 2rem;
-    }
-}
-
 /* editing position of star after title */
-@media (min-width: 25em) and (max-width: 40.5em) {
+@media (min-width: 22rem) and (max-width: 37.5em) {
     header h1 a:after {
         top: 1.33em;   
     }
 }
 
-@media (max-width: 25em) {
+@media (max-width: 22rem) {
     header h1 a:after {
         top: 2.7em;   
     }
 }
 
 /* resize header */
-@media (max-width: 38em) { 
+@media (max-width: 37.5em) { 
     header .horizontal {
         flex-direction: column;
     }
@@ -158,7 +158,7 @@ li {
     }
 }
 
-@media (max-width: 30em) {
+@media (max-width: 20em) {
     #navbar li{
         display: list-item;
         margin: auto;
@@ -382,7 +382,7 @@ textarea {
 
 }
 
-/*---------------------------------HOWTO.HTML AND PLANS.HTML---------------------------------*/
+/*---------------------------------HOWTO.HTML---------------------------------*/
 #container {
     box-sizing: border-box;
     width: 80%;
@@ -413,4 +413,12 @@ blockquote {
 
 img {
   width: 30.125rem;
+}
+
+@media (max-width: 736px) {
+  #container {
+    padding: 1rem;
+    margin: 1rem auto;
+    min-width: 320px;
+  }
 }

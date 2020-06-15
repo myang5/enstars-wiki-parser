@@ -201,29 +201,44 @@ function getValues() {
   var tlLink = document.querySelector('#tlLink').value.trim();
   values.translator = tlLink === '' ? '[User:' + translator + '|' + translator + ']' : tlLink + ' ' + translator;
   var editor = document.querySelector('#editor').value.trim();
+  var edLink = document.querySelector('#edLink').value.trim();
   if (editor.length > 0) {
-    var _edLink = document.querySelector('#edLink').value.trim();
-    values.editor = _edLink === '' ? '[User:' + editor + '|' + editor + ']' : _edLink + ' ' + editor;
+    values.editor = edLink === '' ? '[User:' + editor + '|' + editor + ']' : edLink + ' ' + editor;
   }
   values.writerCol = '#' + document.querySelector('input[name=writerCol]').value;
   values.locationCol = '#' + document.querySelector("input[name=locationCol]").value;
   values.bottomCol = '#' + document.querySelector('input[name=bottomCol]').value;
   values.textCol = '#' + document.querySelector('input[name=textCol]').value;
 
-  if (translator.length > 0 && translator !== localStorage.getItem('translator')) {
-    localStorage.setItem('translator', translator);
-  }
-  if (tlLink.length > 0 && tlLink !== localStorage.getItem('tlLink')) {
-    localStorage.setItem('tlLink', tlLink);
-  }
-  if (editor.length > 0 && editor !== localStorage.getItem('editor')) {
-    localStorage.setItem('editor', editor);
-  }
-  if (edLink.length > 0 && edLink !== localStorage.getItem('edLink')) {
-    localStorage.setItem('edLink', edLink);
-  }
+  updateLocalStorage('translator', translator);
+  updateLocalStorage('tlLink', tlLink);
+  updateLocalStorage('editor', editor);
+  updateLocalStorage('edLink', edLink);
+
+  //if (translator.length > 0 && translator !== localStorage.getItem('translator')) {
+  //  localStorage.setItem('translator', translator);
+  //}
+  //else if (translator.length < 0)
+  //if (tlLink.length > 0 && tlLink !== localStorage.getItem('tlLink')) {
+  //  localStorage.setItem('tlLink', tlLink);
+  //}
+  //if (editor.length > 0 && editor !== localStorage.getItem('editor')) {
+  //  localStorage.setItem('editor', editor);
+  //}
+  //if (edLink.length > 0 && edLink !== localStorage.getItem('edLink')) {
+  //  localStorage.setItem('edLink', edLink);
+  //}
 
   return values;
+}
+
+function updateLocalStorage(key, value) {
+  console.log(key, value);
+  if (value.length > 0 && value !== localStorage.getItem(key)) {
+    localStorage.setItem(key, value);
+  } else if (value.length === 0) {
+    localStorage.removeItem(key);
+  }
 }
 
 //helper function to check if the line is a file
