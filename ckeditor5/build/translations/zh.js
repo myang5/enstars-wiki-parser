@@ -1,1 +1,0 @@
-(function(d){d['zh']=Object.assign(d['zh']||{},{a:"正在儲存變更",b:"連結",c:"有序清單",d:"符號清單",e:"粗體",f:"斜體",g:"在新視窗開啟",h:"可下載",i:"移除連結",j:"編輯連結",k:"在新視窗開啟連結",l:"連結沒有URL",m:"儲存",n:"取消",o:"連結˙ URL",p:"豐富文字編輯器，%0",q:"%0/%1",r:"上一",s:"下一",t:"取消",u:"重做",v:"Editor toolbar",w:"Show more items",x:"Dropdown toolbar"})})(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
