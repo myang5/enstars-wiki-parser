@@ -1,59 +1,24 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import TabMenu from './TabMenu';
-import { InputArea } from './TabContent';
+import * as Tab from './TabContent/TabContent';
 
 export default function Main() {
-  console.log('Main render');
+  const [buttonInfo] = useState({
+    'Text': 'inputArea',
+    'Details': 'detailArea',
+    'Renders': 'renderArea',
+    'TL Notes': 'tlArea',
+  })
+  const [clicked, setClicked] = useState('Text');
+
   return (
-    <div className='mainContainer'>
+    <div id='mainContainer'>
       <div id="input">
-        <TabMenu />
-        <InputArea />
+        <TabMenu {...{ buttonInfo, clicked, setClicked }} />
+        <Tab.InputArea clicked={buttonInfo[clicked]} />
+        <Tab.DetailArea clicked={buttonInfo[clicked]} />
 
         {/*
-
-      <!---DETAILS TAB!--->
-      <div id="detailArea" class="tabcontent">
-
-        <h3>Story Details</h3>
-        <div class="row">
-          <label class='spacer' for="location">Location</label>
-          <input type="text" id="location">
-        </div>
-
-        <div class="row">
-          <label class='spacer' for="author">Writer</label>
-          <select id="author">
-            <option>日日日 (Akira)</option>
-            <option>結城由乃 (Yuuki Yoshino)</option>
-            <option>西岡麻衣子 (Nishioka Maiko)</option>
-            <option>ゆーます (Yuumasu)</option>
-            <option>木野誠太郎 (Kino Seitaro)</option>
-            <option>Happy Elements株式会社 (Happy Elements K.K)</option>
-          </select>
-        </div>
-        <div class="row label">
-          <span class="spacer"></span>
-          <label class="halfWidth" for="translator">Name</label>
-          <label class="halfWidth" for="tlLink">Credit link (optional)</label>
-        </div>
-        <div class="row">
-          <label class='spacer' for="translator">Translator</label>
-          <input class="halfWidth" type="text" id="translator">
-          <input class="halfWidth" type="text" id="tlLink">
-        </div>
-        <div class="row label">
-          <span class="spacer"></span>
-          <label class="halfWidth" for="editor">Name</label>
-          <label class="halfWidth" for="edLink">Credit link (optional)</label>
-        </div>
-        <div class="row">
-          <label class='spacer' for="editor">Editor</label>
-          <input class="halfWidth" type="text" id="editor">
-          <input class="halfWidth" type="text" id="edLink">
-        </div>
-        <h3>Heading Colors</h3>
-        <div id='colorinputs'></div></div>
 
       <!---RENDERTAB!--->
       <div id="renderArea" class="tabcontent">

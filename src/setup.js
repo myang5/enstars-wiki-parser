@@ -69,28 +69,28 @@ function RenderLink(props) {
     </a>)
 }
 
-function ColorInputs(props) {
-  const labels = props.labels;
-  return (
-    labels.map(label =>
-      <div className='row'>
-        <label className='spacer'>{label[0].toUpperCase() + label.slice(1, label.length)}</label>
-        <input className="jscolor {width:101, padding:0, shadow:false, borderWidth:0, backgroundColor:'transparent', position:'right'}"
-          spellcheck='false'
-          name={label + 'Col'} />
-      </div>
-    )
-  )
-}
+//function ColorInputs(props) {
+//  const labels = props.labels;
+//  return (
+//    labels.map(label =>
+//      <div className='row'>
+//        <label className='spacer'>{label[0].toUpperCase() + label.slice(1, label.length)}</label>
+//        <input className="jscolor {width:101, padding:0, shadow:false, borderWidth:0, backgroundColor:'transparent', position:'right'}"
+//          spellcheck='false'
+//          name={label + 'Col'} />
+//      </div>
+//    )
+//  )
+//}
 
 function setup() {
-  ReactDOM.render(<ColorInputs labels={['writer', 'location', 'bottom', 'text']}/>, document.querySelector('#colorinputs'))
+  //ReactDOM.render(<ColorInputs labels={['writer', 'location', 'bottom', 'text']}/>, document.querySelector('#colorinputs'))
   ReactDOM.render(<RenderForms ref={(element) => { window.renderForms = element }} />, document.querySelector('#renderForms'));
   
-  document.querySelector('#translator').value = localStorage.getItem('translator');
-  document.querySelector('#tlLink').value = localStorage.getItem('tlLink');
-  document.querySelector('#editor').value = localStorage.getItem('editor');
-  document.querySelector('#edLink').value = localStorage.getItem('edLink');
+  //document.querySelector('#translator').value = localStorage.getItem('translator');
+  //document.querySelector('#tlLink').value = localStorage.getItem('tlLink');
+  //document.querySelector('#editor').value = localStorage.getItem('editor');
+  //document.querySelector('#edLink').value = localStorage.getItem('edLink');
 
   BalloonEditor
     .create(document.querySelector('#inputEditor'), {

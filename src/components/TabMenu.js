@@ -1,55 +1,23 @@
 import React from 'react';
 
-export default class TabMenu extends React.Component {
-  constructor(props) {
-    super(props);
-    this.openTab = this.openTab.bind(this);
-    this.state = {
-      buttonInfo: {
-        'Text': 'inputArea',
-        'Details': 'detailArea',
-        'Renders': 'renderArea',
-        'TL Notes': 'tlArea',
-      },
-      defaultOpen: 'Text',
-      clicked: '',
-    }
+export default function TabMenu(props) {
+  const openTab = (e) => {
+    const btn = e.target.value;
+    props.setClicked(btn);
   }
 
-  componentDidMount() {
-    document.querySelector(`[value='${this.state.defaultOpen}']`).click();
-  }
-
-  openTab(btn, tabName) {
-    const tabcontent = document.querySelectorAll('.tabcontent');
-    for (let i = 0; i < tabcontent.length; i++) {
-      tabcontent[i].style.display = 'none';
-    }
-    const active = document.querySelectorAll('.tablink');
-    for (let i = 0; i < active.length; i++) {
-      active[i].classList.remove = 'active';
-    }
-    let tabId = "#" + tabName;
-    document.querySelector(tabId).style.display = 'block';
-    this.setState({ clicked: btn })
-  }
-
-  render() {
-    const buttons = Object.keys(this.state.buttonInfo);
-    const tabs = buttons.map((btn) =>
-      <TabLink key={btn}
-        value={btn}
-        className={'tablink' + (this.state.clicked === btn ? ' active' : '')}
-        text={btn}
-        onClick={() => this.openTab(btn, this.state.buttonInfo[btn])}
-      />
-    )
-    return (
-      <div className="tab">
-        {tabs}
-      </div>
-    );
-  }
+  return (
+    <div className="tab">
+      {Object.keys(props.buttonInfo).map((btn) =>
+        <TabLink key={btn}
+          value={btn}
+          className={'tablink' + (props.clicked === btn ? ' active' : '')}
+          text={btn}
+          onClick={openTab}
+        />
+      )}
+    </div>
+  );
 }
 
 function TabLink(props) {
