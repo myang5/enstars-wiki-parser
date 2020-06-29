@@ -1,10 +1,13 @@
 .ck.ck-editor__editable_inline {
     height: inherit;
     border: none;
+    outline: none;
 }
 
 :root {
+    --ck-border-radius: 0;
     --ck-inner-shadow: none;
     --ck-drop-shadow: none;
+    --ck-focus-ring: none;
     --ck-color-focus-border: none;
 }

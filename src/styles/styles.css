@@ -222,7 +222,11 @@ textarea {
     resize: none;
 }
 
-.tabcontent {
+textarea:focus {
+  outline: none;
+}
+
+.tabContent {
     width: 100%;
     height: 100%;
     box-sizing: border-box;
@@ -236,7 +240,7 @@ textarea {
     padding-right: 0.7rem;
 }
 
-.tabcontent .row {
+.tabContent .row {
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -244,7 +248,7 @@ textarea {
   min-width: 300px;
 }
 
-.tabcontent .row:not(.label) {
+.tabContent .row:not(.label) {
   margin-bottom: 0.7rem;
 }
 

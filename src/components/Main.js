@@ -3,6 +3,7 @@ import TabMenu from './TabMenu';
 import { InputArea } from './TabContent';
 
 export default function Main() {
+  console.log('Main render');
   return (
     <div className='mainContainer'>
       <div id="input">
