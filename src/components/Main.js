@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import TabMenu from './TabMenu';
 import * as Tab from './TabContent/TabContent';
+import convertText from '../convertText/convertText.js';
 
 export default function Main() {
   const [buttonInfo] = useState({
@@ -11,12 +12,20 @@ export default function Main() {
   })
   const [clicked, setClicked] = useState('Text');
 
+  //copies text to clipboard
+  const copyToClip = () => {
+    document.querySelector('#output').select();
+    document.execCommand("copy");
+    document.querySelector('#copyBtn').innerHTML = 'Copied';
+  }
+
   return (
     <div id='mainContainer'>
       <div id="input">
         <TabMenu {...{ buttonInfo, clicked, setClicked }} />
         <Tab.InputArea clicked={buttonInfo[clicked]} />
         <Tab.DetailArea clicked={buttonInfo[clicked]} />
+        <Tab.RenderArea clicked={buttonInfo[clicked]} />
 
         {/*
 
@@ -40,10 +49,10 @@ export default function Main() {
 
       </div>
 
-      {/*<div id="btnArea">
-        <button onclick="convertText()" id="convertBtn">CONVERT</button>
-        <button onclick="copyToClip()" id="copyBtn">Copy Output</button>
-      </div>*/}
+      <div id="btnArea">
+        <button onClick={convertText} id="convertBtn">CONVERT</button>
+        <button onClick={copyToClip} id="copyBtn">Copy Output</button>
+      </div>
 
       <textarea id="output"></textarea>
     </div>

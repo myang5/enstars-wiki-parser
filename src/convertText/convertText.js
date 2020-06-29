@@ -1,10 +1,4 @@
-
-//copies text to clipboard
-function copyToClip() {
-  document.querySelector('#output').select();
-  document.execCommand("copy");
-  document.querySelector('#copyBtn').innerHTML = 'Copied';
-}
+import * as data from './data';
 
 //lmao
 function convertToDom(data) {
@@ -165,7 +159,7 @@ If this is an error, please contact Midori.`
             output += headingCode.replace("HEADING", line.slice(line.indexOf(':') + 1).trim());
             currentName = ''; //since its new section
           }
-          else if (namesLink[label.toUpperCase()] != undefined) { //if valid character is speaking
+          else if (data.NAME_LINKS[label.toUpperCase()] != undefined) { //if valid character is speaking
             if (label !== currentName) { //if new character is speaking
               let renderCode = dialogueRender;
               let id = "#" + label[0].toUpperCase() + label.slice(1, label.length); //create id to access chara's render file in Renders tab
