@@ -17,20 +17,19 @@ export default class Editor extends BalloonEditor {}
 
 // Plugins to include in the build.
 Editor.builtinPlugins = [
-	Bold,
-	Italic,
-	Link,
-	PasteFromOffice,
-	Essentials,
-	Paragraph,
-	Autosave,
-	List
+  Bold,
+  Italic,
+  Link,
+  PasteFromOffice,
+  Essentials,
+  Paragraph,
+  Autosave,
+  List
 ];
 
 BalloonEditor.defaultConfig = {
-	language: 'en',
-	licenseKey: '',
-  };
+  language: 'en',
+  licenseKey: '',
+};
 
 
-  

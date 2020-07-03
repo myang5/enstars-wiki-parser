@@ -1,11 +1,11 @@
 import React from 'react';
-import { InputEditor } from './CKEditor';
+import { InputEditor, TLNotesEditor } from './CKEditor';
 import DetailContent from './DetailContent';
 import RenderForms from './RenderContent';
-import '../../jscolor-2.0.5/jscolor.js';
 
 function TabContent(props) {
   return (
+    // set className so that CSS controls which TabContent is visible
     <div className={`tabContent${props.clicked === props.type ? ' active' : ''}`} id={props.type} >
       {props.content}
     </div>
@@ -13,7 +13,7 @@ function TabContent(props) {
 }
 
 export function InputArea(props) {
-  const content = <InputEditor />
+  const content = <InputEditor updateNames={props.updateNames} />
   return <TabContent type='inputArea' content={content} clicked={props.clicked} />
 }
 
@@ -23,6 +23,11 @@ export function DetailArea(props) {
 }
 
 export function RenderArea(props) {
-  const content = <RenderForms />
+  const content = <RenderForms names={props.names} />
   return <TabContent type='renderArea' content={content} clicked={props.clicked} />
+}
+
+export function TLNotesArea(props) {
+  const content = <TLNotesEditor />
+  return <TabContent type='tlArea' content={content} clicked={props.clicked} />
 }

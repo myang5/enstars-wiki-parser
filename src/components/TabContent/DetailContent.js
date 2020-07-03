@@ -1,7 +1,9 @@
 import React, { useLayoutEffect } from 'react';
+import '../../jscolor-2.0.5/jscolor.js';
 
 export default function DetailContent() {
 
+  // get values from localStorage before initial render to screen
   useLayoutEffect(() => {
     document.querySelector('#translator').value = localStorage.getItem('translator');
     document.querySelector('#tlLink').value = localStorage.getItem('tlLink');

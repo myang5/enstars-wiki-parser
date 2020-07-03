@@ -34,7 +34,7 @@ module.exports = {
     new HtmlWebpackHarddiskPlugin(),
     new CKEditorWebpackPlugin({
       language: 'en',
-      additionalLanguages: 'all'
+      //additionalLanguages: 'all'
     })
   ],
   module: {

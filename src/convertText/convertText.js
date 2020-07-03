@@ -1,14 +1,72 @@
 import * as data from './data';
 
-//lmao
-function convertToDom(data) {
+/**
+ * Helper function to convert the data returned as a String
+ * from CKEditor into a DOM Object
+ * @param {String} data The data returned from CKEditor.getData()
+ * @return The result of parsing the data into a DOM object
+ */
+export function convertToDom(data) {
   return new DOMParser().parseFromString(data, 'text/html');
 }
 
-//each line in CKEditor has <p> wrapper
-//editorDom: editor data already converted to DOM object
-//returns an Array of each line of text
-function getTextFromDom(editorDom) {
+
+/**
+   * Pasting from DreamWidth seems to add 2 <br> tags per new line
+   * instead of wrapping the line in <p> elements.
+   * However, most of the functions work based on the assumption that each
+   * line of text is wrapped in a <p> element
+   * This helper function identifies new lines, moves them into <p> elements,
+   * and adds them to the document body.
+   * Possible case includes nested <p> tags but I haven't seen that yet, 
+   * so code assumes this input structure:
+   * <body>
+   *  <p>
+   *    Line1
+   *    <br><br>
+   *    Line2
+   *    <br><br>
+   *    Line3
+   *  </p>
+   * </body>
+   * And the desired output structure is:
+   * <body>
+   *  <p>Line1</p>
+   *  <p>Line2</p>
+   *  <p>Line3</p>
+   * </body>
+   * Function uses selection ranges: https://javascript.info/selection-range
+   * @param inputDom The CKEDitor content converted to a DOM object using convertToDom()
+   * @return The edited CKEditor DOM with lines placed in <p> elements.
+   */
+  export function extractBr(inputDom) {
+    // Assumes content with proper <p> formatting wouldn't have <br> tags
+    let hasBr = inputDom.querySelectorAll('br');
+    if (hasBr.length > 0) {
+      //console.log('has br tags');
+      for (let i = 0; i < hasBr.length; i++) {
+        let parent = hasBr[i].parentNode; // the <p> element
+        let insertInto = parent.parentNode; // the document.body
+        let range = new Range();
+        range.setStart(hasBr[i].parentNode, 0); // set start to immediately after the opening <p> tag
+        range.setEndAfter(hasBr[i]); //set end to the <br> tag itself
+        let newP = document.createElement(parent.tagName.toLowerCase());
+        newP.append(range.extractContents());
+        insertInto.insertBefore(newP, parent);
+        hasBr[i].remove();
+      }
+    }
+    return inputDom;
+  }
+
+
+/**
+ * Extract the text from the CKEditor.
+ * Each line is wrapped in a <p> element.
+ * @param editorDom The CKEDitor content converted to a DOM object using convertToDom()
+ * @return {Array} An array containing the text content of each paragraph
+ */
+export function getTextFromDom(editorDom) {
   const paragraphs = editorDom.querySelectorAll('p'); //NodeList of all p elements
   const input = []
   paragraphs.forEach(function (p) {
@@ -17,31 +75,30 @@ function getTextFromDom(editorDom) {
   return input;
 }
 
-//every line in CKEditor will always be in a <p> element
-//<br> tags will always be in a <p> element
-//goal is to identify new lines, move them into <p> elements, and add them to the document body in the correct order
-//pasting from dreamwidth seems to add 2 <br> tags per double line
-//possible case includes nested <p> tags but I haven't seen that yet, assume all <br> tags have <p> parents which are childNodes of body
-//https://javascript.info/selection-range
-function extractBr(inputDom) {
-  let hasBr = inputDom.querySelectorAll('br');
-  if (hasBr.length > 0) {
-    //console.log('has br tags');
-    for (let i = 0; i < hasBr.length; i++) {
-      let parent = hasBr[i].parentNode;
-      let insertInto = parent.parentNode;
-      let range = new Range()
-      range.setStart(hasBr[i].parentNode, 0);
-      range.setEndAfter(hasBr[i]);
-      let newP = document.createElement(parent.tagName.toLowerCase());
-      newP.append(range.extractContents());
-      insertInto.insertBefore(newP, parent);
-      hasBr[i].remove();
+
+/**
+ * Get the names of the characters in the current dialogue in InputArea component.
+ * Used as a callback to the Autosave plugin of the InputEditor.
+ * @param editor An instance of CKEditor
+ * @return {Set} A Set containing the names of the characters present in the dialogue
+ */
+export function getNamesInDialogue(editor) {
+  let inputDom = extractBr(convertToDom(editor.getData()))
+  let input = getTextFromDom(inputDom);
+  const names = new Set(); //add "key" of each line if there is one
+  input.forEach(function (line) {
+    let name = line.split(' ')[0]; //get first word in the line
+    if (name.includes(':')) { //if there is a colon
+      name = name.slice(0, name.indexOf(':')); //get text up until colon
+      if (data.NAME_LINKS[name.toUpperCase()] != undefined) { //if valid name
+        name = name[0].toUpperCase() + name.slice(1, name.length); //format name: arashi --> Arashi
+        names.add(name);
+      }
     }
-    //console.log(inputDom);
-  }
-  return inputDom;
+  });
+  return names;
 }
+
 
 //How formatter converts text (a rough summary)
 //Types of lines:
@@ -326,7 +383,7 @@ function formatTlNotes(data, count, error) {
           if (!isNaN(text[0])) { //ERROR: assumes the number is separated by space as in "1. note" vs. "1.note"
             acc.push(text.split(' ').slice(1).join(' '))
           }
-          else if (text.length > 0) {acc[acc.length - 1] += `\n${text}`}
+          else if (text.length > 0) { acc[acc.length - 1] += `\n${text}` }
           return acc;
         }, []);
         //parasFiltered = paras.filter((para) => para.trim().length ? true : false); //filter out empty lines
