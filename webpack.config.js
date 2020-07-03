@@ -10,20 +10,30 @@ const CKEditorWebpackPlugin = require('@ckeditor/ckeditor5-dev-webpack-plugin');
 const CKEditorCSSRegex = /ckeditor5-[^/\\]+[/\\]theme[/\\].+\.css$/;
 const excludeFilesRegex = [path.resolve(__dirname, 'node_modules'), path.resolve(__dirname, './src/ckeditor5')];
 
+// follow this guide for splitting: 
+// https://medium.com/hackernoon/the-100-correct-way-to-split-your-chunks-with-webpack-f8a9df5b7758
+
 module.exports = {
   entry: {
     index: './src/index.js',
-    //ckeditor: './src/components/build/ckeditor.js',
+    // TODO: Code splitting throws duplicate modules error but page loads anyway
+    ckeditor: './src/components/TabContent/CKEditor.js',
   },
   output: {
     path: path.resolve(__dirname, './dist'),
-    filename: '[name].bundle.js'
+    filename: '[name].[contenthash].bundle.js'
   },
   resolve: {
     alias: {
       Assets: path.resolve(__dirname, 'src/assets/'),
       Styles: path.resolve(__dirname, 'src/styles/')
     }
+  },
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+      minSize: 0,
+    },
   },
   plugins: [
     new MiniCssExtractPlugin({ filename: '[name].css'}),
