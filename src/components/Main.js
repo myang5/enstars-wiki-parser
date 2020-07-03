@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import EditorContext from './EditorContext';
 import TabMenu from './TabMenu';
 import * as Tab from './TabContent/TabContent';
-import { getNamesInDialogue } from '../convertText/convertText';
+import { getNamesInDialogue, convertText } from '../convertText/convertText';
 
 export default function Main() {
   const [buttonInfo] = useState({
@@ -48,12 +48,12 @@ export default function Main() {
         </div>
 
         <div id="btnArea">
-          <button id="convertBtn">CONVERT</button>
+          <button onClick={() => convertText(inputRef.current.editor, tlNotesRef.current.editor)} id="convertBtn">CONVERT</button>
           <button onClick={copyToClip} id="copyBtn">Copy Output</button>
+          <div className='error'></div>
         </div>
 
         <textarea id="output"></textarea>
-
       </div>
     </EditorContext.Provider>
   )

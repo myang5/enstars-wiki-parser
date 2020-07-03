@@ -6,6 +6,7 @@ import * as data from './data';
  * @param {String} data The data returned from CKEditor.getData()
  * @return The result of parsing the data into a DOM object
  */
+
 export function convertToDom(data) {
   return new DOMParser().parseFromString(data, 'text/html');
 }
@@ -39,25 +40,26 @@ export function convertToDom(data) {
    * @param inputDom The CKEDitor content converted to a DOM object using convertToDom()
    * @return The edited CKEditor DOM with lines placed in <p> elements.
    */
-  export function extractBr(inputDom) {
-    // Assumes content with proper <p> formatting wouldn't have <br> tags
-    let hasBr = inputDom.querySelectorAll('br');
-    if (hasBr.length > 0) {
-      //console.log('has br tags');
-      for (let i = 0; i < hasBr.length; i++) {
-        let parent = hasBr[i].parentNode; // the <p> element
-        let insertInto = parent.parentNode; // the document.body
-        let range = new Range();
-        range.setStart(hasBr[i].parentNode, 0); // set start to immediately after the opening <p> tag
-        range.setEndAfter(hasBr[i]); //set end to the <br> tag itself
-        let newP = document.createElement(parent.tagName.toLowerCase());
-        newP.append(range.extractContents());
-        insertInto.insertBefore(newP, parent);
-        hasBr[i].remove();
-      }
+
+export function extractBr(inputDom) {
+  // Assumes content with proper <p> formatting wouldn't have <br> tags
+  let hasBr = inputDom.querySelectorAll('br');
+  if (hasBr.length > 0) {
+    //console.log('has br tags');
+    for (let i = 0; i < hasBr.length; i++) {
+      let parent = hasBr[i].parentNode; // the <p> element
+      let insertInto = parent.parentNode; // the document.body
+      let range = new Range();
+      range.setStart(hasBr[i].parentNode, 0); // set start to immediately after the opening <p> tag
+      range.setEndAfter(hasBr[i]); //set end to the <br> tag itself
+      let newP = document.createElement(parent.tagName.toLowerCase());
+      newP.append(range.extractContents());
+      insertInto.insertBefore(newP, parent);
+      hasBr[i].remove();
     }
-    return inputDom;
   }
+  return inputDom;
+}
 
 
 /**
@@ -66,6 +68,7 @@ export function convertToDom(data) {
  * @param editorDom The CKEDitor content converted to a DOM object using convertToDom()
  * @return {Array} An array containing the text content of each paragraph
  */
+
 export function getTextFromDom(editorDom) {
   const paragraphs = editorDom.querySelectorAll('p'); //NodeList of all p elements
   const input = []
@@ -82,6 +85,7 @@ export function getTextFromDom(editorDom) {
  * @param editor An instance of CKEditor
  * @return {Set} A Set containing the names of the characters present in the dialogue
  */
+
 export function getNamesInDialogue(editor) {
   let inputDom = extractBr(convertToDom(editor.getData()))
   let input = getTextFromDom(inputDom);
@@ -128,42 +132,11 @@ export function getNamesInDialogue(editor) {
 //How to detect dialogue line styling vs. other styling?
 //Evaluate <p>.innerText and then decide from there
 
-function convertText() {
+export function convertText(editor1, editor2) {
 
   document.querySelector('#copyBtn').innerHTML = 'Copy Output';
 
-  const values = getValues(); //get user input from all the tabs
-
-  //wiki code templates
-  const header =
-    `{| class="article-table" cellspacing="1/6" cellpadding="2" border="1" align="center" width="100%"
-! colspan="2" style="text-align:center;background-color:${values.writerCol}; color:${values.textCol};" |'''Writer:''' ${values.author}
-|-
-| colspan="2" |[[File:HEADERFILE|660px|link=|center]]
-|-
-! colspan="2" style="text-align:center;background-color:${values.locationCol}; color:${values.textCol};" |'''Location: ${values.location}'''
-`;
-  const dialogueRender =
-    `|-
-|[[File:FILENAME|x200px|link=|center]]
-|
-`;
-  const cgRender =
-    `|-
-! colspan="2" style="text-align:center;" |[[File:FILENAME|center|660px]]
-`;
-  const heading =
-    `|-
-! colspan="2" style="text-align:center;background-color:${values.locationCol}; color:${values.textCol};" |'''HEADING'''
-`;
-  const translator =
-    `|-
-! colspan="2" style="text-align:center;background-color:${values.bottomCol};color:${values.textCol};" |'''Translation: [${values.translator}] '''
-`;
-  const editor =
-    `|-
-! colspan="2" style="text-align:center;background-color:${values.bottomCol};color:${values.textCol};" |'''Proofreading: [${values.editor}] '''
-`;
+  const TEMPLATES = getTemplates(); //get user input from all the tabs
 
   function alertOnce() {
     let counter = 0;
@@ -185,40 +158,44 @@ If this is an error, please contact Midori.`
   extractBr(inputDom);
 
   let input = inputDom.querySelectorAll('p');
-  let output = header;
+  let output = TEMPLATES.header;
 
   let currentName = ''; //needed for case where dialogue has name on every line
   let tlMarkerCount = 0;
   for (let i = 0; i < input.length; i++) {
-    let line = input[i].innerText; //ignore possible text styles but keep DOM elements intact to add back dialogue styling
+    let line = input[i].innerText; //ignore text styling while evaluating lines but keep DOM elements intact to add back styling
     if (line.replace(/&nbsp;/g, ' ').trim() != '') { //ignore empty lines
+      // -----FILTER OUT FILE NAMES-----
       if (isFileName(line)) {
-        if (i === 0) { //if first line --> header file
+        if (i === 0) {
           output = output.replace("HEADERFILE", line.trim());
         }
-        else { //if CG or scene change image file
-          let cgCode = cgRender;
-          output += cgCode.replace("FILENAME", line.trim());
-          currentName = ''; //since its new section
+        else {
+          output += TEMPLATES.cgRender.replace("FILENAME", line.trim());
+          currentName = ''; // since its new section
         }
       }
-      else { //if dialogue line or header
-        input[i].innerHTML = formatTlMarker(input[i].innerHTML, alertNoTitleOnce);
+      // -----PROCESS HEADINGS OR DIALOGUE LINES-----
+      else {
+        input[i].innerHTML = formatTlMarker(editor2, input[i].innerHTML, alertNoTitleOnce);
         tlMarkerCount += countTlMarkers(line);
         let firstWord = line.split(" ")[0];
-        if (!firstWord.includes(":")) { //if no colon --> continuing dialogue line
-          output += formatStyling(input[i]).innerHTML + "\n\n"; //convert styling to source wiki notation
+        // -----FILTER OUT DIALOGUE LINES WITH NO LABEL-----
+        if (!firstWord.includes(":")) {
+          output += formatStyling(input[i]).innerHTML + "\n\n"; // convert styling to source wiki notation
         }
-        else { //if new character is speaking or heading
-          let label = firstWord.replace(':', ''); //remove colon
-          if (label.toUpperCase() === 'HEADING') { //if heading
-            let headingCode = heading;
-            output += headingCode.replace("HEADING", line.slice(line.indexOf(':') + 1).trim());
-            currentName = ''; //since its new section
+        // -----PROCESS LINES WHERE FIRST WORD HAS A ':'-----
+        else {
+          let label = firstWord.replace(':', ''); // remove colon
+          // -----FILTER OUT HEADING LINES-----
+          if (label.toUpperCase() === 'HEADING') {
+            output += TEMPLATES.heading.replace("HEADING", line.slice(line.indexOf(':') + 1).trim());
+            currentName = ''; // since its new section
           }
-          else if (data.NAME_LINKS[label.toUpperCase()] != undefined) { //if valid character is speaking
-            if (label !== currentName) { //if new character is speaking
-              let renderCode = dialogueRender;
+          // -----FINALLY PROCESS DIALOGUE LINES WITH LABELS-----
+          else if (data.NAME_LINKS[label.toUpperCase()] != undefined) { // if valid character is speaking
+            if (label !== currentName) { // if new character is speaking
+              let renderCode = TEMPLATES.dialogueRender;
               let id = "#" + label[0].toUpperCase() + label.slice(1, label.length); //create id to access chara's render file in Renders tab
               output += renderCode.replace("FILENAME", document.querySelector(id).value.trim());
               //update currentName
@@ -240,8 +217,8 @@ If this is an error, please contact Midori.`
   }
 
   if (tlMarkerCount > 0) output += formatTlNotes(editor2.getData(), tlMarkerCount, alertNoTitleOnce);
-  output += translator;
-  if (values.editor) output += editor;
+  output += TEMPLATES.translator;
+  if (TEMPLATES.editor) output += TEMPLATES.editor;
   output += '|}';
   document.querySelector('#output').value = output;
   //Error message seems to be more annoying than helpful
@@ -259,9 +236,14 @@ If this is an error, please contact Midori.`
   //}
 }
 
-//helper function for convertText
-//also saves certain values in localStorage for convenience
-function getValues() {
+/**
+ * Helper function to format the wiki code for story header and footer
+ * with the user input
+ * Also saves certain values in localStorage for user convenience
+ * @return {Object} containing the values from 
+ */
+
+function getTemplates() {
   const values = {};
   values.location = document.querySelector('#location').value.trim();
   const select = document.querySelector('#author');
@@ -284,11 +266,51 @@ function getValues() {
   updateLocalStorage('editor', editor);
   updateLocalStorage('edLink', edLink);
 
-  return values;
+  //wiki code templates
+  const templates = {};
+
+  templates.header =
+    `{| class="article-table" cellspacing="1/6" cellpadding="2" border="1" align="center" width="100%"
+! colspan="2" style="text-align:center;background-color:${values.writerCol}; color:${values.textCol};" |'''Writer:''' ${values.author}
+|-
+| colspan="2" |[[File:HEADERFILE|660px|link=|center]]
+|-
+! colspan="2" style="text-align:center;background-color:${values.locationCol}; color:${values.textCol};" |'''Location: ${values.location}'''
+`;
+  templates.dialogueRender =
+    `|-
+|[[File:FILENAME|x200px|link=|center]]
+|
+`;
+  templates.cgRender =
+    `|-
+! colspan="2" style="text-align:center;" |[[File:FILENAME|center|660px]]
+`;
+  templates.heading =
+    `|-
+! colspan="2" style="text-align:center;background-color:${values.locationCol}; color:${values.textCol};" |'''HEADING'''
+`;
+  templates.translator =
+    `|-
+! colspan="2" style="text-align:center;background-color:${values.bottomCol};color:${values.textCol};" |'''Translation: [${values.translator}] '''
+`;
+  if (editor.length > 0) {
+    templates.editor =
+      `|-
+! colspan="2" style="text-align:center;background-color:${values.bottomCol};color:${values.textCol};" |'''Proofreading: [${values.editor}] '''
+`;
+  }
+
+  return templates;
 }
 
+/**
+ * Save value in localStorage at specified key
+ * @param {String} key 
+ * @param {String} value 
+ */
+
 function updateLocalStorage(key, value) {
-  console.log(key, value);
   if (value.length > 0 && value !== localStorage.getItem(key)) {
     localStorage.setItem(key, value);
   }
@@ -297,9 +319,12 @@ function updateLocalStorage(key, value) {
   }
 }
 
-//helper function to check if the line is a file
-//params: line - a String
-//returns a boolean value representing if the string is a file name
+/**
+ * Check if a dialogue line is actually a file name
+ * @param {String} line 
+ * @return {Boolean}
+ */
+
 function isFileName(line) {
   const extensions = ['.png', '.gif', '.jpg', '.jpeg', '.ico', '.pdf', '.svg'];
   for (let i = 0; i < extensions.length; i++) {
@@ -326,21 +351,36 @@ function formatStyling(editorDom) {
   return editorDom;
 }
 
+/**
+ * Get the number of TL markers in the dialogue line
+ * @param {String} line 
+ * @return {Number}
+ */
+
 function countTlMarkers(line) {
   return line.match(/\[\d+\]/g) ? line.match(/\[\d+\]/g).length : 0;
 }
 
-//helper function to format tl note markers
-function formatTlMarker(line, error) {
-  if (line.search(/\[\d+\]/) > 0) { //if there is a tlMarker
-    let title = getChapTitle(convertToDom(editor2.getData()), error);
+/**
+ * Formats TL note markers into clickable wiki code citation references
+ * [1] --> <span id='${title}RefNUM'>[[#${title}NoteNUM|<sup>[NUM]</sup>]]</span>
+ * The complicated id format is required for the citations to work with the 
+ * story page's tabview, since each tab may have multiple citations with the same number
+ * @param editor Reference to the CKEDitor instance 
+ * @param {String} line 
+ * @param {Function} error 
+ * @return {String} The line with any TL markers formatted
+ */
+
+function formatTlMarker(editor, line, error) {
+  if (line.search(/\[\d+\]/) > 0) { // Look for TL Markers
+    const title = getChapTitle(convertToDom(editor.getData()), error);
     if (title) {
-      let tlCode = `<span id='${title}RefNUM'>[[#${title}NoteNUM|<sup>[NUM]</sup>]]</span>`;
       const markers = line.match(/\[\d+\]/g);
-      markers.forEach(function (marker) {
-        let num = marker.substring(marker.indexOf('[') + 1, marker.indexOf(']'));
-        let newTlCode = tlCode.replace(/NUM/g, num);
-        line = line.replace(marker, newTlCode)
+      markers.forEach(marker => {
+        const num = marker.substring(marker.indexOf('[') + 1, marker.indexOf(']'));
+        const tlCode = `<span id='${title}Ref${num}'>[[#${title}Note${num}|<sup>[${num}]</sup>]]</span>`;
+        line = line.replace(marker, tlCode);
       });
     }
   }

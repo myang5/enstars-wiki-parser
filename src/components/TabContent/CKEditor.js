@@ -75,7 +75,6 @@ export function TLNotesEditor() {
   );
 
   useEffect(() => {
-    console.log('InputEditor useEffect')
     // Grab the HTML element using ref.current.editor
     // https://github.com/ckeditor/ckeditor5/issues/1185
     ref.current.editor.editing.view.change( writer => {
