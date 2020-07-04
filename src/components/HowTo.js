@@ -49,22 +49,21 @@ export default function HowTo() {
         <p>For now, if you want to use more than one render per character in one chapter, you have to format each section of the chapter with different renders separately. INSERT EXAMPLE</p>
 
         <h3 id='tlNotesSection'>TL Notes Tab</h3>
-        <p>In the dialogue, you can mark the place the translation note refers to with a marker like this:</p>
+        <p>In the Text tab, you can mark the place the translation note refers to with a marker like this:</p>
         <blockquote>
           Izumi: I don’t know if they’re Eden or oden[1] or what, but we can’t let them have their way in our territory.
     </blockquote>
         <p>You can have markers in the middle or end of the line, or even multiple markers in one line if needed.</p>
         <p>In the TL Notes tab, here's an example of how the notes should be formatted:</p>
         <blockquote>
-          Chapter 1
-      <ol>
+          <ol>
             <li>Place translator notes in a numbered list like this.</li>
             <li>Make sure the numbers correspond to each marker!</li>
           </ol>
         </blockquote>
         <ul>
-          <li><strong>The first line should be a chapter title</strong> that's UNIQUE within the story (needed for citations to work with the wiki's tab view)</li>
-          <li><strong>The TL notes should be in an actual numbered list</strong> as opposed to paragraphs/lines with numbers in front. You can use the editor to format the list:</li>
+          <li>The formatter identifies TL notes by looking for numbers at the beginning of a paragraph.</li>
+          <li><strong>The TL notes can also be in an actual ordered list, which is preferable.</strong> You can use the editor to format the list:</li>
           <img src={list} />
         </ul>
 
