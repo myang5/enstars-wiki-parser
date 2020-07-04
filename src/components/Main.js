@@ -50,7 +50,7 @@ export default function Main() {
         <div id="btnArea">
           <button onClick={() => convertText(inputRef.current.editor, tlNotesRef.current.editor)} id="convertBtn">CONVERT</button>
           <button onClick={copyToClip} id="copyBtn">Copy Output</button>
-          <div className='error'></div>
+          <p className='error'></p>
         </div>
 
         <textarea id="output"></textarea>
