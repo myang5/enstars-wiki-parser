@@ -17,6 +17,7 @@ export default function Header() {
         <ul id="navbar">
           <li><Link to='/howto'>HOW TO USE</Link></li>
           <li><a target="_blank" href="https://goo.gl/forms/Xu42LLAgWKxVYV873">CONTACT</a></li>
+          <li><a target="_blank" href="https://github.com/myang5/enstars-wiki-parser">GITHUB</a></li>
         </ul>
       </div>
     </header>
