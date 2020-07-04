@@ -1,7 +1,7 @@
 import React from 'react';
 import { NAME_LINKS } from '../../convertText/data';
 
-export default function RenderArea(props) {
+export default function RenderContent(props) {
   return (
     <>
       <p>

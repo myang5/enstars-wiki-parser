@@ -160,11 +160,11 @@ If this is an error, please contact Midori.`
   let input = inputDom.querySelectorAll('p');
   let output = TEMPLATES.header;
 
-  let currentName = ''; //needed for case where dialogue has name on every line
-  let tlMarkerCount = 0;
+  let currentName = ''; // needed for case where dialogue has name on every line
+  let tlMarkerCount = 0; // keep track of count to alert user when count mismatches
   for (let i = 0; i < input.length; i++) {
-    let line = input[i].innerText; //ignore text styling while evaluating lines but keep DOM elements intact to add back styling
-    if (line.replace(/&nbsp;/g, ' ').trim() != '') { //ignore empty lines
+    let line = input[i].innerText; // ignore text styling while evaluating lines
+    if (line.replace(/&nbsp;/g, ' ').trim() != '') { // ignore empty lines
       // -----FILTER OUT FILE NAMES-----
       if (isFileName(line)) {
         if (i === 0) {
@@ -182,7 +182,7 @@ If this is an error, please contact Midori.`
         let firstWord = line.split(" ")[0];
         // -----FILTER OUT DIALOGUE LINES WITH NO LABEL-----
         if (!firstWord.includes(":")) {
-          output += formatStyling(input[i]).innerHTML + "\n\n"; // convert styling to source wiki notation
+          output += formatStyling(input[i]).innerHTML + "\n\n";
         }
         // -----PROCESS LINES WHERE FIRST WORD HAS A ':'-----
         else {
@@ -201,9 +201,16 @@ If this is an error, please contact Midori.`
               //update currentName
               currentName = label;
             }
-            //input[i].childNodes[0] might be an element or a text node so use textContent instead of innerHTML or innerText
+            // evaluate text inside first node of <p> tag
+            // might be an element (has styling) or a text node (no styling)
+            // so use textContent instead of innerHTML or innerText
             let contents = input[i].childNodes[0].textContent;
-            contents = contents.replace(firstWord, ''); //get HTMLString of <p> first ChildNode and remove label
+            // remove firstWord (has colon) in case of <strong>Arashi:</strong> line
+            // and also label incase of <strong>Arashi</strong>: line
+            // ERROR: this means colon doesn't get removed if it's not styled....
+            // TODO: find a better way to deal with styling on label
+            contents = contents.replace(firstWord, ''); 
+            contents = contents.replace(label, '');
             if (contents.trim().length === 0) { input[i].childNodes[0].remove(); } //if first ChildNode was just the label then remove node
             else { //set ChildNode HTML
               input[i].childNodes[0].textContent = contents;
@@ -335,9 +342,11 @@ function isFileName(line) {
   return false;
 }
 
-//helper function to format bold, italics, links based on HTML tags
-//params: editorDom - editor data already converted to DOM object
-//returns a DOM object with specified HTML tags converted to wiki code equivalent
+/**
+ * Replaces <strong>, <i>, and <a> tags with the wiki code equivalent
+ * @param editorDom 
+ * @return the editorDom with styling tags replaced
+ */
 function formatStyling(editorDom) {
   editorDom.querySelectorAll('strong').forEach(function (strong) {
     strong.replaceWith(`'''${strong.innerText}'''`);

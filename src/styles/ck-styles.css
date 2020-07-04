@@ -1,7 +1,6 @@
 .ck.ck-editor__editable_inline {
-    height: inherit;
-    border: none;
     outline: none;
+    
 }
 
 :root {
@@ -10,4 +9,19 @@
     --ck-drop-shadow: none;
     --ck-focus-ring: none;
     --ck-color-focus-border: none;
+}
+
+#inputArea .ck.ck-editor__editable_inline {
+  border: none;
+  height: inherit;
+  
+}
+
+#tlArea .ck.ck-editor__editable_inline {
+  border: 1px solid var(--ck-color-base-border);
+  height: 100%;
+  width: 100%;
+  max-height: initial;
+  overflow-y: auto;
+  -webkit-appearance: textfield;
 }

@@ -1,7 +1,8 @@
 import React from 'react';
-import { InputEditor, TLNotesEditor } from './CKEditor';
+import { InputEditor } from './CKEditor';
 import DetailContent from './DetailContent';
-import RenderForms from './RenderContent';
+import RenderContent from './RenderContent';
+import TLNotesContent from './TLNotesContent';
 
 function TabContent(props) {
   return (
@@ -23,11 +24,11 @@ export function DetailArea(props) {
 }
 
 export function RenderArea(props) {
-  const content = <RenderForms names={props.names} />
+  const content = <RenderContent names={props.names} />
   return <TabContent type='renderArea' content={content} clicked={props.clicked} />
 }
 
 export function TLNotesArea(props) {
-  const content = <TLNotesEditor />
+  const content = <TLNotesContent />
   return <TabContent type='tlArea' content={content} clicked={props.clicked} />
 }

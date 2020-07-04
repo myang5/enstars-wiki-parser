@@ -235,20 +235,30 @@ textarea:focus {
 }
 
 .tabContent.active {
-  display: block;
+  display: flex;
+}
+
+.tabContent:not(#inputArea) {
+  padding: 20px;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .spacer {
     display: inline-block;
     text-align: right; 
     padding-right: 0.7rem;
+    width: 4.5rem;
+    flex: 0 0 4.5rem;
 }
 
 .tabContent .row {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  width: calc(100% - 4.5rem);
+  /* subtracting width of spacer */
+  width: calc(100% - 20px); 
   min-width: 300px;
 }
 
@@ -256,16 +266,21 @@ textarea:focus {
   margin-bottom: 0.7rem;
 }
 
-#detailArea .spacer {
-  display: inline-block;
-  flex: 0 0 4.5rem;
+.tabContent .row input, .tabContent .row select {
+  padding: 4px;
+  box-sizing: border-box;
+  min-width: 0;
 }
 
-#detailArea {
-  padding: 20px;
-  flex-direction: column;
-  overflow-y: auto;
-  overflow-x: hidden;
+.tabContent .row input:not(.jscolor), .tabContent .row select {
+  flex: 1 1 auto;
+}
+
+.tabContent .row.label {
+  text-align: left; 
+  margin-left: 2px;
+  font-size: 0.8rem;
+  opacity: 0.7;
 }
 
 #detailArea h3:nth-of-type(1) {
@@ -273,14 +288,10 @@ textarea:focus {
   margin-bottom: 1rem;
 }
 
-#detailArea select, #detailArea input{
-  padding: 4px;
-  box-sizing: border-box;
-  min-width: 0;
-}
-
-#detailArea select, #detailArea input:not(.jscolor){
-  flex: 1 1 auto;
+/* not ideal to hardcode but oh well */
+#detailArea h3:nth-of-type(2) {
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 #detailArea .halfWidth{
@@ -291,35 +302,20 @@ textarea:focus {
   margin-left: 5px;
 }
 
-#detailArea .row.label {
-  text-align: left; 
-  margin-left: 2px;
-  font-size: 0.8rem;
-  opacity: 0.7;
-}
-
 #detailArea .jscolor{
   width: 6em;
   border: 0.5px #adadad;
   border-style: solid;
 }
 
-#renderArea {
-    padding: 20px 20px 0px 20px;
+#tlArea .row.tlEditor {
+  flex: 0 1 100%;
+  display: flex;
+  align-items: flex-start;
 }
 
 #renderArea p {
     margin-top: 0;
-}
-
-#renderArea .spacer {
-    width: 4rem;
-}
-
-#renderForms > .row > input {
-    width: calc(100% - 8rem - 1.4rem); /* - must be surrounded by whitespace */
-    padding: 2px;
-    box-sizing: border-box;
 }
 
 #btnArea{
