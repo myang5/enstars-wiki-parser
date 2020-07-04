@@ -4,8 +4,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
 const { styles } = require('@ckeditor/ckeditor5-dev-utils');
 const CKEditorWebpackPlugin = require('@ckeditor/ckeditor5-dev-webpack-plugin');
-
-//const { CleanWebpackPlugin } = require('clean-webpack-plugin'); //can be used to make sure dist folder doesn't have unused files
+const { CleanWebpackPlugin } = require('clean-webpack-plugin'); // can be used to make sure dist folder doesn't have unused files
+const CopyPlugin = require('copy-webpack-plugin'); // use to copy ico file to build
 
 const CKEditorCSSRegex = /ckeditor5-[^/\\]+[/\\]theme[/\\].+\.css$/;
 const excludeFilesRegex = [path.resolve(__dirname, 'node_modules'), path.resolve(__dirname, './src/ckeditor5')];
@@ -36,6 +36,7 @@ module.exports = {
     },
   },
   plugins: [
+    new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({ filename: '[name].css'}),
     new HtmlWebpackPlugin({
       template: 'src/index.html',
@@ -45,7 +46,13 @@ module.exports = {
     new CKEditorWebpackPlugin({
       language: 'en',
       //additionalLanguages: 'all'
-    })
+    }),
+    // TODO: figure out a way to get ico file into dist
+    //new CopyPlugin({
+    //  patterns: [
+    //    { from: 'src/assets/favicon.ico', to: 'assets/favicon.ico' },
+    //  ],
+    //}),
   ],
   module: {
     rules: [
