@@ -276,7 +276,7 @@ function getTemplates() {
 `;
   templates.cgRender =
     `|-
-! colspan="2" style="text-align:center;" |[[File:FILENAME|center|660px]]
+! colspan="2" style="text-align:center;" |[[File:FILENAME|center|link=|660px]]
 `;
   templates.heading =
     `|-
