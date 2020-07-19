@@ -49,7 +49,8 @@ const NAME_LINKS = {
   HIIRO: 'Hiiro_Amagi',
   AIRA: 'Aira_Shiratori',
   MAYOI: 'Mayoi_Ayase',
-  TATSUMI: 'Tatsumi_Kazehaya'
+  TATSUMI: 'Tatsumi_Kazehaya',
+  SEIYA: 'Seiya_Hidaka'
 };
 
 export { NAME_LINKS };
