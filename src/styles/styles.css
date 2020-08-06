@@ -1,6 +1,6 @@
 /*---------------------------------ALL PAGES----------------------------------*/
 body {
-    margin: ;
+    margin: 0;
     padding: 2.5rem;
     background-image: url('../assets/bg2.png');
     background-repeat: repeat;
@@ -14,7 +14,7 @@ body {
 }
 
 a {
-    color: red;
+    color: #15c6e0;
     text-decoration: none;
     transition: all 0.2s ease-out;
     -webkit-transition: all 0.2s ease-out;
