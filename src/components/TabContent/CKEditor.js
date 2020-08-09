@@ -20,7 +20,7 @@ export function InputEditor(props) {
   // Autosave documentation:
   // https://ckeditor.com/docs/ckeditor5/latest/builds/guides/integration/saving-data.html#autosave-feature
   const inputEditorConfig = {
-    plugins: [Bold, Italic, Link, PasteFromOffice, Essentials, Paragraph, Autosave],
+    plugins: [Essentials, Paragraph, Bold, Italic, Link, PasteFromOffice, Autosave], 
     toolbar: ['bold', 'italic', 'link', '|', 'undo', 'redo'],
     autosave: {
       save(editor) {

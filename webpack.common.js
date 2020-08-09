@@ -4,8 +4,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
 const { styles } = require('@ckeditor/ckeditor5-dev-utils');
 const CKEditorWebpackPlugin = require('@ckeditor/ckeditor5-dev-webpack-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin'); // can be used to make sure dist folder doesn't have unused files
-const CopyPlugin = require('copy-webpack-plugin'); // use to copy ico file to build
 
 const CKEditorCSSRegex = /ckeditor5-[^/\\]+[/\\]theme[/\\].+\.css$/;
 const excludeFilesRegex = [path.resolve(__dirname, 'node_modules'), path.resolve(__dirname, './src/ckeditor5')];
@@ -17,11 +15,10 @@ module.exports = {
   entry: {
     index: './src/index.js',
     // TODO: Code splitting throws duplicate modules error but page loads anyway
-    ckeditor: './src/components/TabContent/CKEditor.js',
+    //ckeditor: './src/components/TabContent/CKEditor.js',
   },
   output: {
     path: path.resolve(__dirname, './dist'),
-    filename: '[name].[contenthash].bundle.js'
   },
   resolve: {
     alias: {
@@ -36,7 +33,6 @@ module.exports = {
     },
   },
   plugins: [
-    new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({ filename: '[name].css'}),
     new HtmlWebpackPlugin({
       template: 'src/index.html',
@@ -47,12 +43,6 @@ module.exports = {
     new CKEditorWebpackPlugin({
       language: 'en',
     }),
-    // TODO: figure out a way to get ico file into dist
-    //new CopyPlugin({
-    //  patterns: [
-    //    { from: 'src/assets/favicon.ico', to: 'assets/favicon.ico' },
-    //  ],
-    //}),
   ],
   module: {
     rules: [
