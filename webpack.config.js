@@ -40,12 +40,12 @@ module.exports = {
     new MiniCssExtractPlugin({ filename: '[name].css'}),
     new HtmlWebpackPlugin({
       template: 'src/index.html',
+      favicon: 'src/assets/favicon.ico',
       alwaysWriteToDisk: true
     }),
     new HtmlWebpackHarddiskPlugin(),
     new CKEditorWebpackPlugin({
       language: 'en',
-      //additionalLanguages: 'all'
     }),
     // TODO: figure out a way to get ico file into dist
     //new CopyPlugin({
