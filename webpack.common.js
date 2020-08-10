@@ -23,7 +23,8 @@ module.exports = {
   resolve: {
     alias: {
       Assets: path.resolve(__dirname, 'src/assets/'),
-      Styles: path.resolve(__dirname, 'src/styles/')
+      Styles: path.resolve(__dirname, 'src/styles/'),
+      'react-dom': '@hot-loader/react-dom',
     }
   },
   optimization: {
@@ -40,9 +41,6 @@ module.exports = {
       alwaysWriteToDisk: true
     }),
     new HtmlWebpackHarddiskPlugin(),
-    new CKEditorWebpackPlugin({
-      language: 'en',
-    }),
   ],
   module: {
     rules: [

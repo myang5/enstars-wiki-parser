@@ -1,10 +1,11 @@
+import { hot } from 'react-hot-loader/root';
 import React from 'react';
 import { HashRouter, Switch, Route } from 'react-router-dom';
 import Header from './Header';
 import Main from './Main';
 import HowTo from './HowTo';
 
-export default function App() {
+function App() {
   return (
     <HashRouter basename='/'>
       <Header />
@@ -19,3 +20,5 @@ export default function App() {
     </HashRouter>
   )
 }
+
+export default hot(App);
