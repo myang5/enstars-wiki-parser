@@ -309,7 +309,7 @@ textarea:focus {
   border-style: solid;
 }
 
-#tlArea .row.tlEditor {
+#TLNotes .row.tlEditor {
   flex: 0 1 100%;
   display: flex;
   align-items: flex-start;
@@ -465,7 +465,7 @@ img {
   width: inherit;
 }
 
-#Tl-Notes .ck.ck-editor__editable_inline {
+#TLNotes .ck.ck-editor__editable_inline {
   border: 1px solid var(--ck-color-base-border);
   height: 100%;
   width: 100%;
