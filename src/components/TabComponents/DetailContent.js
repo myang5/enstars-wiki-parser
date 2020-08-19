@@ -6,7 +6,11 @@ export default function DetailContent() {
   const { details, setDetails } = useContext(StateContext);
   
   const handleChange = (e) => {
-    setDetails({ ...details, [e.target.id]: e.target.value });
+    const id = e.target.id;
+    if (id === 'ES!!' || id === 'ES!') {
+      setDetails({ ...details, whatGame: e.target.value });
+    }
+    else setDetails({ ...details, [id]: e.target.value });
   };
 
   return (
@@ -46,6 +50,13 @@ export default function DetailContent() {
         <label className='spacer' htmlFor="editor">Editor</label>
         <input className="halfWidth" type="text" id="editor" value={details.editor} onChange={handleChange} />
         <input className="halfWidth" type="text" id="edLink" value={details.edLink} onChange={handleChange} />
+      </div>
+      <div className="row">
+        <label className='spacer' htmlFor="whatGame">Game</label>
+        <input type="radio" name='whatGame' value='Story !!' id='ES!!' checked={details.whatGame === 'Story !!'} onChange={handleChange}/>
+        <label htmlFor="ES!!">ES!!</label>
+        <input type="radio" name='whatGame' value='Story' id='ES!' checked={details.whatGame === 'Story'} onChange={handleChange}/>
+        <label htmlFor="ES!">ES!</label>
       </div>
       <h3>Heading Colors</h3>
       <div id='colorinputs'>

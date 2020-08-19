@@ -273,7 +273,7 @@ textarea:focus {
   min-width: 0;
 }
 
-.tabContent .row input:not(.jscolor), .tabContent .row select {
+.tabContent .row input:not(.jscolor):not([type=radio]), .tabContent .row select {
   flex: 1 1 auto;
 }
 

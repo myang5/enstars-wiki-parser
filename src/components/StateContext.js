@@ -16,6 +16,7 @@ export const StateProvider = ({ children }) => {
     tlLink: localStorage.getItem('tlLink') || '',
     editor: localStorage.getItem('editor') || '',
     edLink: localStorage.getItem('edLink') || '',
+    whatGame: 'Story !!',
     writerCol: 'FFFFFF',
     locationCol: 'FFFFFF',
     bottomCol: 'FFFFFF',
