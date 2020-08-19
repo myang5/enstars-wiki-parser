@@ -1,4 +1,4 @@
-import * as data from './data';
+import { NAME_LINKS } from './data';
 
 /**
  * Helper function to convert the data returned as a String
@@ -81,7 +81,7 @@ export function getNamesInDialogue(editor) {
     let name = line.split(' ')[0]; //get first word in the line
     if (name.includes(':')) { //if there is a colon
       name = name.slice(0, name.indexOf(':')); //get text up until colon
-      if (data.NAME_LINKS[name.toUpperCase()]) { //if valid name
+      if (NAME_LINKS[name.toUpperCase()]) { //if valid name
         name = name[0].toUpperCase() + name.slice(1, name.length); //format name: arashi --> Arashi
         names[name] = '';
       }
@@ -124,6 +124,11 @@ export function convertText(editor1, editor2, names, details) {
   document.querySelector('#copyBtn').innerHTML = 'Copy Output';
   document.querySelector('.error').innerHTML = '';
 
+  // trim any whitespace on user input
+  for (let detail in details) {
+    details[detail] = details[detail].trim();
+  }
+
   const TEMPLATES = getTemplates(details); //get user input from all the tabs
 
   let inputDom = convertToDom(editor1.getData());
@@ -165,7 +170,7 @@ export function convertText(editor1, editor2, names, details) {
             currentName = ''; // since its new section
           }
           // -----FINALLY PROCESS DIALOGUE LINES WITH LABELS-----
-          else if (data.NAME_LINKS[label.toUpperCase()] != undefined) { // if valid character is speaking
+          else if (NAME_LINKS[label.toUpperCase()] != undefined) { // if valid character is speaking
             if (label !== currentName) { // if new character is speaking
               let renderCode = TEMPLATES.dialogueRender;
               let id = "#" + label[0].toUpperCase() + label.slice(1, label.length); //create id to access chara's render file in Renders tab
@@ -181,7 +186,7 @@ export function convertText(editor1, editor2, names, details) {
             // and also label incase of <strong>Arashi</strong>: line
             // ERROR: this means colon doesn't get removed if it's not styled....
             // TODO: find a better way to deal with styling on label
-            contents = contents.replace(firstWord, ''); 
+            contents = contents.replace(firstWord, '');
             contents = contents.replace(label, '');
             if (contents.trim().length === 0) { input[i].childNodes[0].remove(); } //if first ChildNode was just the label then remove node
             else { //set ChildNode HTML
@@ -198,7 +203,8 @@ export function convertText(editor1, editor2, names, details) {
   if (tlMarkerCount > 0) output += formatTlNotes(editor2, tlMarkerCount);
   output += TEMPLATES.translator;
   output += TEMPLATES.editor || '';
-  output += '|}';
+  output += '|}\n';
+  output += formatCategories(details.author, names, details.whatGame);
   document.querySelector('#output').value = output;
   //Error message seems to be more annoying than helpful
   //if (invalidLabel.length > 0) {
@@ -223,12 +229,7 @@ export function convertText(editor1, editor2, names, details) {
  */
 
 function getTemplates(details) {
-  const values = {...details};
-  for (let value in values) {
-    values[value] = values[value].trim();
-  } 
-  console.log('getTemplates values', values);
-  const { location, author, translator, tlLink, editor, edLink, writerCol, locationCol, bottomCol, textCol } = values;
+  const { location, author, translator, tlLink, editor, edLink, writerCol, locationCol, bottomCol, textCol } = details;
   const tlWikiLink = tlLink === '' ? `[User:${translator}|${translator}]` : `${tlLink} ${translator}`;
   let edWikiLink;
   if (editor.length > 0) {
@@ -391,9 +392,9 @@ function formatTlNotes(editor, count) {
         let listItems = Array.from(dom.querySelectorAll('li'));
         listItems = listItems.map((item) => item.textContent.replace(/&nbsp;/g, ' ').trim());
         notes = listItems.filter((item) => item.trim().length > 0); //filter out empty lines
-      } 
+      }
       // -----IF TL NOTES ARE IN <p>-----
-      else {  
+      else {
         let paras = Array.from(dom.querySelectorAll('p'));
         notes = paras.reduce((acc, item) => {
           let text = item.textContent.replace(/&nbsp;/g, ' ').trim()
@@ -423,18 +424,21 @@ function formatTlNotes(editor, count) {
 }
 
 /**
- * 
+ * Helper function to add the category tags at the end of the dialogue
  * @param {String} author The author of the story
  * @param {Array} characters An Array of character names that appear in the story
+ * @param {String} whatGame The game the story belongs to (either ES! or ES!!)
  */
 
-export function formatCategories(author, characters, whatGame){
-  const categories = 
-`[[Category:<writer>]]
-[[Category:<full name> - Story]] (for ! stories)
-[[Category:<full name> - Story !!]] (for !! stories)`;
+export function formatCategories(author, names, whatGame) {
+  let categories = `[[Category:${author}]]`;
+  //[[Category:<full name> - Story]] (for ! stories)
+  //[[Category:<full name> - Story !!]] (for !! stories)`;
+  names.forEach(name => {
+    const fullName = NAME_LINKS[name.toUpperCase()].replace('_', ' ');
+    categories += `\n[[Category:${fullName} - ${whatGame}]]`;
+  })
   return categories;
-    
 }
 
 

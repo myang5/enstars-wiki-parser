@@ -1,48 +1,33 @@
 const { formatCategories } = require('../src/convertText/convertText');
+const { NAME_LINKS } = require('../src/convertText/data');
 
 describe('formatCategories', () => {
-  let author, names, whatGame;
+  let author, names, whatGame, result;
 
   beforeEach(() => {
     author = '日日日 (Akira)';
-  
+    names = ['Arashi'];
+    whatGame = 'Story';
+    result = '';
   })
 
-  test('returns the same DOM object that was passed in', () => {
-    document.body.innerHTML = '<p>Line 1<br><br>Line 2</p>';
-    expect(extractBr(document.body)).toBe(document.body);
-  })
-
-  test('does not edit paragraphs with no <br>', () => {
-    document.body.innerHTML = '<p>Line 1</p>';
-    const paragraphs = Array.from(document.body.querySelectorAll('p'));
-    expect(paragraphs.map(p => p.innerHTML)).toEqual(['Line 1']);
+  test('correctly inserts author at beginning', () => {
+    result = formatCategories(author, names, whatGame);
+    expect(result).toEqual(expect.stringMatching(/^\[\[Category:日日日 \(Akira\)\]\]/));
   });
 
-  describe('given a DOM with multiple lines and <br> tags', () => {
-    beforeEach(() => {
-      document.body.innerHTML = '<p>Line 1<br><br>Line 2<br><br>Line 3<br><br>Line 4</p>';
-      extractBr(document.body);
-    });
-
-    test('removes all <br> tags', () => {
-      expect(Array.from(document.body.querySelectorAll('br')).length).toBe(0);
-    });
-
-    test('places lines into <p> tags', () => {
-      const paragraphs = Array.from(document.body.querySelectorAll('p'));
-      expect(paragraphs.map(p => p.innerHTML)).toEqual(['Line 1', 'Line 2', 'Line 3', 'Line 4']);
-    });
-
-    test('handles an arbitrary number of <br>', () => {
-      document.body.innerHTML = '<p>Line 1<br><br><br>Line 2<br><br>Line 3<br>Line 4<br><br><br><br></p>';
-      extractBr(document.body);
-      const paragraphs = Array.from(document.body.querySelectorAll('p'));
-      expect(paragraphs.map(p => p.innerHTML)).toEqual(['Line 1', 'Line 2', 'Line 3', 'Line 4']);
-    });
+  test('creates the correct category label for the  indicated story', () => {
+    result = formatCategories(author, names, whatGame);
+    expect(result).toEqual(expect.stringMatching(/.*\[\[Category:.* - Story\]\].*/));
+    whatGame = 'Story !!';
+    result = formatCategories(author, names, whatGame);
+    expect(result).toEqual(expect.stringMatching(/.*\[\[Category:.* - Story !!\]\].*/));
   });
-});
 
-describe('convertText', () => {
-
+  test('creates a category label for each character ', () => {
+    names = ['Arashi', 'Mika', 'Shu'];
+    result = formatCategories(author, names, whatGame);
+    const regex = /.*\[\[Category:Arashi Narukami - Story\]\]\n\[\[Category:Mika Kagehira - Story\]\]\n\[\[Category:Shu Itsuki - Story\]\]$/;
+    expect(result).toEqual(expect.stringMatching(regex));
+  });
 });
