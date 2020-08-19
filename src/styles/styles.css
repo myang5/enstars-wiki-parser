@@ -309,7 +309,7 @@ textarea:focus {
   border-style: solid;
 }
 
-#tlArea .row.tlEditor {
+#TLNotes .row.tlEditor {
   flex: 0 1 100%;
   display: flex;
   align-items: flex-start;
