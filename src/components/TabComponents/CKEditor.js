@@ -1,4 +1,7 @@
 import React, { useEffect, useContext } from 'react';
+import { StateContext } from '../StateContext';
+import { getNamesInDialogue } from '../../convertText/convertText';
+
 import CKEditor from '@ckeditor/ckeditor5-react';
 import BalloonEditor from '@ckeditor/ckeditor5-editor-balloon/src/ballooneditor.js';
 import Essentials from '@ckeditor/ckeditor5-essentials/src/essentials.js';
@@ -10,12 +13,18 @@ import List from '@ckeditor/ckeditor5-list/src/list.js';
 import PasteFromOffice from '@ckeditor/ckeditor5-paste-from-office/src/pastefromoffice';
 import Autosave from '@ckeditor/ckeditor5-autosave/src/autosave.js';
 
-import EditorContext from '../EditorContext';
-
-export function InputEditor(props) {
+export function InputEditor() {
   // get refs from EditorContext to provide to CKEditor components
   // refer to Main.js code
-  const ref = useContext(EditorContext).inputRef;
+  const { renderRef, setRenders, inputRef } = useContext(StateContext);
+  
+  // updates the dialogue render inputs when content of InputArea changes
+  const updateNames = (editor) => {
+    const names = getNamesInDialogue(editor);
+    const newState = { ...names, ...renderRef.current };
+    renderRef.current = newState;
+    setRenders(newState);
+  };
 
   // Autosave documentation:
   // https://ckeditor.com/docs/ckeditor5/latest/builds/guides/integration/saving-data.html#autosave-feature
@@ -23,9 +32,7 @@ export function InputEditor(props) {
     plugins: [Essentials, Paragraph, Bold, Italic, Link, PasteFromOffice, Autosave], 
     toolbar: ['bold', 'italic', 'link', '|', 'undo', 'redo'],
     autosave: {
-      save(editor) {
-        return props.updateNames(editor);
-      }
+      save: updateNames
     }
   };
 
@@ -44,17 +51,17 @@ export function InputEditor(props) {
   useEffect(() => {
     // Grab the HTML element using ref.current.editor
     // https://github.com/ckeditor/ckeditor5/issues/1185
-    ref.current.editor.editing.view.change( writer => {
-      writer.setAttribute( 'spellcheck', 'false', ref.current.editor.editing.view.document.getRoot() );
+    inputRef.current.editor.editing.view.change( writer => {
+      writer.setAttribute( 'spellcheck', 'false', inputRef.current.editor.editing.view.document.getRoot() );
     } );
-  }, [])
+  }, []);
 
   return (
     <CKEditor
       editor={BalloonEditor}
       config={inputEditorConfig}
       data={inputEditorData}
-      ref={ref}
+      ref={inputRef}
     />
   );
 }
@@ -62,7 +69,7 @@ export function InputEditor(props) {
 export function TLNotesEditor() {
   // get refs from EditorContext to provide to CKEditor components
   // refer to Main.js code
-  const ref = useContext(EditorContext).tlNotesRef;
+  const { tlNotesRef } = useContext(StateContext);
 
   const tlNotesEditorConfig = {
     plugins: [Bold, Italic, Link, List, PasteFromOffice, Essentials, Paragraph],
@@ -77,17 +84,17 @@ export function TLNotesEditor() {
   useEffect(() => {
     // Grab the HTML element using ref.current.editor
     // https://github.com/ckeditor/ckeditor5/issues/1185
-    ref.current.editor.editing.view.change( writer => {
-      writer.setAttribute( 'spellcheck', 'false', ref.current.editor.editing.view.document.getRoot() );
+    tlNotesRef.current.editor.editing.view.change( writer => {
+      writer.setAttribute( 'spellcheck', 'false', tlNotesRef.current.editor.editing.view.document.getRoot() );
     } );
-  }, [])
+  }, []);
 
   return (
     <CKEditor
       editor={BalloonEditor}
       config={tlNotesEditorConfig}
       data={tlNotesEditorData}
-      ref={ref}
+      ref={tlNotesRef}
     />
   )
 }

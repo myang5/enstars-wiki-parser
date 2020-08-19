@@ -43,39 +43,25 @@ export function convertToDom(data) {
 
 export function extractBr(inputDom) {
   // Assumes content with proper <p> formatting wouldn't have <br> tags
-  let hasBr = inputDom.querySelectorAll('br');
-  if (hasBr.length > 0) {
+  let breaks = inputDom.querySelectorAll('br');
+  if (breaks.length > 0) {
     //console.log('has br tags');
-    for (let i = 0; i < hasBr.length; i++) {
-      let parent = hasBr[i].parentNode; // the <p> element
-      let insertInto = parent.parentNode; // the document.body
+    let parent = breaks[0].parentNode; // the <p> element
+    let insertInto = parent.parentNode; // the document.body
+    for (let i = 0; i < breaks.length; i++) {
       let range = new Range();
-      range.setStart(hasBr[i].parentNode, 0); // set start to immediately after the opening <p> tag
-      range.setEndAfter(hasBr[i]); //set end to the <br> tag itself
-      let newP = document.createElement(parent.tagName.toLowerCase());
-      newP.append(range.extractContents());
-      insertInto.insertBefore(newP, parent);
-      hasBr[i].remove();
+      range.setStart(breaks[i].parentNode, 0); // set start to immediately after the opening <p> tag
+      range.setEndBefore(breaks[i]); // set end to right before the <br> tag
+      if (!range.collapsed) { // if there is text between the parent <p> and the <br>
+        let newP = document.createElement(parent.tagName.toLowerCase());
+        newP.append(range.extractContents());
+        insertInto.insertBefore(newP, parent);
+      }
+      breaks[i].remove();
     }
+    if (parent.innerHTML.length === 0) parent.remove();
   }
   return inputDom;
-}
-
-
-/**
- * Extract the text from the CKEditor.
- * Each line is wrapped in a <p> element.
- * @param editorDom The CKEDitor content converted to a DOM object using convertToDom()
- * @return {Array} An array containing the text content of each paragraph
- */
-
-export function getTextFromDom(editorDom) {
-  const paragraphs = editorDom.querySelectorAll('p'); //NodeList of all p elements
-  const input = []
-  paragraphs.forEach(function (p) {
-    input.push(p.textContent.replace(/&nbsp;/g, ' '));
-  });
-  return input;
 }
 
 
@@ -87,16 +73,17 @@ export function getTextFromDom(editorDom) {
  */
 
 export function getNamesInDialogue(editor) {
-  let inputDom = extractBr(convertToDom(editor.getData()))
-  let input = getTextFromDom(inputDom);
-  const names = new Set(); //add "key" of each line if there is one
+  let inputDom = extractBr(convertToDom(editor.getData()));
+  const paragraphs = inputDom.querySelectorAll('p'); //NodeList of all p elements
+  let input = Array.from(paragraphs, p => p.textContent.replace(/&nbsp;/g, ' '));
+  const names = {}; //add "key" of each line if there is one
   input.forEach(function (line) {
     let name = line.split(' ')[0]; //get first word in the line
     if (name.includes(':')) { //if there is a colon
       name = name.slice(0, name.indexOf(':')); //get text up until colon
-      if (data.NAME_LINKS[name.toUpperCase()] != undefined) { //if valid name
+      if (data.NAME_LINKS[name.toUpperCase()]) { //if valid name
         name = name[0].toUpperCase() + name.slice(1, name.length); //format name: arashi --> Arashi
-        names.add(name);
+        names[name] = '';
       }
     }
   });
@@ -132,12 +119,12 @@ export function getNamesInDialogue(editor) {
 //How to detect dialogue line styling vs. other styling?
 //Evaluate <p>.innerText and then decide from there
 
-export function convertText(editor1, editor2) {
+export function convertText(editor1, editor2, names, details) {
 
   document.querySelector('#copyBtn').innerHTML = 'Copy Output';
   document.querySelector('.error').innerHTML = '';
 
-  const TEMPLATES = getTemplates(); //get user input from all the tabs
+  const TEMPLATES = getTemplates(details); //get user input from all the tabs
 
   let inputDom = convertToDom(editor1.getData());
   extractBr(inputDom);
@@ -210,7 +197,7 @@ export function convertText(editor1, editor2) {
 
   if (tlMarkerCount > 0) output += formatTlNotes(editor2, tlMarkerCount);
   output += TEMPLATES.translator;
-  if (TEMPLATES.editor) output += TEMPLATES.editor;
+  output += TEMPLATES.editor || '';
   output += '|}';
   document.querySelector('#output').value = output;
   //Error message seems to be more annoying than helpful
@@ -235,23 +222,18 @@ export function convertText(editor1, editor2) {
  * @return {Object} containing the values from 
  */
 
-function getTemplates() {
-  const values = {};
-  values.location = document.querySelector('#location').value.trim();
-  const select = document.querySelector('#author');
-  values.author = select.options[select.selectedIndex].text;
-  const translator = document.querySelector('#translator').value.trim();
-  const tlLink = document.querySelector('#tlLink').value.trim();
-  values.translator = tlLink === '' ? `[User:${translator}|${translator}]` : `${tlLink} ${translator}`;
-  const editor = document.querySelector('#editor').value.trim();
-  const edLink = document.querySelector('#edLink').value.trim();
+function getTemplates(details) {
+  const values = {...details};
+  for (let value in values) {
+    values[value] = values[value].trim();
+  } 
+  console.log('getTemplates values', values);
+  const { location, author, translator, tlLink, editor, edLink, writerCol, locationCol, bottomCol, textCol } = values;
+  const tlWikiLink = tlLink === '' ? `[User:${translator}|${translator}]` : `${tlLink} ${translator}`;
+  let edWikiLink;
   if (editor.length > 0) {
-    values.editor = edLink === '' ? `[User:${editor}|${editor}]` : `${edLink} ${editor}`;
+    edWikiLink = edLink === '' ? `[User:${editor}|${editor}]` : `${edLink} ${editor}`;
   }
-  values.writerCol = '#' + document.querySelector('input[name=writerCol]').value;
-  values.locationCol = '#' + document.querySelector("input[name=locationCol]").value;
-  values.bottomCol = '#' + document.querySelector('input[name=bottomCol]').value;
-  values.textCol = '#' + document.querySelector('input[name=textCol]').value;
 
   updateLocalStorage('translator', translator);
   updateLocalStorage('tlLink', tlLink);
@@ -263,11 +245,11 @@ function getTemplates() {
 
   templates.header =
     `{| class="article-table" cellspacing="1/6" cellpadding="2" border="1" align="center" width="100%"
-! colspan="2" style="text-align:center;background-color:${values.writerCol}; color:${values.textCol};" |'''Writer:''' ${values.author}
+! colspan="2" style="text-align:center;background-color:${writerCol}; color:${textCol};" |'''Writer:''' ${author}
 |-
 | colspan="2" |[[File:HEADERFILE|660px|link=|center]]
 |-
-! colspan="2" style="text-align:center;background-color:${values.locationCol}; color:${values.textCol};" |'''Location: ${values.location}'''
+! colspan="2" style="text-align:center;background-color:${locationCol}; color:${textCol};" |'''Location: ${location}'''
 `;
   templates.dialogueRender =
     `|-
@@ -280,16 +262,16 @@ function getTemplates() {
 `;
   templates.heading =
     `|-
-! colspan="2" style="text-align:center;background-color:${values.locationCol}; color:${values.textCol};" |'''HEADING'''
+! colspan="2" style="text-align:center;background-color:${locationCol}; color:${textCol};" |'''HEADING'''
 `;
   templates.translator =
     `|-
-! colspan="2" style="text-align:center;background-color:${values.bottomCol};color:${values.textCol};" |'''Translation: [${values.translator}] '''
+! colspan="2" style="text-align:center;background-color:${bottomCol};color:${textCol};" |'''Translation: [${tlWikiLink}] '''
 `;
   if (editor.length > 0) {
     templates.editor =
       `|-
-! colspan="2" style="text-align:center;background-color:${values.bottomCol};color:${values.textCol};" |'''Proofreading: [${values.editor}] '''
+! colspan="2" style="text-align:center;background-color:${bottomCol};color:${textCol};" |'''Proofreading: [${edWikiLink}] '''
 `;
   }
 
@@ -440,22 +422,19 @@ function formatTlNotes(editor, count) {
   return ''
 }
 
-//helper function to get and format chapter title from tl notes
-function getChapTitle(inputDom, error) {
+/**
+ * 
+ * @param {String} author The author of the story
+ * @param {Array} characters An Array of character names that appear in the story
+ */
 
-  // CODE LEFTOVER FROM OLD TL NOTES TAB FORMAT
-  //let firstElt = inputDom.body.firstChild;
-  //if (firstElt) {
-  //  if (firstElt.tagName === 'P'
-  //    && firstElt.innerText.indexOf('If this is your first time using the formatter') < 0
-  //    && firstElt.innerText.length < 100 //ERROR: Assuming somewhat dangerously that titles would not be longer than 100 characters
-  //    && isNaN(firstElt.innerText[0])) {
-  //    const title = firstElt.innerText.replace(/ /g, '');
-  //    return title;
-  //  }
-  //}
-  //else {
-  //  error();
-  //  return null;
-  //}
+export function formatCategories(author, characters, whatGame){
+  const categories = 
+`[[Category:<writer>]]
+[[Category:<full name> - Story]] (for ! stories)
+[[Category:<full name> - Story !!]] (for !! stories)`;
+  return categories;
+    
 }
+
+

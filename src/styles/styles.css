@@ -239,7 +239,7 @@ textarea:focus {
   display: flex;
 }
 
-.tabContent:not(#inputArea) {
+.tabContent:not(#Text) {
   padding: 20px;
   flex-direction: column;
   overflow-y: auto;
@@ -284,26 +284,26 @@ textarea:focus {
   opacity: 0.7;
 }
 
-#detailArea h3:nth-of-type(1) {
+#Details h3:nth-of-type(1) {
   margin-top: 0;
   margin-bottom: 1rem;
 }
 
 /* not ideal to hardcode but oh well */
-#detailArea h3:nth-of-type(2) {
+#Details h3:nth-of-type(2) {
   margin-top: 0.5rem;
   margin-bottom: 1rem;
 }
 
-#detailArea .halfWidth{
+#Details .halfWidth{
   width: 50%;
 }
 
-#detailArea .halfWidth ~ .halfWidth{
+#Details .halfWidth ~ .halfWidth{
   margin-left: 5px;
 }
 
-#detailArea .jscolor{
+#Details .jscolor{
   width: 6em;
   border: 0.5px #adadad;
   border-style: solid;
@@ -315,7 +315,7 @@ textarea:focus {
   align-items: flex-start;
 }
 
-#renderArea p {
+#Renders p {
   margin-top: 0;
 }
 

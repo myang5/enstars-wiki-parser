@@ -1,6 +1,12 @@
-const { extractBr } = require('../src/convertText/convertText');
+const { formatCategories } = require('../src/convertText/convertText');
 
-describe('extractBr', () => {
+describe('formatCategories', () => {
+  let author, names, whatGame;
+
+  beforeEach(() => {
+    author = '日日日 (Akira)';
+  
+  })
 
   test('returns the same DOM object that was passed in', () => {
     document.body.innerHTML = '<p>Line 1<br><br>Line 2</p>';
@@ -35,4 +41,8 @@ describe('extractBr', () => {
       expect(paragraphs.map(p => p.innerHTML)).toEqual(['Line 1', 'Line 2', 'Line 3', 'Line 4']);
     });
   });
+});
+
+describe('convertText', () => {
+
 });
