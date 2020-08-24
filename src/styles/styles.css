@@ -407,7 +407,7 @@ textarea:focus {
 }
 
 /*---------------------------------HOWTO.HTML---------------------------------*/
-#howToContainer {
+.pageContent {
     box-sizing: border-box;
     width: 80%;
     background-color: #fff;

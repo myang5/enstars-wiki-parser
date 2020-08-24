@@ -8,7 +8,7 @@ import newPage3 from 'Assets/createNewPage3.PNG';
 export default function HowTo() {
   return (
     <>
-      <div id="howToContainer">
+      <div className="pageContent">
         <h2>TEXT GUIDELINES</h2>
         <h3>Text Tab</h3>
         <p>Copy and paste your translated chapter into the text box.</p>
