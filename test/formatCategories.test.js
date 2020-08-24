@@ -1,5 +1,5 @@
-const { formatCategories } = require('../src/convertText/convertText');
-const { NAME_LINKS } = require('../src/convertText/data');
+import { formatCategories } from '../src/util/convertText';
+import { NAME_LINKS } from '../src/util/data';
 
 describe('formatCategories', () => {
   let author, names, whatGame, result;
