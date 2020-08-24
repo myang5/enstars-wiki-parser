@@ -1,6 +1,6 @@
 import React, { useEffect, useContext } from 'react';
 import { StateContext } from '../StateContext';
-import { getNamesInDialogue } from '../../convertText/convertText';
+import getNamesInDialogue from '../../util/getNamesInDialogue';
 
 import CKEditor from '@ckeditor/ckeditor5-react';
 import BalloonEditor from '@ckeditor/ckeditor5-editor-balloon/src/ballooneditor.js';
@@ -20,7 +20,7 @@ export function InputEditor() {
   
   // updates the dialogue render inputs when content of InputArea changes
   const updateNames = (editor) => {
-    const names = getNamesInDialogue(editor);
+    const names = getNamesInDialogue(editor.getData());
     const newState = { ...names, ...renderRef.current };
     renderRef.current = newState;
     setRenders(newState);
