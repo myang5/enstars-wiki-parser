@@ -16,7 +16,7 @@ export default function Header() {
         </p>
         <ul id="navbar">
           <li><Link to='/howto'>HOW TO USE</Link></li>
-          <li><Link to='/issues'>KNOWN ISSUES</Link></li>
+          <li><a target="_blank" href="https://github.com/myang5/enstars-wiki-parser/issues">KNOWN ISSUES</a></li>
           <li><a target="_blank" href="https://twitter.com/gayandasleep">CONTACT</a></li>
           <li><a target="_blank" href="https://github.com/myang5/enstars-wiki-parser">GITHUB</a></li>
         </ul>
@@ -24,3 +24,4 @@ export default function Header() {
     </header>
   )
 }
+
