@@ -4,6 +4,7 @@ import { ChromePicker } from './react-color';
 
 export default function DetailContent() {
   const { details, setDetails } = useContext(StateContext);
+  const [focusedInput, setFocusedInput] = useState('');
 
   const handleChange = e => {
     const {
@@ -14,6 +15,14 @@ export default function DetailContent() {
     } else setDetails({ ...details, [id]: value });
   };
 
+  const handleFocus = e => {
+    const {
+      target: { id },
+    } = e;
+    if (id.includes('Color')) setFocusedInput(id.replace('Color', ''));
+    else setFocusedInput('');
+  };
+
   return (
     <>
       <h3>Story Details</h3>
@@ -21,13 +30,24 @@ export default function DetailContent() {
         <label className="spacer" htmlFor="location">
           Location
         </label>
-        <input type="text" id="location" value={details.location} onChange={handleChange} />
+        <input
+          type="text"
+          id="location"
+          value={details.location}
+          onChange={handleChange}
+          onFocus={handleFocus}
+        />
       </div>
       <div className="row">
         <label className="spacer" htmlFor="author">
           Writer
         </label>
-        <select id="author" defaultValue={details.author} onChange={handleChange}>
+        <select
+          id="author"
+          defaultValue={details.author}
+          onChange={handleChange}
+          onFocus={handleFocus}
+        >
           <option value="日日日 (Akira)">日日日 (Akira)</option>
           <option value="結城由乃 (Yuuki Yoshino)">結城由乃 (Yuuki Yoshino)</option>
           <option value="西岡麻衣子 (Nishioka Maiko)">西岡麻衣子 (Nishioka Maiko)</option>
@@ -57,6 +77,7 @@ export default function DetailContent() {
           id="translator"
           value={details.translator}
           onChange={handleChange}
+          onFocus={handleFocus}
         />
         <input
           className="halfWidth"
@@ -64,6 +85,7 @@ export default function DetailContent() {
           id="tlLink"
           value={details.tlLink}
           onChange={handleChange}
+          onFocus={handleFocus}
         />
       </div>
       <div className="row label">
@@ -85,6 +107,7 @@ export default function DetailContent() {
           id="editor"
           value={details.editor}
           onChange={handleChange}
+          onFocus={handleFocus}
         />
         <input
           className="halfWidth"
@@ -92,6 +115,7 @@ export default function DetailContent() {
           id="edLink"
           value={details.edLink}
           onChange={handleChange}
+          onFocus={handleFocus}
         />
       </div>
       <div className="row">
@@ -105,6 +129,7 @@ export default function DetailContent() {
           id="ES!!"
           checked={details.whatGame === 'Story !!'}
           onChange={handleChange}
+          onFocus={handleFocus}
         />
         <label htmlFor="ES!!">ES!!</label>
         <input
@@ -114,15 +139,16 @@ export default function DetailContent() {
           id="ES!"
           checked={details.whatGame === 'Story'}
           onChange={handleChange}
+          onFocus={handleFocus}
         />
         <label htmlFor="ES!">ES!</label>
       </div>
-      <ColorContent />
+      <ColorContent {...{ focusedInput, handleFocus }} />
     </>
   );
 }
 
-function ColorContent() {
+function ColorContent({ focusedInput, handleFocus }) {
   const { colors, setColors } = useContext(StateContext);
 
   const handleColorChange = (name, value) => {
@@ -132,38 +158,103 @@ function ColorContent() {
   return (
     <>
       <h3>Heading Colors</h3>
-      {Object.entries(colors).map(([label, color]) => (
-        <ColorInput key={label} {...{ label, color, handleColorChange }} />
-      ))}
+      {Object.entries(colors).map(([label, color]) => {
+        const isFocused = label === focusedInput;
+        return (
+          <ColorInput
+            key={label}
+            {...{ label, color, handleColorChange, isFocused, handleFocus }}
+          />
+        );
+      })}
     </>
   );
 }
 
-function ColorInput({ label, color, handleColorChange }) {
+function ColorInput({ label, color, handleColorChange, isFocused, handleFocus }) {
   const [isColorPickerShowing, setColorPickerShowing] = useState(false);
   const [textColor, setTextColor] = useState('#000');
 
-  const handleFocus = () => {
-    setColorPickerShowing(true);
+  // const handleFocus = () => {
+  //   setColorPickerShowing(true);
+  // };
+
+  const normalizeHex = str => {
+    return str[0] === '#' ? str.toUpperCase() : '#' + str.toUpperCase();
+  };
+
+  const hexToHSL = hex => {
+    // Convert hex to RGB first
+    let r = 0,
+      g = 0,
+      b = 0;
+    if (hex.length == 4) {
+      r = '0x' + hex[1] + hex[1];
+      g = '0x' + hex[2] + hex[2];
+      b = '0x' + hex[3] + hex[3];
+    } else if (hex.length == 7) {
+      r = '0x' + hex[1] + hex[2];
+      g = '0x' + hex[3] + hex[4];
+      b = '0x' + hex[5] + hex[6];
+    }
+    // Then to HSL
+    r /= 255;
+    g /= 255;
+    b /= 255;
+    let cmin = Math.min(r, g, b),
+      cmax = Math.max(r, g, b),
+      delta = cmax - cmin,
+      h = 0,
+      s = 0,
+      l = 0;
+
+    if (delta == 0) h = 0;
+    else if (cmax == r) h = ((g - b) / delta) % 6;
+    else if (cmax == g) h = (b - r) / delta + 2;
+    else h = (r - g) / delta + 4;
+
+    h = Math.round(h * 60);
+
+    if (h < 0) h += 360;
+
+    l = (cmax + cmin) / 2;
+    s = delta == 0 ? 0 : delta / (1 - Math.abs(2 * l - 1));
+    s = +s.toFixed(2);
+    l = +l.toFixed(2);
+
+    return { h, s, l };
   };
 
   const handleInputChange = e => {
     const {
       target: { value },
     } = e;
-    handleColorChange(label, value);
+    const normalized = normalizeHex(value);
+    handleColorChange(label, normalized);
+    console.log(normalized);
+    if (normalized.length === 4 || normalized.length === 7) {
+      const { l } = hexToHSL(normalized);
+      console.log(l);
+      setTextColor(l > 0.6 ? '#000' : '#fff');
+    }
   };
 
   const handlePickerChange = color => {
-    const { hex, hsl: { l } } = color;
+    const {
+      hex,
+      hsl: { l },
+    } = color;
     handleColorChange(label, hex);
-    setTextColor(l > 0.60 ? '#000' : '#fff');
+    setTextColor(l > 0.6 ? '#000' : '#fff');
   };
 
   return (
     <div className="row">
-      <label className="spacer">{label[0].toUpperCase() + label.slice(1, label.length)}</label>
+      <label className="spacer" htmlFor={`${label}Color`}>
+        {label[0].toUpperCase() + label.slice(1, label.length)}
+      </label>
       <input
+        id={`${label}Color`}
         className="jscolor"
         spellCheck="false"
         value={color.toUpperCase()}
@@ -171,21 +262,10 @@ function ColorInput({ label, color, handleColorChange }) {
         onChange={handleInputChange}
         onFocus={handleFocus}
       />
-      {/* TODO: toggle ColorPicker by focusing on input and then clicking out of input*/}
-      {isColorPickerShowing && <ChromePicker color={color} onChange={handlePickerChange} disableAlpha={true} />}
+      {/* TODO: toggle ColorPicker properly when clicking out of clicking out of input*/}
+      {isFocused && (
+        <ChromePicker color={color} onChange={handlePickerChange} disableAlpha={true} />
+      )}
     </div>
   );
-  // return (
-  //   <div>
-  //     <div style={styles.swatch} onClick={this.handleClick}>
-  //       <div style={styles.color} />
-  //     </div>
-  //     {this.state.displayColorPicker ? (
-  //       <div style={styles.popover}>
-  //         <div style={styles.cover} onClick={this.handleClose} />
-  //         <SketchPicker color={this.state.color} onChange={this.handleChange} />
-  //       </div>
-  //     ) : null}
-  //   </div>
-  // );
 }
