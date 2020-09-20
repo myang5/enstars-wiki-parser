@@ -1,5 +1,4 @@
 import { formatCategories } from '../src/util/convertText';
-import { NAME_LINKS } from '../src/util/data';
 
 describe('formatCategories', () => {
   let author, names, whatGame, result;
