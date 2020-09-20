@@ -55,8 +55,7 @@ const NAME_LINKS = {
   AIRA: 'Aira_Shiratori',
   MAYOI: 'Mayoi_Ayase',
   TATSUMI: 'Tatsumi_Kazehaya',
-  SEIYA: 'Seiya_Hidaka'
+  SEIYA: 'Seiya_Hidaka',
 };
 
-export { NAME_LINKS };
-
+export default NAME_LINKS;

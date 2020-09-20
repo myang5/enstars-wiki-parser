@@ -1,0 +1,3 @@
+[submodule "src/components/TabComponents/react-color"]
+	path = src/components/TabComponents/react-color
+	url = https://github.com/myang5/react-color.git

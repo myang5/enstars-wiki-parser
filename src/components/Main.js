@@ -46,7 +46,7 @@ const Input = () => {
 };
 
 const Buttons = ({ outputRef }) => {
-  const { details, renders, inputRef, tlNotesRef } = useContext(StateContext);
+  const { details, colors, renders, inputRef, tlNotesRef } = useContext(StateContext);
   const [copyButton, setCopyButton] = useState('Copy Output');
   const [error, setError] = useState('');
 
@@ -64,7 +64,8 @@ const Buttons = ({ outputRef }) => {
       inputRef.current.editor.getData(),
       tlNotesRef.current.editor.getData(),
       Object.keys(renders),
-      details
+      details,
+      colors
     );
     outputRef.current.value = output;
   }

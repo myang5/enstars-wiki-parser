@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { StateContext } from '../StateContext';
-import { NAME_LINKS } from '../../util/data';
+import NAME_LINKS from '../../util/name_links';
 
 export default function RenderContent() {
   const { renderRef, setRenders } = useContext(StateContext);

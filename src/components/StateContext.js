@@ -17,17 +17,19 @@ export const StateProvider = ({ children }) => {
     editor: localStorage.getItem('editor') || '',
     edLink: localStorage.getItem('edLink') || '',
     whatGame: 'Story !!',
-    writerCol: 'FFFFFF',
-    locationCol: 'FFFFFF',
-    bottomCol: 'FFFFFF',
-    textCol: 'FFFFFF',
+  });
+  const [colors, setColors] = useState({
+    writer: '#FFFFFF',
+    location: '#FFFFFF',
+    bottom: '#FFFFFF',
+    text: '#FFFFFF',
   });
 
   // create refs for each CKEditor to pass into EditorContext
   const inputRef = useRef(null);
   const tlNotesRef = useRef(null);
 
-  const state = { renders, renderRef, setRenders, details, setDetails, inputRef, tlNotesRef };
+  const state = { renders, renderRef, setRenders, details, setDetails, colors, setColors, inputRef, tlNotesRef };
 
   return (
     <StateContext.Provider value={state}>

@@ -1,6 +1,6 @@
 import extractBr from './extractBr';
 import convertEditorDataToDom from './convertEditorDataToDom';
-import { NAME_LINKS } from './data';
+import NAME_LINKS from './name_links';
 
 /**
  * Get the names of the characters in the current dialogue in InputArea component.

@@ -21,11 +21,11 @@
   "homepage": "https://github.com/myang5/enstars-wiki-parser#readme",
   "dependencies": {
     "react": "^16.13.1",
+    "react-color": "^2.18.1",
     "react-dom": "^16.13.1",
-    "react-router-dom": "^5.2.0"
-  },
-  "devDependencies": {
+    "react-router-dom": "^5.2.0",
     "@babel/core": "^7.10.3",
+    "@babel/plugin-proposal-class-properties": "^7.10.4",
     "@babel/preset-env": "^7.10.3",
     "@babel/preset-react": "^7.10.1",
     "@ckeditor/ckeditor5-autoformat": "^21.0.0",

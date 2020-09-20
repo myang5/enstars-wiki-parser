@@ -5,7 +5,7 @@
    * line of text is wrapped in a <p> element
    * This helper function identifies new lines, moves them into <p> elements,
    * and adds them to the document body.
-   * Possible case includes nested <p> tags but I haven't seen that yet, 
+   * Possible case includes nested <p> tags but I haven't seen that yet,
    * so code assumes this input structure:
    * <body>
    *  <p>
@@ -23,7 +23,6 @@
    *  <p>Line3</p>
    * </body>
    * Function uses selection ranges: https://javascript.info/selection-range
-   * 
    */
 
 /**
@@ -35,17 +34,17 @@
 
 export default function extractBr(inputDom) {
   // Assumes content with proper <p> formatting wouldn't have <br> tags
-  let breaks = inputDom.querySelectorAll('br');
+  const breaks = inputDom.querySelectorAll('br');
   if (breaks.length > 0) {
-    //console.log('has br tags');
-    let parent = breaks[0].parentNode; // the <p> element
-    let insertInto = parent.parentNode; // the document.body
+    // console.log('has br tags');
+    const parent = breaks[0].parentNode; // the <p> element
+    const insertInto = parent.parentNode; // the document.body
     for (let i = 0; i < breaks.length; i++) {
-      let range = new Range();
+      const range = new Range();
       range.setStart(breaks[i].parentNode, 0); // set start to immediately after the opening <p> tag
       range.setEndBefore(breaks[i]); // set end to right before the <br> tag
       if (!range.collapsed) { // if there is text between the parent <p> and the <br>
-        let newP = document.createElement(parent.tagName.toLowerCase());
+        const newP = document.createElement(parent.tagName.toLowerCase());
         newP.append(range.extractContents());
         insertInto.insertBefore(newP, parent);
       }
