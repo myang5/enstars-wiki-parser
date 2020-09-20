@@ -49,6 +49,9 @@ module.exports = {
     rules: [
       {
         test: /\.jsx?$/i,
+        resolve: {
+          extensions: ['.js', '.jsx'],
+        },
         exclude: excludeFilesRegex,
         loader: 'babel-loader',
         options: {
