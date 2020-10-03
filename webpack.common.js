@@ -3,7 +3,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
 const { styles } = require('@ckeditor/ckeditor5-dev-utils');
-const CKEditorWebpackPlugin = require('@ckeditor/ckeditor5-dev-webpack-plugin');
+// const CKEditorWebpackPlugin = require('@ckeditor/ckeditor5-dev-webpack-plugin');
 
 const CKEditorCSSRegex = /ckeditor5-[^/\\]+[/\\]theme[/\\].+\.css$/;
 const excludeFilesRegex = [
@@ -18,7 +18,7 @@ module.exports = {
   entry: {
     index: './src/index.js',
     // TODO: Code splitting throws duplicate modules error but page loads anyway
-    //ckeditor: './src/components/TabContent/CKEditor.js',
+    // ckeditor: './src/components/TabContent/CKEditor.js',
   },
   output: {
     path: path.resolve(__dirname, './dist'),
