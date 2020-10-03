@@ -13,17 +13,17 @@ export default function Main() {
 
   return (
     <StateProvider>
-      <div id='mainContainer'>
+      <div id="mainContainer">
         <Input />
         <Buttons {...{ outputRef }} />
-        <textarea id="output" ref={outputRef} spellCheck={false}></textarea>
+        <textarea id="output" ref={outputRef} spellCheck={false} />
       </div>
     </StateProvider>
-  )
+  );
 }
 
 const Input = () => {
-  const [tabs,] = useState(['Text', 'Details', 'Renders', 'TL Notes']);
+  const [tabs] = useState(['Text', 'Details', 'Renders', 'TL Notes']);
   const [clicked, setClicked] = useState('Text');
 
   return (
@@ -42,7 +42,7 @@ const Input = () => {
         <TLNotesContent />
       </TabContent>
     </div>
-  )
+  );
 };
 
 const Buttons = ({ outputRef }) => {
@@ -53,9 +53,9 @@ const Buttons = ({ outputRef }) => {
   // copies text to clipboard
   const copyToClip = () => {
     outputRef.current.select();
-    document.execCommand("copy");
+    document.execCommand('copy');
     setCopyButton('Copied');
-  }
+  };
 
   const convertOnClick = () => {
     setCopyButton('Copy Output');
@@ -65,16 +65,20 @@ const Buttons = ({ outputRef }) => {
       tlNotesRef.current.editor.getData(),
       Object.keys(renders),
       details,
-      colors
+      colors,
     );
     outputRef.current.value = output;
-  }
+  };
 
   return (
     <div id="btnArea">
-      <button onClick={convertOnClick} id="convertBtn">CONVERT</button>
-      <button onClick={copyToClip} id="copyBtn">{copyButton}</button>
-      <p className='error'>{error}</p>
+      <button type="button" onClick={convertOnClick} id="convertBtn">
+        CONVERT
+      </button>
+      <button type="button" onClick={copyToClip} id="copyBtn">
+        {copyButton}
+      </button>
+      <p className="error">{error}</p>
     </div>
-  )
+  );
 };

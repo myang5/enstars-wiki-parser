@@ -172,45 +172,42 @@ function ColorContent({ focusedInput, handleFocus }) {
 }
 
 function ColorInput({ label, color, handleColorChange, isFocused, handleFocus }) {
-  const [isColorPickerShowing, setColorPickerShowing] = useState(false);
   const [textColor, setTextColor] = useState('#000');
 
   // const handleFocus = () => {
   //   setColorPickerShowing(true);
   // };
 
-  const normalizeHex = str => {
-    return str[0] === '#' ? str.toUpperCase() : '#' + str.toUpperCase();
-  };
+  const normalizeHex = str => (str[0] === '#' ? str.toUpperCase() : `#${str.toUpperCase()}`);
 
   const hexToHSL = hex => {
     // Convert hex to RGB first
-    let r = 0,
-      g = 0,
-      b = 0;
-    if (hex.length == 4) {
-      r = '0x' + hex[1] + hex[1];
-      g = '0x' + hex[2] + hex[2];
-      b = '0x' + hex[3] + hex[3];
-    } else if (hex.length == 7) {
-      r = '0x' + hex[1] + hex[2];
-      g = '0x' + hex[3] + hex[4];
-      b = '0x' + hex[5] + hex[6];
+    let r = 0;
+    let g = 0;
+    let b = 0;
+    if (hex.length === 4) {
+      r = `0x${hex[1]}${hex[1]}`;
+      g = `0x${hex[2]}${hex[2]}`;
+      b = `0x${hex[3]}${hex[3]}`;
+    } else if (hex.length === 7) {
+      r = `0x${hex[1]}${hex[2]}`;
+      g = `0x${hex[3]}${hex[4]}`;
+      b = `0x${hex[5]}${hex[6]}`;
     }
     // Then to HSL
     r /= 255;
     g /= 255;
     b /= 255;
-    let cmin = Math.min(r, g, b),
-      cmax = Math.max(r, g, b),
-      delta = cmax - cmin,
-      h = 0,
-      s = 0,
-      l = 0;
+    const cmin = Math.min(r, g, b);
+    const cmax = Math.max(r, g, b);
+    const delta = cmax - cmin;
+    let h = 0;
+    let s = 0;
+    let l = 0;
 
-    if (delta == 0) h = 0;
-    else if (cmax == r) h = ((g - b) / delta) % 6;
-    else if (cmax == g) h = (b - r) / delta + 2;
+    if (delta === 0) h = 0;
+    else if (cmax === r) h = ((g - b) / delta) % 6;
+    else if (cmax === g) h = (b - r) / delta + 2;
     else h = (r - g) / delta + 4;
 
     h = Math.round(h * 60);
@@ -218,7 +215,7 @@ function ColorInput({ label, color, handleColorChange, isFocused, handleFocus })
     if (h < 0) h += 360;
 
     l = (cmax + cmin) / 2;
-    s = delta == 0 ? 0 : delta / (1 - Math.abs(2 * l - 1));
+    s = delta === 0 ? 0 : delta / (1 - Math.abs(2 * l - 1));
     s = +s.toFixed(2);
     l = +l.toFixed(2);
 
@@ -231,19 +228,19 @@ function ColorInput({ label, color, handleColorChange, isFocused, handleFocus })
     } = e;
     const normalized = normalizeHex(value);
     handleColorChange(label, normalized);
-    console.log(normalized);
+    // console.log(normalized);
     if (normalized.length === 4 || normalized.length === 7) {
       const { l } = hexToHSL(normalized);
-      console.log(l);
+      // console.log(l);
       setTextColor(l > 0.6 ? '#000' : '#fff');
     }
   };
 
-  const handlePickerChange = color => {
+  const handlePickerChange = newColor => {
     const {
       hex,
       hsl: { l },
-    } = color;
+    } = newColor;
     handleColorChange(label, hex);
     setTextColor(l > 0.6 ? '#000' : '#fff');
   };
@@ -262,9 +259,9 @@ function ColorInput({ label, color, handleColorChange, isFocused, handleFocus })
         onChange={handleInputChange}
         onFocus={handleFocus}
       />
-      {/* TODO: toggle ColorPicker properly when clicking out of clicking out of input*/}
+      {/* TODO: toggle ColorPicker properly when clicking out of clicking out of input */}
       {isFocused && (
-        <ChromePicker color={color} onChange={handlePickerChange} disableAlpha={true} />
+        <ChromePicker color={color} onChange={handlePickerChange} disableAlpha="true" />
       )}
     </div>
   );

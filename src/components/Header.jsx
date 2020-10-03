@@ -11,8 +11,7 @@ export default function Header() {
       It formats your story chapter into text that can be pasted directly into the
       &quot;source&quot; section of the page.
       <br />
-      Developed by
-      {' '}
+      {'Developed by '}
       <a target="_blank" rel="noreferrer" href="https://twitter.com/gayandasleep">
         midori
       </a>

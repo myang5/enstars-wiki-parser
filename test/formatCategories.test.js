@@ -1,14 +1,18 @@
+import { describe, beforeEach, test, expect } from 'jest';
 import { formatCategories } from '../src/util/convertText';
 
 describe('formatCategories', () => {
-  let author, names, whatGame, result;
+  let author;
+  let names;
+  let whatGame;
+  let result;
 
   beforeEach(() => {
     author = '日日日 (Akira)';
     names = ['Arashi'];
     whatGame = 'Story';
     result = '';
-  })
+  });
 
   test('correctly inserts author at beginning', () => {
     result = formatCategories(author, names, whatGame);

@@ -1,19 +1,19 @@
+import { describe, test, expect } from 'jest';
 import extractBr from '../src/util/extractBr';
 
 describe('extractBr', () => {
-
   test('returns the same DOM object that was passed in', () => {
     document.body.innerHTML = '<p>Line 1<br><br>Line 2</p>';
     expect(extractBr(document.body)).toBe(document.body);
-  })
+  });
 
-  //test('does not edit paragraphs with no <br>', () => {
+  // test('does not edit paragraphs with no <br>', () => {
   //  document.body.innerHTML = '<p>Line 1</p>';
   //  const paragraphs = Array.from(document.body.querySelectorAll('p'));
   //  expect(paragraphs.map(p => p.innerHTML)).toEqual(['Line 1']);
-  //});
+  // });
 
-  //describe('given a DOM with multiple lines and <br> tags', () => {
+  // describe('given a DOM with multiple lines and <br> tags', () => {
   //  beforeEach(() => {
   //    document.body.innerHTML = '<p>Line 1<br><br>Line 2<br><br>Line 3<br><br>Line 4</p>';
   //    extractBr(document.body);
@@ -34,5 +34,5 @@ describe('extractBr', () => {
   //    const paragraphs = Array.from(document.body.querySelectorAll('p'));
   //    expect(paragraphs.map(p => p.innerHTML)).toEqual(['Line 1', 'Line 2', 'Line 3', 'Line 4']);
   //  });
-  //});
+  // });
 });
