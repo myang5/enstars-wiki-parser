@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'jest';
-import extractBr from '../src/util/extractBr';
+import extractBr from '../../src/util/extractBr';
 
 describe('extractBr', () => {
   test('returns the same DOM object that was passed in', () => {

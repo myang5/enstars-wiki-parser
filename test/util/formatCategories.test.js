@@ -1,5 +1,5 @@
 import { describe, beforeEach, test, expect } from 'jest';
-import { formatCategories } from '../src/util/convertText';
+import { formatCategories } from '../../src/util/convertText';
 
 describe('formatCategories', () => {
   let author;
