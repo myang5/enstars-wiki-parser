@@ -33,7 +33,7 @@ How to detect dialogue line styling vs. other styling?
 Evaluate <p>.innerText and then decide from there
 */
 
-export function convertText(inputData, tlNotesData, names, details, colors) {
+export default function convertText(inputData, tlNotesData, names, details, colors) {
   normalizeDetails(details);
 
   const TEMPLATES = getTemplates(details, colors);

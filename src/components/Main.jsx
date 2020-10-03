@@ -6,7 +6,7 @@ import { InputEditor } from './TabComponents/CKEditor';
 import DetailContent from './TabComponents/DetailContent';
 import RenderContent from './TabComponents/RenderContent';
 import TLNotesContent from './TabComponents/TLNotesContent';
-import { convertText } from '../util/convertText';
+import convertText from '../util/convertText';
 
 export default function Main() {
   const outputRef = useRef(null);
