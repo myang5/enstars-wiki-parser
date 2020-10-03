@@ -7,18 +7,18 @@ import HowTo from './HowTo';
 
 function App() {
   return (
-    <HashRouter basename='/'>
+    <HashRouter basename="/">
       <Header />
       <Switch>
-        <Route exact path ='/'>
+        <Route exact path="/">
           <Main />
         </Route>
-        <Route exact path ='/howto'>
+        <Route exact path="/howto">
           <HowTo />
         </Route>
       </Switch>
     </HashRouter>
-  )
+  );
 }
 
 export default hot(App);
