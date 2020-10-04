@@ -3,8 +3,9 @@ module.exports = {
     browser: true,
     es2021: true,
     node: true,
+    'jest/globals': true,
   },
-  extends: ['plugin:react/recommended', 'airbnb'],
+  extends: ['plugin:react/recommended', 'plugin:jest/recommended', 'airbnb'],
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
@@ -12,7 +13,7 @@ module.exports = {
     ecmaVersion: 12,
     sourceType: 'module',
   },
-  plugins: ['react'],
+  plugins: ['react', 'jest'],
   rules: {
     'linebreak-style': 0,
     'eol-last': 0,
@@ -23,5 +24,6 @@ module.exports = {
     'jsx-a11y/label-has-associated-control': [2, { assert: 'either' }],
     'react/jsx-one-expression-per-line': [2, { allow: 'single-child' }],
     'object-curly-newline': 0,
+    'no-disabled-tests': 0,
   },
 };
