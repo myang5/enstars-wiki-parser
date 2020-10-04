@@ -74,14 +74,11 @@ Evaluate <p>.textContent and then decide from there
  */
 
 export default function convertText(inputData, tlNotesData, renders, details, colors) {
-  console.log(inputData);
   normalizeDetails(details);
 
   const TEMPLATES = getTemplates(details, colors);
 
   const inputDom = extractBr(convertEditorDataToDom(inputData));
-  console.log(inputDom.body.firstChild);
-  console.log(inputDom.body.firstChild.innerText);
 
   const input = inputDom.querySelectorAll('p');
   let output = TEMPLATES.header;
@@ -127,7 +124,6 @@ export default function convertText(inputData, tlNotesData, renders, details, co
               // if new character is speaking
               const renderCode = TEMPLATES.dialogueRender;
               const charName = `${label[0].toUpperCase() + label.slice(1, label.length)}`; //create id to access chara's render file in Renders tab
-              console.log(renders);
               output += renderCode.replace('FILENAME', renders[charName].trim());
               // update currentName
               currentName = label;

@@ -35,7 +35,7 @@ Evaluate <p>.innerText and then decide from there
 describe('convertText', () => {
   let inputData;
   let tlNotesData;
-  let names;
+  let renders;
   let details;
   let colors;
 
@@ -44,13 +44,16 @@ describe('convertText', () => {
       '<p>HEADER.PNG</p><p>Arashi: hello</p><p>Ritsu: hello</p><p>some cg.png</p><p>Arashi: hello again</p>';
     tlNotesData =
       '<p>If this is your first time using the formatter, please check the <a href="./howto.html#tlNotesSection">Text Guidelines</a> for how to add translation notes.</p>';
-    names = ['Arashi', 'Ritsu'];
+    renders = {
+      Arashi: 'arashi.png',
+      Ritsu: 'ritsu.png',
+    };
     details = {
       location: 'Hallway',
       author: '日日日 (Akira)',
-      translator: 'Mike',
+      translator: 'mike',
       tlLink: '',
-      editor: 'Jay',
+      editor: 'jay',
       edLink: '',
       whatGame: 'Story !!',
     };
@@ -58,8 +61,7 @@ describe('convertText', () => {
   });
 
   test('still works', () => {
-    const expected = `
-    {| class="article-table" cellspacing="1/6" cellpadding="2" border="1" align="center" width="100%"
+    const expected = `{| class="article-table" cellspacing="1/6" cellpadding="2" border="1" align="center" width="100%"
 ! colspan="2" style="text-align:center;background-color:#FFFFFF; color:#FFFFFF;" |'''Writer:''' 日日日 (Akira)
 |-
 | colspan="2" |[[File:HEADER.PNG|660px|link=|center]]
@@ -89,9 +91,8 @@ hello again
 |}
 [[Category:日日日 (Akira)]]
 [[Category:Arashi Narukami - Story !!]]
-[[Category:Ritsu Sakuma - Story !!]]
-`;
-    const output = convertText(inputData, tlNotesData, names, details, colors);
+[[Category:Ritsu Sakuma - Story !!]]`;
+    const output = convertText(inputData, tlNotesData, renders, details, colors);
     expect(output).toEqual(expected);
   });
 });
