@@ -57,7 +57,7 @@ export default function DetailContent() {
           onChange={handleChange}
           onFocus={handleFocus}
         >
-          {authors.map(author => <option value={author}>{author}</option>)}
+          {authors.map(author => <option key={author} value={author}>{author}</option>)}
         </select>
       </div>
       <div className="row label">

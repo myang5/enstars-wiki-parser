@@ -20,11 +20,11 @@ export default function RenderContent() {
         (This tab will fill out once you paste dialogue into the Text tab)
       </p>
       <div id="renderForms">
-        {Object.keys(renderRef.current).map(name => (
+        {Object.entries(renderRef.current).map(([name, render]) => (
           <RenderRow
-            key={name}
+            key={name + render}
             name={name}
-            value={renderRef.current[name]}
+            value={render}
             link={NAME_LINKS[name.toUpperCase()]}
             handleChange={handleChange}
           />

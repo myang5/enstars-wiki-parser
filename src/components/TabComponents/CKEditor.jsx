@@ -22,9 +22,11 @@ export function InputEditor() {
   // updates the dialogue render inputs when content of InputArea changes
   const updateNames = editor => {
     const names = getNamesInDialogue(editor.getData());
-    const newState = { ...names, ...renderRef.current };
-    renderRef.current = newState;
-    setRenders(newState);
+    Object.keys(names).forEach(name => {
+      names[name] = renderRef.current[name] || '';
+    });
+    renderRef.current = names;
+    setRenders(names);
   };
 
   // Autosave documentation:
