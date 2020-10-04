@@ -1,6 +1,35 @@
 import NAME_LINKS from './name_links';
 import extractBr from './extractBr';
 import convertEditorDataToDom from './convertEditorDataToDom';
+
+/**
+ * @typedef DetailsObject
+ * An object composed of the values in the Details tab.
+ * @type {object}
+ * @property {string} location
+ * @property {'日日日 (Akira)'|
+    '結城由乃 (Yuuki Yoshino)'|
+    '西岡麻衣子 (Nishioka Maiko)'|
+    'ゆーます (Yuumasu)'|
+    '木野誠太郎 (Kino Seitaro)'|
+    'Happy Elements株式会社 (Happy Elements K.K)'} author
+ * @property {string} translator
+ * @property {string} tlLink
+ * @property {string} editor
+ * @property {string} edLink
+ * @property {('Story !!'|'Story')} whatGame
+ */
+
+/**
+ * @typedef ColorsObject
+ * Specific key-value pairs of the color assignments in the Details tab.
+ * @type {object}
+ * @property {string} writer
+ * @property {string} location
+ * @property {string} bottom
+ * @property {string} text
+ */
+
 /*
 How formatter converts text (a rough summary)
 Types of lines:
@@ -30,15 +59,29 @@ case 4c: other partial styling variations
 What styling should be kept?
 Only styling on the dialogue lines (excluding labels)
 How to detect dialogue line styling vs. other styling?
-Evaluate <p>.innerText and then decide from there
+Evaluate <p>.textContent and then decide from there
 */
 
-export default function convertText(inputData, tlNotesData, names, details, colors) {
+/**
+ * Formats text into source code for the wiki.
+ * @param {string} inputData The data from the input CKEditor
+ * @param {string} tlNotesData The data from the TL notes CKEditor
+ * @param {object} renders Object containing names of the characters found in the TL
+ * and their respective render files
+ * @param {DetailsObject} details
+ * @param {ColorsObject} colors
+ * @return {string} The formatted text as a string to be placed in the output textarea
+ */
+
+export default function convertText(inputData, tlNotesData, renders, details, colors) {
+  console.log(inputData);
   normalizeDetails(details);
 
   const TEMPLATES = getTemplates(details, colors);
 
   const inputDom = extractBr(convertEditorDataToDom(inputData));
+  console.log(inputDom.body.firstChild);
+  console.log(inputDom.body.firstChild.innerText);
 
   const input = inputDom.querySelectorAll('p');
   let output = TEMPLATES.header;
@@ -46,7 +89,7 @@ export default function convertText(inputData, tlNotesData, names, details, colo
   let currentName = ''; // needed for case where dialogue has name on every line
   let tlMarkerCount = 0; // keep track of count to alert user when count mismatches
   for (let i = 0; i < input.length; i++) {
-    let line = input[i].innerText; // ignore text styling while evaluating lines
+    let line = input[i].textContent; // ignore text styling while evaluating lines
     if (line.replace(/&nbsp;/g, ' ').trim() !== '') {
       // ignore empty lines
       // -----FILTER OUT FILE NAMES-----
@@ -73,19 +116,20 @@ export default function convertText(inputData, tlNotesData, names, details, colo
           if (label.toUpperCase() === 'HEADING') {
             output += TEMPLATES.heading.replace(
               'HEADING',
-              line.slice(line.indexOf(':') + 1).trim()
+              line.slice(line.indexOf(':') + 1).trim(),
             );
             currentName = ''; // since its new section
           }
           // -----FINALLY PROCESS DIALOGUE LINES WITH LABELS-----
-          else if (NAME_LINKS[label.toUpperCase()] != undefined) {
+          else if (NAME_LINKS[label.toUpperCase()] !== undefined) {
             // if valid character is speaking
             if (label !== currentName) {
               // if new character is speaking
-              let renderCode = TEMPLATES.dialogueRender;
-              let id = '#' + label[0].toUpperCase() + label.slice(1, label.length); //create id to access chara's render file in Renders tab
-              output += renderCode.replace('FILENAME', document.querySelector(id).value.trim());
-              //update currentName
+              const renderCode = TEMPLATES.dialogueRender;
+              const charName = `${label[0].toUpperCase() + label.slice(1, label.length)}`; //create id to access chara's render file in Renders tab
+              console.log(renders);
+              output += renderCode.replace('FILENAME', renders[charName].trim());
+              // update currentName
               currentName = label;
             }
             // evaluate text inside first node of <p> tag
@@ -100,9 +144,9 @@ export default function convertText(inputData, tlNotesData, names, details, colo
             contents = contents.replace(label, '');
             if (contents.trim().length === 0) {
               input[i].childNodes[0].remove();
-            } //if first ChildNode was just the label then remove node
-            else {
-              //set ChildNode HTML
+            } else {
+              // if first ChildNode was just the label then remove node
+              // set ChildNode HTML
               input[i].childNodes[0].textContent = contents;
             }
             let newLine = formatStyling(input[i]);
@@ -117,7 +161,7 @@ export default function convertText(inputData, tlNotesData, names, details, colo
   output += TEMPLATES.translator;
   output += TEMPLATES.editor || '';
   output += '|}\n';
-  output += formatCategories(details.author, names, details.whatGame);
+  output += formatCategories(details.author, Object.keys(renders), details.whatGame);
   return output;
   //Error message seems to be more annoying than helpful
   //if (invalidLabel.length > 0) {
@@ -137,7 +181,7 @@ export default function convertText(inputData, tlNotesData, names, details, colo
 /**
  * Helper function to normalize inputs from the Details tab.
  * Mutates the values directly.
- * @param {Object} details
+ * @param {DetailsObject} details
  */
 
 function normalizeDetails(details) {
@@ -155,6 +199,8 @@ function normalizeDetails(details) {
  * Helper function to format the wiki code for story header and footer
  * with the user input
  * Also saves certain values in localStorage for user convenience
+ * @param {{string: String, string: String}} details Object containing values from the Details tab
+ * @param {} colors Object containing the colors from 
  * @return {Object} Object containing the wikia syntax to use as templates
  */
 
@@ -206,8 +252,8 @@ function getTemplates(details, colors) {
 
 /**
  * Save value in localStorage at specified key
- * @param {String} key
- * @param {String} value
+ * @param {string} key
+ * @param {string} value
  */
 
 function updateLocalStorage(key, value) {
@@ -219,9 +265,9 @@ function updateLocalStorage(key, value) {
 }
 
 /**
- * Check if a dialogue line is actually a file name
- * @param {String} line
- * @return {Boolean}
+ * Check if a dialogue line is actually an image file name
+ * @param {string} line
+ * @return {boolean}
  */
 
 function isFileName(line) {
@@ -236,27 +282,26 @@ function isFileName(line) {
 
 /**
  * Replaces <strong>, <i>, and <a> tags with the wiki code equivalent
- * @param editorDom
+ * @param {Document} editorDom
  * @return the editorDom with styling tags replaced
  */
 
 function formatStyling(editorDom) {
-  editorDom.querySelectorAll('strong').forEach(function (strong) {
-    strong.replaceWith(`'''${strong.innerText}'''`);
+  editorDom.querySelectorAll('strong').forEach(strong => {
+    strong.replaceWith(`'''${strong.textContent}'''`);
   });
-  editorDom.querySelectorAll('i').forEach(function (italic) {
-    italic.replaceWith(`''${italic.innerText}''`);
+  editorDom.querySelectorAll('i').forEach(italic => {
+    italic.replaceWith(`''${italic.textContent}''`);
   });
-  editorDom.querySelectorAll('a').forEach(function (link) {
-    link.replaceWith(`[${link.href} ${link.innerText}]`);
+  editorDom.querySelectorAll('a').forEach(link => {
+    link.replaceWith(`[${link.href} ${link.textContent}]`);
   });
   return editorDom;
 }
 
 /**
  * Get the number of TL markers in the dialogue line
- * @param {String} line
- * @return {Number}
+ * @param {string} line
  */
 
 function countTlMarkers(line) {
@@ -268,8 +313,8 @@ function countTlMarkers(line) {
  * [1] --> <span id='${title}RefNUM'>[[#${title}NoteNUM|<sup>[NUM]</sup>]]</span>
  * The complicated id format is required for the citations to work with the
  * story page's tabview, since each tab may have multiple citations with the same number
- * @param {String} line
- * @return {String} The line with any TL markers formatted
+ * @param {string} line
+ * @return {string} The line with any TL markers formatted
  */
 
 function formatTlMarker(line) {
@@ -300,7 +345,7 @@ If there are TL Notes, assume there would be
  2. One <p> and one <ol> if notes are in numbered list
 Chapter title is correctly input if:
  - first ChildNode of the editor DOM if child is <p>
- - innerText doesn't match default text or start with a number
+ - textContent doesn't match default text or start with a number
 Detect if user forgot chapter title and alert user
 Get TL Notes which are the rest of the <p> elements or <li> elements
 If <p> elements start with number, then new TL note
@@ -356,9 +401,9 @@ function formatTlNotes(tlNotesData, count) {
 
 /**
  * Helper function to add the category tags at the end of the dialogue
- * @param {String} author The author of the story
- * @param {Array} characters An Array of character names that appear in the story
- * @param {String} whatGame The game the story belongs to (either ES! or ES!!)
+ * @param {string} author The author of the story
+ * @param {Array<string>} names An Array of character names that appear in the story
+ * @param {string} whatGame The game the story belongs to (either ES! or ES!!)
  */
 
 export function formatCategories(author, names, whatGame) {

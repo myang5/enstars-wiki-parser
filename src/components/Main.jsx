@@ -63,7 +63,7 @@ const Buttons = ({ outputRef }) => {
     const output = convertText(
       inputRef.current.editor.getData(),
       tlNotesRef.current.editor.getData(),
-      Object.keys(renders),
+      renders,
       details,
       colors,
     );

@@ -23,6 +23,15 @@ export default function DetailContent() {
     else setFocusedInput('');
   };
 
+  const authors = [
+    '日日日 (Akira)',
+    '結城由乃 (Yuuki Yoshino)',
+    '西岡麻衣子 (Nishioka Maiko)',
+    'ゆーます (Yuumasu)',
+    '木野誠太郎 (Kino Seitaro)',
+    'Happy Elements株式会社 (Happy Elements K.K)',
+  ];
+
   return (
     <>
       <h3>Story Details</h3>
@@ -48,14 +57,7 @@ export default function DetailContent() {
           onChange={handleChange}
           onFocus={handleFocus}
         >
-          <option value="日日日 (Akira)">日日日 (Akira)</option>
-          <option value="結城由乃 (Yuuki Yoshino)">結城由乃 (Yuuki Yoshino)</option>
-          <option value="西岡麻衣子 (Nishioka Maiko)">西岡麻衣子 (Nishioka Maiko)</option>
-          <option value="ゆーます (Yuumasu)">ゆーます (Yuumasu)</option>
-          <option value="木野誠太郎 (Kino Seitaro)">木野誠太郎 (Kino Seitaro)</option>
-          <option value="Happy Elements株式会社 (Happy Elements K.K)">
-            Happy Elements株式会社 (Happy Elements K.K)
-          </option>
+          {authors.map(author => <option value={author}>{author}</option>)}
         </select>
       </div>
       <div className="row label">
