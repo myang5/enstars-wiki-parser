@@ -3,7 +3,6 @@ import React, { createContext, useState, useRef } from 'react';
 export const StateContext = createContext();
 
 export const StateProvider = ({ children }) => {
-
   const [renders, setRenders] = useState({});
   // needed to solve stale closure problem
   // when renders is passed to CKEditor autosave
@@ -29,11 +28,17 @@ export const StateProvider = ({ children }) => {
   const inputRef = useRef(null);
   const tlNotesRef = useRef(null);
 
-  const state = { renders, renderRef, setRenders, details, setDetails, colors, setColors, inputRef, tlNotesRef };
+  const state = {
+    renders,
+    renderRef,
+    setRenders,
+    details,
+    setDetails,
+    colors,
+    setColors,
+    inputRef,
+    tlNotesRef,
+  };
 
-  return (
-    <StateContext.Provider value={state}>
-      {children}
-    </StateContext.Provider>
-  )
-}
+  return <StateContext.Provider value={state}>{children}</StateContext.Provider>;
+};
