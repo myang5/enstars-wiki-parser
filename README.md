@@ -7,3 +7,5 @@ A simple formatter that takes in translators' dialogue and converts it into sour
 Link: https://myang5.github.io/enstars-wiki-parser/
 
 This project uses a modified version of the Chrome Picker from [React Color](https://github.com/casesandberg/react-color).
+
+Note to self: Travis CI will handle building and deploying on PR, don't need to do it yourself
