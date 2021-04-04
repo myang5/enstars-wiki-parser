@@ -140,11 +140,11 @@ const getTemplates = (details, colors) => {
 ! colspan="2" style="text-align:center;background-color:${locationCol}; color:${textCol};" |'''HEADING'''
 `;
   templates.translator = `|-
-! colspan="2" style="text-align:center;background-color:${bottomCol};" |'''Translation: ${tlWikiLink} '''
+! colspan="2" style="text-align:center;background-color:${bottomCol};color:${textCol};" |'''Translation: ${tlWikiLink} '''
 `;
   if (editor.length > 0) {
     templates.editor = `|-
-! colspan="2" style="text-align:center;background-color:${bottomCol};" |'''Proofreading: ${edWikiLink} '''
+! colspan="2" style="text-align:center;background-color:${bottomCol};color:${textCol};" |'''Proofreading: ${edWikiLink} '''
 `;
   }
 

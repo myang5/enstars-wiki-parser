@@ -85,9 +85,9 @@ hello
 hello again
 
 |-
-! colspan="2" style="text-align:center;background-color:#FFFFFF;color:#FFFFFF;" |'''Translation: [[User:mike|mike]] '''
+! colspan="2" style="text-align:center;background-color:#FFFFFF;color:#FFFFFF;" |'''Translation: {{Link|https://ensemble-stars.fandom.com/wiki/User:mike|mike|#FFFFFF}} '''
 |-
-! colspan="2" style="text-align:center;background-color:#FFFFFF;color:#FFFFFF;" |'''Proofreading: [[User:jay|jay]] '''
+! colspan="2" style="text-align:center;background-color:#FFFFFF;color:#FFFFFF;" |'''Proofreading: {{Link|https://ensemble-stars.fandom.com/wiki/User:jay|jay|#FFFFFF}} '''
 |}
 [[Category:日日日 (Akira)]]
 [[Category:Arashi Narukami - Story !!]]
