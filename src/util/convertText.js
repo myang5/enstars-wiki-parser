@@ -1,6 +1,8 @@
 import NAME_LINKS from './name_links';
 import extractBr from './extractBr';
 import convertEditorDataToDom from './convertEditorDataToDom';
+import formatLine, { isFileName } from './formatLine';
+import formatStyling from './formatStyling';
 
 /**
  * @typedef DetailsObject
@@ -30,38 +32,6 @@ import convertEditorDataToDom from './convertEditorDataToDom';
  * @property {string} text
  */
 
-/*
-How formatter converts text (a rough summary)
-Types of lines:
- Filename (for images) - formatter checks if file extension like .png exists in line
- (since this probably wouldn't show up in a dialogue line)
- Dialogue line (no label) - formatter checks if first word has no colon.
- Formatter assumes label-less lines that aren't filenames are dialogue lines
- Heading: label
- Name: label
-Formatter identifies labels by checking if first word has a colon character (str.split(' '))
-Formatter assumes the label is only one word long
-Formatter assumes all the other words are part of the line/heading
-
-need to account for text styling and how it might interfere with parsing
-code has to handle partial line styling and whole line styling
-TLers may paste code from their dreamwidth accounts where they bold/italicize names/headings
-case 1: no styling, <p> only contains text
-case 3: styling on non-label lines
-case 3a: styling on filenames ex. <p><strong>filename</strong></p>
-case 3b: styling in dialogue lines (probably intentional) ex. <p><strong>dialogue line</strong></p>
-case 3c: partial styling on dialogue lines ex. <p>dialogue <strong>line</strong></p>
-case 4: styling on label lines
-case 4a: styling on labels ex. <p><strong>Ritsu:</strong> dialogue line</p>
-case 4b: styling on informational headings <p><strong>Location: Hallway</strong</p>
-case 4c: other partial styling variations
-
-What styling should be kept?
-Only styling on the dialogue lines (excluding labels)
-How to detect dialogue line styling vs. other styling?
-Evaluate <p>.textContent and then decide from there
-*/
-
 /**
  * Formats text into source code for the wiki.
  * @param {string} inputData The data from the input CKEditor
@@ -77,80 +47,26 @@ export default function convertText(inputData, tlNotesData, renders, details, co
   normalizeDetails(details);
 
   const TEMPLATES = getTemplates(details, colors);
-
   const inputDom = extractBr(convertEditorDataToDom(inputData));
 
   const input = inputDom.querySelectorAll('p');
   let output = TEMPLATES.header;
 
-  let currentName = ''; // needed for case where dialogue has name on every line
   let tlMarkerCount = 0; // keep track of count to alert user when count mismatches
-  for (let i = 0; i < input.length; i++) {
-    let line = input[i].textContent; // ignore text styling while evaluating lines
-    if (line.replace(/&nbsp;/g, ' ').trim() !== '') {
-      // ignore empty lines
-      // -----FILTER OUT FILE NAMES-----
-      if (isFileName(line)) {
-        if (i === 0) {
-          output = output.replace('HEADERFILE', line.trim());
-        } else {
-          output += TEMPLATES.cgRender.replace('FILENAME', line.trim());
-          currentName = ''; // since its new section
-        }
-      } else {
-        // -----PROCESS HEADINGS OR DIALOGUE LINES-----
-        input[i].innerHTML = formatTlMarker(input[i].innerHTML);
-        tlMarkerCount += countTlMarkers(line);
-        let firstWord = line.split(' ')[0];
-        // -----FILTER OUT DIALOGUE LINES WITH NO LABEL-----
-        if (!firstWord.includes(':')) {
-          output += formatStyling(input[i]).innerHTML + '\n\n';
-        }
-        // -----PROCESS LINES WHERE FIRST WORD HAS A ':'-----
-        else {
-          let label = firstWord.replace(':', ''); // remove colon
-          // -----FILTER OUT HEADING LINES-----
-          if (label.toUpperCase() === 'HEADING') {
-            output += TEMPLATES.heading.replace(
-              'HEADING',
-              line.slice(line.indexOf(':') + 1).trim(),
-            );
-            currentName = ''; // since its new section
-          }
-          // -----FINALLY PROCESS DIALOGUE LINES WITH LABELS-----
-          else if (NAME_LINKS[label.toUpperCase()] !== undefined) {
-            // if valid character is speaking
-            if (label !== currentName) {
-              // if new character is speaking
-              const renderCode = TEMPLATES.dialogueRender;
-              const charName = `${label[0].toUpperCase() + label.slice(1, label.length)}`; //create id to access chara's render file in Renders tab
-              output += renderCode.replace('FILENAME', renders[charName].trim());
-              // update currentName
-              currentName = label;
-            }
-            // evaluate text inside first node of <p> tag
-            // might be an element (has styling) or a text node (no styling)
-            // so use textContent instead of innerHTML or innerText
-            let contents = input[i].childNodes[0].textContent;
-            // remove firstWord (has colon) in case of <strong>Arashi:</strong> line
-            // and also label incase of <strong>Arashi</strong>: line
-            // ERROR: this means colon doesn't get removed if it's not styled....
-            // TODO: find a better way to deal with styling on label
-            contents = contents.replace(firstWord, '');
-            contents = contents.replace(label, '');
-            if (contents.trim().length === 0) {
-              input[i].childNodes[0].remove();
-            } else {
-              // if first ChildNode was just the label then remove node
-              // set ChildNode HTML
-              input[i].childNodes[0].textContent = contents;
-            }
-            let newLine = formatStyling(input[i]);
-            output += newLine.innerHTML.trim() + '\n\n';
-          }
-        }
-      }
-    }
+  let i = 0;
+
+  // user is allowed to specify the header image as the first line in the input
+  const firstLine = input[0].textContent.trim();
+  if (isFileName(firstLine)) {
+    output = output.replace('HEADERFILE', firstLine);
+    i += 1;
+  }
+
+  const formatLineHelper = formatLine(TEMPLATES, renders);
+
+  for (i; i < input.length; i++) {
+    tlMarkerCount += countTlMarkers(input[i].textContent);
+    output += formatLineHelper(input[i]);
   }
 
   if (tlMarkerCount > 0) output += formatTlNotes(tlNotesData, tlMarkerCount);
@@ -159,19 +75,6 @@ export default function convertText(inputData, tlNotesData, renders, details, co
   output += '|}\n';
   output += formatCategories(details.author, Object.keys(renders), details.whatGame);
   return output;
-  //Error message seems to be more annoying than helpful
-  //if (invalidLabel.length > 0) {
-  //  //Formatter was unable to process these names:
-  //  // 1. truncate after certain length
-  //  let alertMsg = 'Formatter was unable to process these names:';
-  //  for (let i = 0; i < invalidLabel.length; i++) {
-  //    alertMsg += `\n${i + 1}. ${invalidLabel[i].slice(0, 200)}`
-  //    if (invalidLabel[i].length > 200) { alertMsg += '...' }
-  //    alertMsg += '\n\nDialogue lines should be labeled with character names or "Heading" for scene changes/headings.'
-  //    alertMsg += '\nIf this is a problem other than a typo, please contact Midori.'
-  //  }
-  //  alert(alertMsg);
-  //}
 }
 
 /**
@@ -191,23 +94,25 @@ function normalizeDetails(details) {
   });
 }
 
+
+const userUrl = (username) => `https://ensemble-stars.fandom.com/wiki/User:${username}`
+const templateLink = (link, text, color) => `{{Link|${link}|${text}|${color}}}`
 /**
  * Helper function to format the wiki code for story header and footer
  * with the user input
  * Also saves certain values in localStorage for user convenience
  * @param {{string: String, string: String}} details Object containing values from the Details tab
- * @param {} colors Object containing the colors from 
+ * @param {} colors Object containing the colors from
  * @return {Object} Object containing the wikia syntax to use as templates
  */
-
-function getTemplates(details, colors) {
+const getTemplates = (details, colors) => {
   const { location, author, translator, tlLink, editor, edLink } = details;
   const { writer: writerCol, location: locationCol, bottom: bottomCol, text: textCol } = colors;
   const tlWikiLink =
-    tlLink === '' ? `[User:${translator}|${translator}]` : `${tlLink} ${translator}`;
+    tlLink ? templateLink(tlLink, translator, textCol) : templateLink(userUrl(translator), translator, textCol);
   let edWikiLink;
   if (editor.length > 0) {
-    edWikiLink = edLink === '' ? `[User:${editor}|${editor}]` : `${edLink} ${editor}`;
+    edWikiLink = edLink ? templateLink(edLink, editor, textCol) : templateLink(userUrl(editor), editor, textCol);;
   }
 
   updateLocalStorage('translator', translator);
@@ -235,11 +140,11 @@ function getTemplates(details, colors) {
 ! colspan="2" style="text-align:center;background-color:${locationCol}; color:${textCol};" |'''HEADING'''
 `;
   templates.translator = `|-
-! colspan="2" style="text-align:center;background-color:${bottomCol};color:${textCol};" |'''Translation: [${tlWikiLink}] '''
+! colspan="2" style="text-align:center;background-color:${bottomCol};" |'''Translation: ${tlWikiLink} '''
 `;
   if (editor.length > 0) {
     templates.editor = `|-
-! colspan="2" style="text-align:center;background-color:${bottomCol};color:${textCol};" |'''Proofreading: [${edWikiLink}] '''
+! colspan="2" style="text-align:center;background-color:${bottomCol};" |'''Proofreading: ${edWikiLink} '''
 `;
   }
 
@@ -261,75 +166,12 @@ function updateLocalStorage(key, value) {
 }
 
 /**
- * Check if a dialogue line is actually an image file name
- * @param {string} line
- * @return {boolean}
- */
-
-function isFileName(line) {
-  const extensions = ['.png', '.gif', '.jpg', '.jpeg', '.ico', '.pdf', '.svg'];
-  for (let i = 0; i < extensions.length; i++) {
-    if (line.toLowerCase().endsWith(extensions[i])) {
-      return true;
-    }
-  }
-  return false;
-}
-
-/**
- * Replaces <strong>, <i>, and <a> tags with the wiki code equivalent
- * @param {Document} editorDom
- * @return the editorDom with styling tags replaced
- */
-
-function formatStyling(editorDom) {
-  editorDom.querySelectorAll('strong').forEach(strong => {
-    strong.replaceWith(`'''${strong.textContent}'''`);
-  });
-  editorDom.querySelectorAll('i').forEach(italic => {
-    italic.replaceWith(`''${italic.textContent}''`);
-  });
-  editorDom.querySelectorAll('a').forEach(link => {
-    link.replaceWith(`[${link.href} ${link.textContent}]`);
-  });
-  return editorDom;
-}
-
-/**
  * Get the number of TL markers in the dialogue line
  * @param {string} line
  */
 
 function countTlMarkers(line) {
   return line.match(/\[\d+\]/g) ? line.match(/\[\d+\]/g).length : 0;
-}
-
-/**
- * Formats TL note markers into clickable wiki code citation references
- * [1] --> <span id='${title}RefNUM'>[[#${title}NoteNUM|<sup>[NUM]</sup>]]</span>
- * The complicated id format is required for the citations to work with the
- * story page's tabview, since each tab may have multiple citations with the same number
- * @param {string} line
- * @return {string} The line with any TL markers formatted
- */
-
-function formatTlMarker(line) {
-  if (line.search(/\[\d+\]/) > 0) {
-    // Look for TL Markers
-    const title = document.querySelector('#title').value;
-    if (title.length > 0) {
-      const markers = line.match(/\[\d+\]/g);
-      markers.forEach(marker => {
-        const num = marker.substring(marker.indexOf('[') + 1, marker.indexOf(']'));
-        const tlCode = `<span id='${title}Ref${num}'>[[#${title}Note${num}|<sup>[${num}]</sup>]]</span>`;
-        line = line.replace(marker, tlCode);
-      });
-    } else {
-      document.querySelector('.error').innerHTML =
-        'WARNING: The formatter detected TL notes in the dialogue but no chapter title in the TL Notes tab. TL notes were not formatted.';
-    }
-  }
-  return line;
 }
 
 /*
