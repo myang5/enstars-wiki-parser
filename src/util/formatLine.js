@@ -94,7 +94,6 @@ export default function formatLine(TEMPLATES, renders) {
       }
       const newLine = formatStyling(p);
       dialogue += `${newLine.innerHTML.trim()}\n\n`;
-      console.log(dialogue);
       return dialogue;
     }
     return '';
