@@ -4,8 +4,8 @@ export const StateContext = createContext();
 
 export const StateProvider = ({ children }) => {
   const [renders, setRenders] = useState({});
-  // needed to solve stale closure problem
-  // when renders is passed to CKEditor autosave
+  // needed to solve stale closure problem when renders is passed to CKEditor autosave
+  // that was causing existing input values to be erased
   // https://css-tricks.com/dealing-with-stale-props-and-states-in-reacts-functional-components/
   const renderRef = useRef(renders);
   const [details, setDetails] = useState({

@@ -25,7 +25,7 @@ export function InputEditor() {
     Object.keys(names).forEach(name => {
       names[name] = renderRef.current[name] || '';
     });
-    renderRef.current = names;
+    // renderRef.current = names;
     setRenders(names);
   };
 

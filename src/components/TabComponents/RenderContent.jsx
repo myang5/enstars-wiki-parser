@@ -3,10 +3,10 @@ import { StateContext } from '../StateContext';
 import NAME_LINKS from '../../util/name_links';
 
 export default function RenderContent() {
-  const { renderRef, setRenders } = useContext(StateContext);
+  const { renderRef, renders, setRenders } = useContext(StateContext);
 
   const handleChange = e => {
-    const newState = { ...renderRef.current, [e.target.id]: e.target.value };
+    const newState = { ...renders, [e.target.id]: e.target.value };
     renderRef.current = newState;
     setRenders(newState);
   };
@@ -20,13 +20,12 @@ export default function RenderContent() {
         (This tab will fill out once you paste dialogue into the Text tab)
       </p>
       <div id="renderForms">
-        {Object.entries(renderRef.current).map(([name, render]) => (
+        {Object.entries(renders).map(([name, render]) => (
           <RenderRow
-            key={name + render}
             name={name}
             value={render}
             link={NAME_LINKS[name.toUpperCase()]}
-            handleChange={handleChange}
+            onChange={handleChange}
           />
         ))}
       </div>
@@ -34,13 +33,13 @@ export default function RenderContent() {
   );
 }
 
-function RenderRow({ name, link, value, handleChange }) {
+function RenderRow({ name, link, value, onChange }) {
   return (
     <div className="row">
       <label htmlFor={name} className="spacer">
         <RenderLink link={link} name={name} />
       </label>
-      <input id={name} onChange={handleChange} value={value} />
+      <input id={name} onChange={onChange} value={value} />
     </div>
   );
 }
