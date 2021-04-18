@@ -6,7 +6,15 @@ import { InputEditor } from './TabComponents/CKEditor';
 import DetailContent from './TabComponents/DetailContent';
 import RenderContent from './TabComponents/RenderContent';
 import TLNotesContent from './TabComponents/TLNotesContent';
-import convertText from '../util/convertText';
+import convertText from '../utils/convertText';
+
+const TABS = {
+  TEXT: 'Text',
+  DETAILS: 'Details',
+  RENDERS: 'Renders',
+  TL_NOTES: 'TL Notes',
+};
+const tabTitles = Object.values(TABS);
 
 export default function Main() {
   const outputRef = useRef(null);
@@ -23,50 +31,56 @@ export default function Main() {
 }
 
 const Input = () => {
-  const [tabs] = useState(['Text', 'Details', 'Renders', 'TL Notes']);
-  const [clicked, setClicked] = useState('Text');
+  const [clicked, setClicked] = useState(TABS.TEXT);
 
   return (
     <div id="input">
-      <TabMenu {...{ tabs, clicked, setClicked }} />
-      <TabContent {...{ value: 'Text', clicked }}>
+      <TabMenu {...{ tabs: tabTitles, clicked, onClick: setClicked }} />
+      <TabContent {...{ value: TABS.TEXT, clicked }}>
         <InputEditor />
       </TabContent>
-      <TabContent {...{ value: 'Details', clicked }}>
+      <TabContent {...{ value: TABS.DETAILS, clicked }}>
         <DetailContent />
       </TabContent>
-      <TabContent {...{ value: 'Renders', clicked }}>
+      <TabContent {...{ value: TABS.RENDERS, clicked }}>
         <RenderContent />
       </TabContent>
-      <TabContent {...{ value: 'TL Notes', clicked }}>
+      <TabContent {...{ value: TABS.TL_NOTES, clicked }}>
         <TLNotesContent />
       </TabContent>
     </div>
   );
 };
 
+const COPY_BUTTON_TEXT = {
+  COPY: 'Copy Output',
+  COPIED: 'Copied',
+};
+
 const Buttons = ({ outputRef }) => {
-  const { details, colors, renders, inputRef, tlNotesRef } = useContext(StateContext);
-  const [copyButton, setCopyButton] = useState('Copy Output');
+  const { details, colors, renders, inputRef, tlNotesRef } = useContext(
+    StateContext
+  );
+  const [copyButton, setCopyButton] = useState(COPY_BUTTON_TEXT.COPY);
   const [error, setError] = useState('');
 
   // copies text to clipboard
   const copyToClip = () => {
     outputRef.current.select();
     document.execCommand('copy');
-    setCopyButton('Copied');
+    setCopyButton(COPY_BUTTON_TEXT.COPIED);
   };
 
   const convertOnClick = () => {
-    setCopyButton('Copy Output');
+    setCopyButton(COPY_BUTTON_TEXT.COPY);
     setError('');
-    const output = convertText(
-      inputRef.current.editor.getData(),
-      tlNotesRef.current.editor.getData(),
+    const output = convertText({
+      inputData: inputRef.current.editor.getData(),
+      tlNotesData: tlNotesRef.current.editor.getData(),
       renders,
       details,
       colors,
-    );
+    });
     outputRef.current.value = output;
   };
 

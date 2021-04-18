@@ -1,4 +1,5 @@
-import convertText from '../../src/util/convertText';
+import { COLORS_KEYS, DETAILS_KEYS, GAME_OPTIONS } from '../../src/constants';
+import convertText from '../../src/utils/convertText';
 
 /*
 How formatter converts text (a rough summary)
@@ -49,15 +50,20 @@ describe('convertText', () => {
       Ritsu: 'ritsu.png',
     };
     details = {
-      location: 'Hallway',
-      author: '日日日 (Akira)',
-      translator: 'mike',
-      tlLink: '',
-      editor: 'jay',
-      edLink: '',
-      whatGame: 'Story !!',
+      [DETAILS_KEYS.LOCATION]: 'Hallway',
+      [DETAILS_KEYS.AUTHOR]: '日日日 (Akira)',
+      [DETAILS_KEYS.TRANSLATOR]: 'mike',
+      [DETAILS_KEYS.TL_LINK]: '',
+      [DETAILS_KEYS.EDITOR]: 'jay',
+      [DETAILS_KEYS.ED_LINK]: '',
+      [DETAILS_KEYS.WHAT_GAME]: GAME_OPTIONS.GAME2,
     };
-    colors = { writer: '#FFFFFF', location: '#FFFFFF', bottom: '#FFFFFF', text: '#FFFFFF' };
+    colors = {
+      [COLORS_KEYS.WRITER]: '#FFFFFF',
+      [COLORS_KEYS.LOCATION]: '#FFFFFF',
+      [COLORS_KEYS.BOTTOM]: '#FFFFFF',
+      [COLORS_KEYS.TEXT]: '#FFFFFF',
+    };
   });
 
   test('still works', () => {
@@ -92,7 +98,13 @@ hello again
 [[Category:日日日 (Akira)]]
 [[Category:Arashi Narukami - Story !!]]
 [[Category:Ritsu Sakuma - Story !!]]`;
-    const output = convertText(inputData, tlNotesData, renders, details, colors);
+    const output = convertText({
+      inputData,
+      tlNotesData,
+      renders,
+      details,
+      colors,
+    });
     expect(output).toEqual(expected);
   });
 });

@@ -12,7 +12,7 @@ import PasteFromOffice from '@ckeditor/ckeditor5-paste-from-office/src/pastefrom
 import Autosave from '@ckeditor/ckeditor5-autosave/src/autosave';
 
 import { StateContext } from '../StateContext';
-import getNamesInDialogue from '../../util/getNamesInDialogue';
+import getNamesInDialogue from '../../utils/getNamesInDialogue';
 
 export function InputEditor() {
   // get refs from EditorContext to provide to CKEditor components

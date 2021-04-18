@@ -1,4 +1,5 @@
-import { formatCategories } from '../../src/util/convertText';
+import { GAME_OPTIONS } from '../../src/constants';
+import { formatCategories } from '../../src/utils/convertText';
 
 describe('formatCategories', () => {
   let author;
@@ -9,21 +10,27 @@ describe('formatCategories', () => {
   beforeEach(() => {
     author = '日日日 (Akira)';
     names = ['Arashi'];
-    whatGame = 'Story';
+    whatGame = GAME_OPTIONS.GAME1;
     result = '';
   });
 
   test('correctly inserts author at beginning', () => {
     result = formatCategories(author, names, whatGame);
-    expect(result).toEqual(expect.stringMatching(/^\[\[Category:日日日 \(Akira\)\]\]/));
+    expect(result).toEqual(
+      expect.stringMatching(/^\[\[Category:日日日 \(Akira\)\]\]/)
+    );
   });
 
   test('creates the correct category label for the  indicated story', () => {
     result = formatCategories(author, names, whatGame);
-    expect(result).toEqual(expect.stringMatching(/.*\[\[Category:.* - Story\]\].*/));
-    whatGame = 'Story !!';
+    expect(result).toEqual(
+      expect.stringMatching(/.*\[\[Category:.* - Story\]\].*/)
+    );
+    whatGame = GAME_OPTIONS.GAME2;
     result = formatCategories(author, names, whatGame);
-    expect(result).toEqual(expect.stringMatching(/.*\[\[Category:.* - Story !!\]\].*/));
+    expect(result).toEqual(
+      expect.stringMatching(/.*\[\[Category:.* - Story !!\]\].*/)
+    );
   });
 
   test('creates a category label for each character ', () => {

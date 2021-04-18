@@ -1,4 +1,9 @@
-import NAME_LINKS from './name_links';
+import {
+  COLORS_KEYS,
+  DETAILS_KEYS,
+  GAME_OPTIONS,
+  NAME_LINKS,
+} from '../constants/';
 import extractBr from './extractBr';
 import convertEditorDataToDom from './convertEditorDataToDom';
 import formatLine, { isFileName } from './formatLine';
@@ -43,7 +48,13 @@ import formatStyling from './formatStyling';
  * @return {string} The formatted text as a string to be placed in the output textarea
  */
 
-export default function convertText(inputData, tlNotesData, renders, details, colors) {
+export default function convertText({
+  inputData,
+  tlNotesData,
+  renders,
+  details,
+  colors,
+}) {
   normalizeDetails(details);
 
   const TEMPLATES = getTemplates(details, colors);
@@ -73,7 +84,11 @@ export default function convertText(inputData, tlNotesData, renders, details, co
   output += TEMPLATES.translator;
   output += TEMPLATES.editor || '';
   output += '|}\n';
-  output += formatCategories(details.author, Object.keys(renders), details.whatGame);
+  output += formatCategories(
+    details[DETAILS_KEYS.AUTHOR],
+    Object.keys(renders),
+    details[DETAILS_KEYS.WHAT_GAME]
+  );
   return output;
 }
 
@@ -84,7 +99,7 @@ export default function convertText(inputData, tlNotesData, renders, details, co
  */
 
 function normalizeDetails(details) {
-  Object.entries(details).forEach(entry => {
+  Object.entries(details).forEach((entry) => {
     const [key, value] = entry;
     details[key] = value.trim();
     // add # character to color if it does not exist
@@ -94,9 +109,9 @@ function normalizeDetails(details) {
   });
 }
 
-
-const userUrl = (username) => `https://ensemble-stars.fandom.com/wiki/User:${username}`
-const templateLink = (link, text, color) => `{{Link|${link}|${text}|${color}}}`
+const userUrl = (username) =>
+  `https://ensemble-stars.fandom.com/wiki/User:${username}`;
+const templateLink = (link, text, color) => `{{Link|${link}|${text}|${color}}}`;
 /**
  * Helper function to format the wiki code for story header and footer
  * with the user input
@@ -107,18 +122,26 @@ const templateLink = (link, text, color) => `{{Link|${link}|${text}|${color}}}`
  */
 const getTemplates = (details, colors) => {
   const { location, author, translator, tlLink, editor, edLink } = details;
-  const { writer: writerCol, location: locationCol, bottom: bottomCol, text: textCol } = colors;
-  const tlWikiLink =
-    tlLink ? templateLink(tlLink, translator, textCol) : templateLink(userUrl(translator), translator, textCol);
+  const {
+    [COLORS_KEYS.WRITER]: writerCol,
+    [COLORS_KEYS.LOCATION]: locationCol,
+    [COLORS_KEYS.BOTTOM]: bottomCol,
+    [COLORS_KEYS.TEXT]: textCol,
+  } = colors;
+  const tlWikiLink = tlLink
+    ? templateLink(tlLink, translator, textCol)
+    : templateLink(userUrl(translator), translator, textCol);
   let edWikiLink;
   if (editor.length > 0) {
-    edWikiLink = edLink ? templateLink(edLink, editor, textCol) : templateLink(userUrl(editor), editor, textCol);;
+    edWikiLink = edLink
+      ? templateLink(edLink, editor, textCol)
+      : templateLink(userUrl(editor), editor, textCol);
   }
 
-  updateLocalStorage('translator', translator);
-  updateLocalStorage('tlLink', tlLink);
-  updateLocalStorage('editor', editor);
-  updateLocalStorage('edLink', edLink);
+  updateLocalStorage(DETAILS_KEYS.TRANSLATOR, translator);
+  updateLocalStorage(DETAILS_KEYS.TL_LINK, tlLink);
+  updateLocalStorage(DETAILS_KEYS.EDITOR, editor);
+  updateLocalStorage(DETAILS_KEYS.ED_LINK, edLink);
 
   const templates = {};
 
@@ -149,7 +172,7 @@ const getTemplates = (details, colors) => {
   }
 
   return templates;
-}
+};
 
 /**
  * Save value in localStorage at specified key
@@ -202,8 +225,10 @@ function formatTlNotes(tlNotesData, count) {
       // -----IF TL NOTES ARE IN <li>-----
       if (dom.body.firstChild.tagName.toUpperCase() === 'OL') {
         let listItems = Array.from(dom.querySelectorAll('li'));
-        listItems = listItems.map(item => item.textContent.replace(/&nbsp;/g, ' ').trim());
-        notes = listItems.filter(item => item.trim().length > 0); // filter out empty lines
+        listItems = listItems.map((item) =>
+          item.textContent.replace(/&nbsp;/g, ' ').trim()
+        );
+        notes = listItems.filter((item) => item.trim().length > 0); // filter out empty lines
       }
       // -----IF TL NOTES ARE IN <p>-----
       else {
@@ -248,9 +273,10 @@ export function formatCategories(author, names, whatGame) {
   let categories = `[[Category:${author}]]`;
   // [[Category:<full name> - Story]] (for ! stories)
   // [[Category:<full name> - Story !!]] (for !! stories)`;
-  names.forEach(name => {
+  names.forEach((name) => {
     const fullName = NAME_LINKS[name.toUpperCase()].replace('_', ' ');
-    categories += `\n[[Category:${fullName} - ${whatGame}]]`;
+    const game = whatGame === GAME_OPTIONS.GAME2 ? 'Story !!' : 'Story';
+    categories += `\n[[Category:${fullName} - ${game}]]`;
   });
   return categories;
 }

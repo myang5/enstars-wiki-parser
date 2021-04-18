@@ -1,18 +1,23 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+const lastUpdated = '9/20/20';
+
 export default function Header() {
-  const lastUpdated = '9/20/20';
   const desc = (
     <>
-      A website to more easily upload event/gacha stories from the mobile idol game Ensemble Stars
-      to the fandom wiki.
+      A website to more easily upload event/gacha stories from the mobile idol
+      game Ensemble Stars to the fandom wiki.
       <br />
-      It formats your story chapter into text that can be pasted directly into the
-      &quot;source&quot; section of the page.
+      It formats your story chapter into text that can be pasted directly into
+      the &quot;source&quot; section of the page.
       <br />
       {'Developed by '}
-      <a target="_blank" rel="noreferrer" href="https://twitter.com/gayandasleep">
+      <a
+        target="_blank"
+        rel="noreferrer"
+        href="https://twitter.com/gayandasleep"
+      >
         midori
       </a>
       {` (last updated ${lastUpdated}).`}
@@ -40,7 +45,11 @@ export default function Header() {
             </a>
           </li>
           <li>
-            <a target="_blank" rel="noreferrer" href="https://twitter.com/gayandasleep">
+            <a
+              target="_blank"
+              rel="noreferrer"
+              href="https://twitter.com/gayandasleep"
+            >
               CONTACT
             </a>
           </li>

@@ -1,4 +1,4 @@
-const NAME_LINKS = {
+export const NAME_LINKS = {
   TETORA: 'Tetora_Nagumo',
   HAJIME: 'Hajime_Shino',
   TOMOYA: 'Tomoya_Mashiro',
@@ -130,5 +130,3 @@ const NAME_LINKS = {
   // HAJIME: 'Hajime_Kodama',
   SEIRA: 'Seira_Sone',
 };
-
-export default NAME_LINKS;

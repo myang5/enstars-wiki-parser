@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
 import { StateContext } from '../StateContext';
-import NAME_LINKS from '../../util/name_links';
+import { NAME_LINKS } from '../../constants';
 
 export default function RenderContent() {
   const { renderRef, renders, setRenders } = useContext(StateContext);
 
-  const handleChange = e => {
+  const handleChange = (e) => {
     const newState = { ...renders, [e.target.id]: e.target.value };
     renderRef.current = newState;
     setRenders(newState);
@@ -14,14 +14,15 @@ export default function RenderContent() {
   return (
     <>
       <p>
-        Please paste in the file names of the dialogue renders as written in the wiki (ex. Tsukasa
-        Suou School Dialogue Render.png)
+        Please paste in the file names of the dialogue renders as written in the
+        wiki (ex. Tsukasa Suou School Dialogue Render.png)
         <br />
         (This tab will fill out once you paste dialogue into the Text tab)
       </p>
       <div id="renderForms">
         {Object.entries(renders).map(([name, render]) => (
           <RenderRow
+            key={name}
             name={name}
             value={render}
             link={NAME_LINKS[name.toUpperCase()]}

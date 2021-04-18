@@ -1,4 +1,4 @@
-import NAME_LINKS from './name_links';
+import { NAME_LINKS } from '../constants';
 import formatStyling from './formatStyling';
 
 /*
@@ -41,7 +41,7 @@ Evaluate <p>.textContent and then decide from there
 
 export default function formatLine(TEMPLATES, renders) {
   let currentName = ''; // needed for case where dialogue has name on every line
-  return p => {
+  return (p) => {
     const line = p.textContent.replace(/&nbsp;/g, ' ').trim(); // ignore text styling while evaluating lines
     if (line === '') return line; // ignore empty lines
     // -----FILTER OUT FILE NAMES-----
@@ -61,7 +61,10 @@ export default function formatLine(TEMPLATES, renders) {
     // -----FILTER OUT HEADING LINES-----
     if (label.toUpperCase() === 'HEADING') {
       currentName = ''; // since its new section
-      return TEMPLATES.heading.replace('HEADING', line.slice(line.indexOf(':') + 1).trim());
+      return TEMPLATES.heading.replace(
+        'HEADING',
+        line.slice(line.indexOf(':') + 1).trim()
+      );
     }
     // -----FINALLY PROCESS DIALOGUE LINES WITH LABELS-----
     if (NAME_LINKS[label.toUpperCase()] !== undefined) {
@@ -72,7 +75,9 @@ export default function formatLine(TEMPLATES, renders) {
         currentName = label;
         const renderCode = TEMPLATES.dialogueRender;
         // create id to access chara's render file in Renders tab
-        const charName = `${label[0].toUpperCase() + label.slice(1, label.length)}`;
+        const charName = `${
+          label[0].toUpperCase() + label.slice(1, label.length)
+        }`;
         dialogue += renderCode.replace('FILENAME', renders[charName].trim());
       }
       // evaluate text inside first node of <p> tag
@@ -131,8 +136,11 @@ function formatTlMarker(line) {
     const title = document.querySelector('#title').value;
     if (title.length > 0) {
       const markers = line.match(/\[\d+\]/g);
-      markers.forEach(marker => {
-        const num = marker.substring(marker.indexOf('[') + 1, marker.indexOf(']'));
+      markers.forEach((marker) => {
+        const num = marker.substring(
+          marker.indexOf('[') + 1,
+          marker.indexOf(']')
+        );
         const tlCode = `<span id='${title}Ref${num}'>[[#${title}Note${num}|<sup>[${num}]</sup>]]</span>`;
         line = line.replace(marker, tlCode);
       });
