@@ -56,6 +56,7 @@ export const NAME_LINKS = {
   MAYOI: 'Mayoi_Ayase',
   TATSUMI: 'Tatsumi_Kazehaya',
   SEIYA: 'Seiya_Hidaka',
+  GATEKEEPER: 'Gatekeeper',
   // ENGIRLS CONSTANTS
   // TODO: deal with girls that have same name
   // CHIAKI: 'Chiaki_Takahara',
