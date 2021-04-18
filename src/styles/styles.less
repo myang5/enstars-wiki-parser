@@ -1,0 +1,60 @@
+/*---------------------------------ALL PAGES----------------------------------*/
+@import './colors.less';
+
+body {
+  margin: 0;
+  padding: 2.5rem;
+  background-image: url('../assets/bg2.png');
+  background-repeat: repeat;
+  font-family: 'Nunito', sans-serif;
+
+  @media (max-width: 736px) {
+    padding: 2.5rem 0.5rem;
+  }
+}
+
+a {
+  color: @light-blue;
+  text-decoration: none;
+  transition: all 0.2s ease-out;
+  -webkit-transition: all 0.2s ease-out;
+  -moz-transition: all 0.2s ease-out;
+  &:hover {
+    opacity: 0.2;
+  }
+}
+
+h2 {
+  color: @light-blue;
+  font-size: 2rem;
+  text-transform: uppercase;
+  margin-top: 0;
+}
+
+h3 {
+  color: @light-blue;
+  font-size: 1.5rem;
+  text-transform: uppercase;
+}
+
+p,
+li,
+blockquote {
+  font-size: 0.875rem;
+}
+
+li {
+  margin: 0.25em 0;
+}
+
+.ck.ck-editor__editable_inline {
+  outline: none;
+}
+
+:root {
+  --ck-border-radius: 0;
+  --ck-inner-shadow: none;
+  --ck-drop-shadow: none;
+  --ck-focus-ring: none;
+  --ck-color-focus-border: none;
+}

@@ -4,7 +4,7 @@ import {
   COLORS_KEYS,
   DETAILS_KEYS,
   GAME_OPTIONS,
-} from '../constants';
+} from 'Constants';
 
 export const StateContext = createContext();
 

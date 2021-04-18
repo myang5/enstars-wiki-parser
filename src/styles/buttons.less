@@ -1,0 +1,27 @@
+@button-border-radius: 5px;
+
+button {
+  cursor: pointer;
+  outline: none;
+  transition: all 0.1s;
+  -webkit-transition: all 0.1s;
+  -moz-transition: all 0.1s;
+}
+
+.primary-button {
+  background-color: @light-blue;
+  border-radius: @button-border-radius;
+  border: 1px solid;
+  color: #fff;
+  box-sizing: border-box;
+  &:extend(button);
+}
+
+.secondary-button {
+  background-color: #fff;
+  border-radius: @button-border-radius;
+  border: 1px solid;
+  color: @light-blue;
+  box-sizing: border-box;
+  &:extend(button);
+}

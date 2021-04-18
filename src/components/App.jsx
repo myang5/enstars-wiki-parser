@@ -4,6 +4,7 @@ import { HashRouter, Switch, Route } from 'react-router-dom';
 import Header from './Header';
 import Main from './Main';
 import HowTo from './HowTo';
+import 'Styles/styles.less';
 
 function App() {
   return (

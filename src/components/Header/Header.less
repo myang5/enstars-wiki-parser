@@ -1,0 +1,129 @@
+header {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .horizontal {
+    display: flex;
+    flex-direction: row;
+  }
+
+  a {
+    position: relative;
+    padding: 1px;
+    background-clip: padding-box;
+    transition: all 0.4s ease-out;
+    -webkit-transition: all 0.4s ease-out;
+    -moz-transition: all 0.4s ease-out;
+
+    &.star-link {
+      &:hover {
+        opacity: 1;
+      }
+      &:after {
+        opacity: 0;
+        transition: 0.4s ease-out;
+        transform: rotate(-90deg);
+      }
+      &:hover:after {
+        opacity: 1;
+        transform: rotate(0deg);
+      }
+    }
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    margin: 0;
+    margin-bottom: 8px;
+
+    a.star-link {
+      &:hover {
+        padding-right: 35px; /* roughly size of :after? */
+      }
+      &:after {
+        content: '★';
+        position: absolute;
+        top: -0.04em;
+        right: -0.5em;
+        /* editing position of star after title */
+        @media (min-width: 22rem) and (max-width: 37.5em) {
+          top: 1.33em;
+        }
+        @media (max-width: 22rem) {
+          top: 2.7em;
+        }
+      }
+      &:hover:after {
+        right: 0;
+      }
+    }
+  }
+
+  p {
+    font-size: 0.875rem;
+    max-width: 25rem;
+    text-align: right;
+    margin: 0;
+  }
+}
+
+#navbar {
+  padding-left: 1rem;
+  margin: 0;
+  vertical-align: top;
+
+  li {
+    text-align: left;
+    list-style-type: none;
+  }
+
+  a.star-link {
+    font-size: 1rem;
+
+    &:after {
+      content: '☆';
+      position: absolute;
+      top: -0.0625em;
+      right: -0.375em;
+    }
+    &:hover:after {
+      right: -0.875em;
+    }
+  }
+}
+
+/* resize header */
+@media (max-width: 37.5em) {
+  header {
+    .horizontal {
+      flex-direction: column;
+    }
+
+    p {
+      text-align: center;
+    }
+  }
+
+  #navbar {
+    padding-left: 0;
+
+    li {
+      display: inline-block;
+      margin: 1em;
+      text-align: center;
+    }
+  }
+}
+
+@media (max-width: 20em) {
+  #navbar {
+    margin-top: 0.5rem;
+
+    li {
+      display: list-item;
+      margin: auto;
+    }
+  }
+}
