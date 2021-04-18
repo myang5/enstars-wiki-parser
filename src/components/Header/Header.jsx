@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import './Header.less';
 
 const lastUpdated = '9/20/20';
 
@@ -27,16 +28,21 @@ export default function Header() {
   return (
     <header>
       <h1>
-        <Link to="/">ENSTARS STORY FORMATTER</Link>
+        <Link className="star-link" to="/">
+          ENSTARS STORY FORMATTER
+        </Link>
       </h1>
       <div className="horizontal">
         <p>{desc}</p>
         <ul id="navbar">
           <li>
-            <Link to="/howto">HOW TO USE</Link>
+            <Link className="star-link" to="/howto">
+              HOW TO USE
+            </Link>
           </li>
           <li>
             <a
+              className="star-link"
               target="_blank"
               rel="noreferrer"
               href="https://github.com/myang5/enstars-wiki-parser/issues"
@@ -46,6 +52,7 @@ export default function Header() {
           </li>
           <li>
             <a
+              className="star-link"
               target="_blank"
               rel="noreferrer"
               href="https://twitter.com/gayandasleep"
@@ -55,6 +62,7 @@ export default function Header() {
           </li>
           <li>
             <a
+              className="star-link"
               target="_blank"
               rel="noreferrer"
               href="https://github.com/myang5/enstars-wiki-parser"

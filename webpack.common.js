@@ -27,6 +27,8 @@ module.exports = {
     alias: {
       Assets: path.resolve(__dirname, 'src/assets/'),
       Styles: path.resolve(__dirname, 'src/styles/'),
+      Utils: path.resolve(__dirname, 'src/utils/'),
+      Constants: path.resolve(__dirname, 'src/constants/'),
       'react-dom': '@hot-loader/react-dom',
     },
   },
@@ -63,6 +65,11 @@ module.exports = {
         test: /\.css$/i,
         exclude: [excludeFilesRegex, CKEditorCSSRegex],
         use: [MiniCssExtractPlugin.loader, 'css-loader'],
+      },
+      {
+        test: /\.less$/i,
+        exclude: [excludeFilesRegex, CKEditorCSSRegex],
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'less-loader'],
       },
       {
         test: /\.(png|jpg|ico)$/i,

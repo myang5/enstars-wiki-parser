@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
-import { StateContext } from '../StateContext';
-import { NAME_LINKS } from '../../constants';
+import { StateContext } from '../Main/StateContext';
+import { NAME_LINKS } from 'Constants';
 
 export default function RenderContent() {
   const { renderRef, renders, setRenders } = useContext(StateContext);
@@ -37,7 +37,7 @@ export default function RenderContent() {
 function RenderRow({ name, link, value, onChange }) {
   return (
     <div className="row">
-      <label htmlFor={name} className="spacer">
+      <label htmlFor={name} className="row__spacer">
         <RenderLink link={link} name={name} />
       </label>
       <input id={name} onChange={onChange} value={value} />

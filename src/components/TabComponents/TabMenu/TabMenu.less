@@ -1,0 +1,17 @@
+@import 'Styles/colors.less';
+@import 'Styles/buttons.less';
+
+.tab-menu button {
+  border-bottom: none;
+  border-radius: @button-border-radius @button-border-radius 0 0;
+  padding: 5px 14px;
+  margin-right: 5px;
+  &:extend(.secondary-button);
+
+  &:hover,
+  &.active {
+    border-bottom: none;
+    border-radius: @button-border-radius @button-border-radius 0 0;
+    &:extend(.primary-button);
+  }
+}

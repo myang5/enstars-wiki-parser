@@ -1,16 +1,21 @@
 import React, { useState, useContext, useRef } from 'react';
 import { StateProvider, StateContext } from './StateContext';
-import TabMenu from './TabComponents/TabMenu';
-import TabContent from './TabComponents/TabContent';
-import { InputEditor } from './TabComponents/CKEditor';
-import DetailContent from './TabComponents/DetailContent';
-import RenderContent from './TabComponents/RenderContent';
-import TLNotesContent from './TabComponents/TLNotesContent';
-import convertText from '../utils/convertText';
+import {
+  TabMenu,
+  TabContent,
+  InputEditor,
+  DetailContent,
+  ColorContent,
+  RenderContent,
+  TLNotesContent,
+} from '../TabComponents';
+import convertText from 'Utils/convertText';
+import './Main.less';
 
 const TABS = {
   TEXT: 'Text',
   DETAILS: 'Details',
+  COLORS: 'Colors',
   RENDERS: 'Renders',
   TL_NOTES: 'TL Notes',
 };
@@ -21,10 +26,10 @@ export default function Main() {
 
   return (
     <StateProvider>
-      <div id="mainContainer">
+      <div className="main-page">
         <Input />
         <Buttons {...{ outputRef }} />
-        <textarea id="output" ref={outputRef} spellCheck={false} />
+        <textarea className="output" ref={outputRef} spellCheck={false} />
       </div>
     </StateProvider>
   );
@@ -34,13 +39,16 @@ const Input = () => {
   const [clicked, setClicked] = useState(TABS.TEXT);
 
   return (
-    <div id="input">
+    <div className="input">
       <TabMenu {...{ tabs: tabTitles, clicked, onClick: setClicked }} />
       <TabContent {...{ value: TABS.TEXT, clicked }}>
         <InputEditor />
       </TabContent>
       <TabContent {...{ value: TABS.DETAILS, clicked }}>
         <DetailContent />
+      </TabContent>
+      <TabContent {...{ value: TABS.COLORS, clicked }}>
+        <ColorContent />
       </TabContent>
       <TabContent {...{ value: TABS.RENDERS, clicked }}>
         <RenderContent />
@@ -85,11 +93,11 @@ const Buttons = ({ outputRef }) => {
   };
 
   return (
-    <div id="btnArea">
-      <button type="button" onClick={convertOnClick} id="convertBtn">
+    <div className="actions">
+      <button type="button" onClick={convertOnClick} id="convert-button">
         CONVERT
       </button>
-      <button type="button" onClick={copyToClip} id="copyBtn">
+      <button type="button" onClick={copyToClip} id="copy-button">
         {copyButton}
       </button>
       <p className="error">{error}</p>
