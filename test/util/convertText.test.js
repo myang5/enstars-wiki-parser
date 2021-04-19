@@ -1,4 +1,9 @@
-import { COLORS_KEYS, DETAILS_KEYS, GAME_OPTIONS } from '../../src/constants';
+import {
+  COLORS_KEYS,
+  DETAILS_KEYS,
+  GAME_OPTIONS,
+  NAV_KEYS,
+} from '../../src/constants';
 import convertText from '../../src/utils/convertText';
 
 /*
@@ -39,6 +44,7 @@ describe('convertText', () => {
   let renders;
   let details;
   let colors;
+  let nav;
 
   beforeEach(() => {
     inputData =
@@ -64,10 +70,20 @@ describe('convertText', () => {
       [COLORS_KEYS.BOTTOM]: '#FFFFFF',
       [COLORS_KEYS.TEXT]: '#FFFFFF',
     };
+    nav = {
+      [NAV_KEYS.NAME]: 'Euthanasia',
+      [NAV_KEYS.PREV]: 'Prologue',
+      [NAV_KEYS.NEXT]: '2',
+    };
   });
 
   test('still works', () => {
-    const expected = `{| class="article-table" cellspacing="1/6" cellpadding="2" border="1" align="center" width="100%"
+    const expected = `{{StoryNavBar
+|name = Euthanasia
+|prev = Prologue
+|next = 2
+}}
+{| class="article-table" cellspacing="1/6" cellpadding="2" border="1" align="center" width="100%"
 ! colspan="2" style="text-align:center;background-color:#FFFFFF; color:#FFFFFF;" |'''Writer:''' 日日日 (Akira)
 |-
 | colspan="2" |[[File:HEADER.PNG|660px|link=|center]]
@@ -95,6 +111,12 @@ hello again
 |-
 ! colspan="2" style="text-align:center;background-color:#FFFFFF;color:#FFFFFF;" |'''Proofreading: {{Link|https://ensemble-stars.fandom.com/wiki/User:jay|jay|#FFFFFF}} '''
 |}
+{{StoryNavBar
+|name = Euthanasia
+|prev = Prologue
+|next = 2
+|chapter list = {{:Euthanasia/Chapters}}
+}}
 [[Category:日日日 (Akira)]]
 [[Category:Arashi Narukami - Story !!]]
 [[Category:Ritsu Sakuma - Story !!]]`;
@@ -104,6 +126,7 @@ hello again
       renders,
       details,
       colors,
+      nav,
     });
     expect(output).toEqual(expected);
   });

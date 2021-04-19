@@ -4,8 +4,8 @@ import {
   TabMenu,
   TabContent,
   InputEditor,
+  NavContent,
   DetailContent,
-  ColorContent,
   RenderContent,
   TLNotesContent,
 } from '../TabComponents';
@@ -14,8 +14,8 @@ import './Main.less';
 
 const TABS = {
   TEXT: 'Text',
+  NAV: 'Story Nav',
   DETAILS: 'Details',
-  COLORS: 'Colors',
   RENDERS: 'Renders',
   TL_NOTES: 'TL Notes',
 };
@@ -44,11 +44,11 @@ const Input = () => {
       <TabContent {...{ value: TABS.TEXT, clicked }}>
         <InputEditor />
       </TabContent>
+      <TabContent {...{ value: TABS.NAV, clicked }}>
+        <NavContent />
+      </TabContent>
       <TabContent {...{ value: TABS.DETAILS, clicked }}>
         <DetailContent />
-      </TabContent>
-      <TabContent {...{ value: TABS.COLORS, clicked }}>
-        <ColorContent />
       </TabContent>
       <TabContent {...{ value: TABS.RENDERS, clicked }}>
         <RenderContent />
@@ -66,7 +66,7 @@ const COPY_BUTTON_TEXT = {
 };
 
 const Buttons = ({ outputRef }) => {
-  const { details, colors, renders, inputRef, tlNotesRef } = useContext(
+  const { nav, details, colors, renders, inputRef, tlNotesRef } = useContext(
     StateContext
   );
   const [copyButton, setCopyButton] = useState(COPY_BUTTON_TEXT.COPY);
@@ -85,6 +85,7 @@ const Buttons = ({ outputRef }) => {
     const output = convertText({
       inputData: inputRef.current.editor.getData(),
       tlNotesData: tlNotesRef.current.editor.getData(),
+      nav,
       renders,
       details,
       colors,

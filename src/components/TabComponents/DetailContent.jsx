@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { StateContext } from '../Main/StateContext';
 import { AUTHOR_NAMES, DETAILS_KEYS, GAME_OPTIONS } from 'Constants';
+import ColorContent from './ColorContent';
 
 const authors = Object.values(AUTHOR_NAMES);
 
@@ -130,6 +131,7 @@ export default function DetailContent() {
         />
         <label htmlFor={GAME_OPTIONS.GAME1}>ES!</label>
       </div>
+      <ColorContent />
     </>
   );
 }

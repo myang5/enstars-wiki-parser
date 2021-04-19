@@ -3,6 +3,7 @@ import {
   DETAILS_KEYS,
   GAME_OPTIONS,
   NAME_LINKS,
+  NAV_KEYS,
 } from '../constants/';
 import extractBr from './extractBr';
 import convertEditorDataToDom from './convertEditorDataToDom';
@@ -10,41 +11,7 @@ import formatLine, { isFileName } from './formatLine';
 import formatStyling from './formatStyling';
 
 /**
- * @typedef DetailsObject
- * An object composed of the values in the Details tab.
- * @type {object}
- * @property {string} location
- * @property {'日日日 (Akira)'|
-    '結城由乃 (Yuuki Yoshino)'|
-    '西岡麻衣子 (Nishioka Maiko)'|
-    'ゆーます (Yuumasu)'|
-    '木野誠太郎 (Kino Seitaro)'|
-    'Happy Elements株式会社 (Happy Elements K.K)'} author
- * @property {string} translator
- * @property {string} tlLink
- * @property {string} editor
- * @property {string} edLink
- * @property {('Story !!'|'Story')} whatGame
- */
-
-/**
- * @typedef ColorsObject
- * Specific key-value pairs of the color assignments in the Details tab.
- * @type {object}
- * @property {string} writer
- * @property {string} location
- * @property {string} bottom
- * @property {string} text
- */
-
-/**
  * Formats text into source code for the wiki.
- * @param {string} inputData The data from the input CKEditor
- * @param {string} tlNotesData The data from the TL notes CKEditor
- * @param {object} renders Object containing names of the characters found in the TL
- * and their respective render files
- * @param {DetailsObject} details
- * @param {ColorsObject} colors
  * @return {string} The formatted text as a string to be placed in the output textarea
  */
 
@@ -54,14 +21,19 @@ export default function convertText({
   renders,
   details,
   colors,
+  nav,
 }) {
   normalizeDetails(details);
 
   const TEMPLATES = getTemplates(details, colors);
   const inputDom = extractBr(convertEditorDataToDom(inputData));
 
+  updateLocalStorage('nav', JSON.stringify(nav));
+
   const input = inputDom.querySelectorAll('p');
-  let output = TEMPLATES.header;
+  let output = formatTopNavBar(nav);
+
+  output += TEMPLATES.header;
 
   let tlMarkerCount = 0; // keep track of count to alert user when count mismatches
   let i = 0;
@@ -84,6 +56,7 @@ export default function convertText({
   output += TEMPLATES.translator;
   output += TEMPLATES.editor || '';
   output += '|}\n';
+  output += formatBottomNavBar(nav);
   output += formatCategories(
     details[DETAILS_KEYS.AUTHOR],
     Object.keys(renders),
@@ -279,4 +252,30 @@ export function formatCategories(author, names, whatGame) {
     categories += `\n[[Category:${fullName} - ${game}]]`;
   });
   return categories;
+}
+
+function formatNavBarBase(nav) {
+  let output = `{{StoryNavBar
+|name = ${nav[NAV_KEYS.NAME]}
+`;
+  if (nav[NAV_KEYS.PREV]) {
+    output += `|prev = ${nav[NAV_KEYS.PREV]}\n`;
+  }
+  if (nav[NAV_KEYS.NEXT]) {
+    output += `|next = ${nav[NAV_KEYS.NEXT]}\n`;
+  }
+  return output;
+}
+
+export function formatTopNavBar(nav) {
+  let output = formatNavBarBase(nav);
+  output += '}}\n';
+  return output;
+}
+
+export function formatBottomNavBar(nav) {
+  let output = formatNavBarBase(nav);
+  output += `|chapter list = {{:${nav[NAV_KEYS.NAME]}/Chapters}}\n`;
+  output += '}}\n';
+  return output;
 }

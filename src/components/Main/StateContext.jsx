@@ -30,6 +30,7 @@ export const StateProvider = ({ children }) => {
     [COLORS_KEYS.BOTTOM]: '#FFFFFF',
     [COLORS_KEYS.TEXT]: '#FFFFFF',
   });
+  const [nav, setNav] = useState(JSON.parse(localStorage.getItem('nav')) || {});
 
   // create refs for each CKEditor to pass into EditorContext
   const inputRef = useRef(null);
@@ -43,6 +44,8 @@ export const StateProvider = ({ children }) => {
     setDetails,
     colors,
     setColors,
+    nav,
+    setNav,
     inputRef,
     tlNotesRef,
   };
