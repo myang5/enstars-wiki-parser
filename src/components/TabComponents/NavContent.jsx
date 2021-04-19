@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
-import { NAV_KEYS } from '../../constants';
+import { NAV_KEYS } from 'Constants';
+import { formatTopNavBar, formatBottomNavBar } from 'Utils/convertText';
 import { StateContext } from '../Main/StateContext';
 
 function NavContent() {
@@ -59,6 +60,11 @@ function NavContent() {
           onChange={handleChange}
         />
       </div>
+      <p>Source code preview:</p>
+      <blockquote className="preview">{`${formatTopNavBar(nav)}`}</blockquote>
+      <blockquote className="preview">{`${formatBottomNavBar(
+        nav
+      )}`}</blockquote>
     </>
   );
 }
