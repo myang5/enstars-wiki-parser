@@ -218,6 +218,9 @@ button,
 .tab-content--story-nav .preview {
   white-space: pre-wrap;
 }
+.tab-content--story-nav .p--margin-bottom-none {
+  margin-bottom: 0;
+}
 .tab-content--details .row__half-width {
   width: 50%;
 }
