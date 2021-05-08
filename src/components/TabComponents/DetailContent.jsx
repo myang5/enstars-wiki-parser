@@ -22,17 +22,6 @@ export default function DetailContent() {
     setDetails({ ...details, [DETAILS_KEYS.WHAT_GAME]: value });
   };
 
-  // For handling the logic with translators/editors
-  const handlePersonChange = (e) => {
-    const {
-      target: { value, id },
-    } = e;
-    const [personType, key, idx] = id.split('_');
-    const newArr = [...details[personType]];
-    newArr[idx] = { ...newArr[idx], [key]: value };
-    setDetails({ ...details, [personType]: newArr });
-  };
-
   return (
     <>
       <h3>Story Details</h3>
@@ -66,12 +55,12 @@ export default function DetailContent() {
       <PersonInput
         personTypeDetailKey={DETAILS_KEYS.TRANSLATORS}
         details={details}
-        onChange={handlePersonChange}
+        onChange={setDetails}
       />
       <PersonInput
         personTypeDetailKey={DETAILS_KEYS.EDITORS}
         details={details}
-        onChange={handlePersonChange}
+        onChange={setDetails}
       />
       <div className="row">
         <label className="row__spacer" htmlFor={DETAILS_KEYS.WHAT_GAME}>
@@ -102,6 +91,26 @@ export default function DetailContent() {
 }
 
 function PersonInput({ personTypeDetailKey, details, onChange }) {
+  const handlePersonChange = (e) => {
+    const {
+      target: { value, id },
+    } = e;
+    const [personType, key, idx] = id.split('_');
+    const newArr = [...details[personType]];
+    newArr[idx] = { ...newArr[idx], [key]: value };
+    onChange({ ...details, [personType]: newArr });
+  };
+
+  const handleAdd = (e) => {
+    const {
+      target: { id },
+    } = e;
+    const [key] = id.split('_');
+    const newArr = [...details[key]];
+    newArr.push({ [DETAILS_KEYS.NAME]: '', [DETAILS_KEYS.LINK]: '' });
+    onChange({ ...details, [key]: newArr });
+  };
+
   const personLabel =
     personTypeDetailKey === DETAILS_KEYS.TRANSLATORS ? 'Translator' : 'Editor';
   return (
@@ -118,7 +127,7 @@ function PersonInput({ personTypeDetailKey, details, onChange }) {
           className="row__half-width"
           id={`${personTypeDetailKey}-credit-label`}
         >
-          Credit link or wiki username (optional)
+          Credit link/wiki username (optional)
         </label>
       </div>
       {details[personTypeDetailKey].map((person, idx) => (
@@ -136,7 +145,7 @@ function PersonInput({ personTypeDetailKey, details, onChange }) {
             aria-labelledby={`${personTypeDetailKey}-label ${personTypeDetailKey}-name-label`}
             id={`${personTypeDetailKey}_${DETAILS_KEYS.NAME}_${idx}`}
             value={person[DETAILS_KEYS.NAME]}
-            onChange={onChange}
+            onChange={handlePersonChange}
           />
           <input
             className="row__half-width"
@@ -144,10 +153,21 @@ function PersonInput({ personTypeDetailKey, details, onChange }) {
             aria-labelledby={`${personTypeDetailKey}-label ${personTypeDetailKey}-credit-label`}
             id={`${personTypeDetailKey}_${DETAILS_KEYS.LINK}_${idx}`}
             value={person[DETAILS_KEYS.LINK]}
-            onChange={onChange}
+            onChange={handlePersonChange}
           />
         </div>
       ))}
+      <div className="row">
+        <span className="row__spacer" />
+        <button
+          type="button"
+          className="btn--add-person"
+          id={`${personTypeDetailKey}_add-person`}
+          onClick={handleAdd}
+        >
+          + Add
+        </button>
+      </div>
     </>
   );
 }

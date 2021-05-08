@@ -9,6 +9,7 @@ import extractBr from './extractBr';
 import convertEditorDataToDom from './convertEditorDataToDom';
 import formatLine, { isFileName } from './formatLine';
 import formatStyling from './formatStyling';
+import getEmptyPersonObject from './getEmptyPersonObject';
 
 /**
  * Formats text into source code for the wiki.
@@ -20,23 +21,22 @@ export default function convertText({
   tlNotesData,
   renders,
   details,
+  onChangeDetails,
   colors,
   nav,
 }) {
   normalizeDetails(details);
+  onChangeDetails({ ...details });
 
   const TEMPLATES = getTemplates(details, colors);
   const inputDom = extractBr(convertEditorDataToDom(inputData));
 
   updateLocalStorage(
     DETAILS_KEYS.TRANSLATORS,
-    JSON.stringify(details[DETAILS_KEYS.TRANSLATORS])
+    details[DETAILS_KEYS.TRANSLATORS]
   );
-  updateLocalStorage(
-    DETAILS_KEYS.EDITORS,
-    JSON.stringify(details[DETAILS_KEYS.EDITORS])
-  );
-  updateLocalStorage('nav', JSON.stringify(nav));
+  updateLocalStorage(DETAILS_KEYS.EDITORS, details[DETAILS_KEYS.EDITORS]);
+  updateLocalStorage('nav', nav);
 
   const input = inputDom.querySelectorAll('p');
   let output = formatTopNavBar(nav);
@@ -78,17 +78,23 @@ export default function convertText({
  * Mutates the values directly.
  * @param {DetailsObject} details
  */
-
 function normalizeDetails(details) {
   Object.entries(details).forEach((entry) => {
     const [key, value] = entry;
     if (key === DETAILS_KEYS.TRANSLATORS || key === DETAILS_KEYS.EDITORS) {
-      value.forEach((person) => {
-        Object.entries(person).forEach((subEntry) => {
-          const [subKey, subValue] = subEntry;
-          person[subKey] = subValue.trim();
-        });
-      });
+      const personsArr = value.reduce((arr, person) => {
+        const { [DETAILS_KEYS.NAME]: name, [DETAILS_KEYS.LINK]: link } = person;
+        // If the person object is essentially empty, filter it out
+        if (!name && !link) return arr;
+        // Else trim the string values
+        person[DETAILS_KEYS.NAME] = name.trim();
+        person[DETAILS_KEYS.LINK] = link.trim();
+        arr.push(person);
+        return arr;
+      }, []);
+      // UI needs at least one empty person object to render properly
+      if (personsArr.length === 0) personsArr.push(getEmptyPersonObject());
+      details[key] = personsArr;
     } else {
       details[key] = value.trim();
     }
@@ -112,17 +118,18 @@ const getPersonsTemplate = ({
   textCol,
   bottomCol,
 }) => {
-  const resultText = persons.reduce((result, person, idx) => {
+  const resultText = persons.reduce((result, person) => {
     const { [DETAILS_KEYS.NAME]: name, [DETAILS_KEYS.LINK]: link } = person;
     if (!name && !link) return result;
+    if (result.length !== 0) {
+      result += ', ';
+    }
     result += !link
       ? name
       : link.startsWith('http')
       ? externalLinkTemplate(link, name, textCol)
       : internalLinkTemplate(link, name, textCol);
-    if (idx !== persons.length - 1) {
-      result += ', ';
-    }
+
     return result;
   }, '');
   if (resultText.length === 0) return resultText;
@@ -192,12 +199,11 @@ const getTemplates = (details, colors) => {
  * @param {string} key
  * @param {string} value
  */
-
 function updateLocalStorage(key, value) {
-  if (value.length > 0 && value !== localStorage.getItem(key)) {
-    localStorage.setItem(key, value);
-  } else if (value.length === 0) {
+  if (value.length === 0) {
     localStorage.removeItem(key);
+  } else if (JSON.stringify(value) !== localStorage.getItem(key)) {
+    localStorage.setItem(key, JSON.stringify(value));
   }
 }
 

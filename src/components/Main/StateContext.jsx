@@ -5,13 +5,12 @@ import {
   DETAILS_KEYS,
   GAME_OPTIONS,
 } from 'Constants';
+import getEmptyPersonObject from 'Utils/getEmptyPersonObject';
 
 export const StateContext = createContext();
 
 const getPersonsValue = (key) =>
-  JSON.parse(localStorage.getItem(key)) || [
-    { [DETAILS_KEYS.NAME]: '', [DETAILS_KEYS.LINK]: '' },
-  ];
+  JSON.parse(localStorage.getItem(key)) || [getEmptyPersonObject()];
 
 export const StateProvider = ({ children }) => {
   const [renders, setRenders] = useState({});

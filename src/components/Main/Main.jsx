@@ -66,9 +66,15 @@ const COPY_BUTTON_TEXT = {
 };
 
 const Buttons = ({ outputRef }) => {
-  const { nav, details, colors, renders, inputRef, tlNotesRef } = useContext(
-    StateContext
-  );
+  const {
+    nav,
+    details,
+    setDetails,
+    colors,
+    renders,
+    inputRef,
+    tlNotesRef,
+  } = useContext(StateContext);
   const [copyButton, setCopyButton] = useState(COPY_BUTTON_TEXT.COPY);
   const [error, setError] = useState('');
 
@@ -88,6 +94,7 @@ const Buttons = ({ outputRef }) => {
       nav,
       renders,
       details,
+      onChangeDetails: setDetails,
       colors,
     });
     outputRef.current.value = output;
