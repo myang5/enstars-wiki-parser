@@ -1,4 +1,4 @@
-import { DETAILS_KEYS } from 'Constants';
+import { DETAILS_KEYS } from '../constants';
 
 export default function getEmptyPersonObject() {
   return {

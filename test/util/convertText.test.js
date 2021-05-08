@@ -58,10 +58,12 @@ describe('convertText', () => {
     details = {
       [DETAILS_KEYS.LOCATION]: 'Hallway',
       [DETAILS_KEYS.AUTHOR]: '日日日 (Akira)',
-      [DETAILS_KEYS.TRANSLATOR]: 'mike',
-      [DETAILS_KEYS.TL_LINK]: '',
-      [DETAILS_KEYS.EDITOR]: 'jay',
-      [DETAILS_KEYS.ED_LINK]: '',
+      [DETAILS_KEYS.TRANSLATORS]: [
+        { [DETAILS_KEYS.NAME]: 'Mike', [DETAILS_KEYS.LINK]: 'mike' },
+      ],
+      [DETAILS_KEYS.EDITORS]: [
+        { [DETAILS_KEYS.NAME]: 'Jay', [DETAILS_KEYS.LINK]: 'jay' },
+      ],
       [DETAILS_KEYS.WHAT_GAME]: GAME_OPTIONS.GAME2,
     };
     colors = {
@@ -107,9 +109,9 @@ hello
 hello again
 
 |-
-! colspan="2" style="text-align:center;background-color:#FFFFFF;color:#FFFFFF;" |'''Translation: {{Link|https://ensemble-stars.fandom.com/wiki/User:mike|mike|#FFFFFF}} '''
+! colspan="2" style="text-align:center;background-color:#FFFFFF;color:#FFFFFF;" |'''Translation: {{inLink|User:mike|Mike|#FFFFFF}} '''
 |-
-! colspan="2" style="text-align:center;background-color:#FFFFFF;color:#FFFFFF;" |'''Proofreading: {{Link|https://ensemble-stars.fandom.com/wiki/User:jay|jay|#FFFFFF}} '''
+! colspan="2" style="text-align:center;background-color:#FFFFFF;color:#FFFFFF;" |'''Proofreading: {{inLink|User:jay|Jay|#FFFFFF}} '''
 |}
 {{StoryNavBar
 |name = Euthanasia
@@ -125,6 +127,7 @@ hello again
       tlNotesData,
       renders,
       details,
+      onChangeDetails: () => {},
       colors,
       nav,
     });
