@@ -8,8 +8,8 @@ import {
 
 export const StateContext = createContext();
 
-const getTranslatorsValue = () =>
-  JSON.parse(localStorage.getItem(DETAILS_KEYS.TRANSLATORS)) || [
+const getPersonsValue = (key) =>
+  JSON.parse(localStorage.getItem(key)) || [
     { [DETAILS_KEYS.NAME]: '', [DETAILS_KEYS.LINK]: '' },
   ];
 
@@ -22,9 +22,8 @@ export const StateProvider = ({ children }) => {
   const [details, setDetails] = useState({
     [DETAILS_KEYS.LOCATION]: '',
     [DETAILS_KEYS.AUTHOR]: AUTHOR_NAMES.AKIRA,
-    [DETAILS_KEYS.TRANSLATORS]: getTranslatorsValue(),
-    [DETAILS_KEYS.EDITOR]: localStorage.getItem(DETAILS_KEYS.EDITOR) || '',
-    [DETAILS_KEYS.ED_LINK]: localStorage.getItem(DETAILS_KEYS.ED_LINK) || '',
+    [DETAILS_KEYS.TRANSLATORS]: getPersonsValue(DETAILS_KEYS.TRANSLATORS),
+    [DETAILS_KEYS.EDITORS]: getPersonsValue(DETAILS_KEYS.EDITORS),
     [DETAILS_KEYS.WHAT_GAME]: GAME_OPTIONS.GAME2,
   });
   const [colors, setColors] = useState({

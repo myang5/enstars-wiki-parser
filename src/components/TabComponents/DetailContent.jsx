@@ -22,7 +22,8 @@ export default function DetailContent() {
     setDetails({ ...details, [DETAILS_KEYS.WHAT_GAME]: value });
   };
 
-  const handleTranslatorChange = (e) => {
+  // For handling the logic with translators/editors
+  const handlePersonChange = (e) => {
     const {
       target: { value, id },
     } = e;
@@ -62,72 +63,16 @@ export default function DetailContent() {
           ))}
         </select>
       </div>
-      <div className="row row--label-only">
-        <span className="row__spacer" />
-        <label className="row__half-width" id="translators-name-label">
-          Name
-        </label>
-        <label className="row__half-width" id="translators-credit-label">
-          Credit link or wiki username (optional)
-        </label>
-      </div>
-      {details[DETAILS_KEYS.TRANSLATORS].map((translator, idx) => {
-        return (
-          <div className="row" key={`${DETAILS_KEYS.TRANSLATORS}_${idx}`}>
-            {idx === 0 ? (
-              <label className="row__spacer" id="translator-label">
-                Translator
-              </label>
-            ) : (
-              <span className="row__spacer" />
-            )}
-            <input
-              className="row__half-width"
-              type="text"
-              aria-labelledby="translator-label translators-name-label"
-              id={`${DETAILS_KEYS.TRANSLATORS}_${DETAILS_KEYS.NAME}_${idx}`}
-              value={translator[DETAILS_KEYS.NAME]}
-              onChange={handleTranslatorChange}
-            />
-            <input
-              className="row__half-width"
-              type="text"
-              aria-labelledby="translator-label translators-credit-label"
-              id={`${DETAILS_KEYS.TRANSLATORS}_${DETAILS_KEYS.LINK}_${idx}`}
-              value={translator[DETAILS_KEYS.LINK]}
-              onChange={handleTranslatorChange}
-            />
-          </div>
-        );
-      })}
-      <div className="row row--label-only">
-        <span className="row__spacer" />
-        <label className="row__half-width" htmlFor={DETAILS_KEYS.EDITOR}>
-          Name
-        </label>
-        <label className="row__half-width" htmlFor={DETAILS_KEYS.ED_LINK}>
-          Credit link (optional)
-        </label>
-      </div>
-      <div className="row">
-        <label className="row__spacer" htmlFor={DETAILS_KEYS.EDITOR}>
-          Editor
-        </label>
-        <input
-          className="row__half-width"
-          type="text"
-          id={DETAILS_KEYS.EDITOR}
-          value={details[DETAILS_KEYS.EDITOR]}
-          onChange={handleChange}
-        />
-        <input
-          className="row__half-width"
-          type="text"
-          id={DETAILS_KEYS.ED_LINK}
-          value={details[DETAILS_KEYS.ED_LINK]}
-          onChange={handleChange}
-        />
-      </div>
+      <PersonInput
+        personTypeDetailKey={DETAILS_KEYS.TRANSLATORS}
+        details={details}
+        onChange={handlePersonChange}
+      />
+      <PersonInput
+        personTypeDetailKey={DETAILS_KEYS.EDITORS}
+        details={details}
+        onChange={handlePersonChange}
+      />
       <div className="row">
         <label className="row__spacer" htmlFor={DETAILS_KEYS.WHAT_GAME}>
           Game
@@ -152,6 +97,57 @@ export default function DetailContent() {
         <label htmlFor={GAME_OPTIONS.GAME1}>ES!</label>
       </div>
       <ColorContent />
+    </>
+  );
+}
+
+function PersonInput({ personTypeDetailKey, details, onChange }) {
+  const personLabel =
+    personTypeDetailKey === DETAILS_KEYS.TRANSLATORS ? 'Translator' : 'Editor';
+  return (
+    <>
+      <div className="row row--label-only">
+        <span className="row__spacer" />
+        <label
+          className="row__half-width"
+          id={`${personTypeDetailKey}-name-label`}
+        >
+          Name
+        </label>
+        <label
+          className="row__half-width"
+          id={`${personTypeDetailKey}-credit-label`}
+        >
+          Credit link or wiki username (optional)
+        </label>
+      </div>
+      {details[personTypeDetailKey].map((person, idx) => (
+        <div className="row" key={`${personTypeDetailKey}_${idx}`}>
+          {idx === 0 ? (
+            <label className="row__spacer" id={`${personTypeDetailKey}-label`}>
+              {personLabel}
+            </label>
+          ) : (
+            <span className="row__spacer" />
+          )}
+          <input
+            className="row__half-width"
+            type="text"
+            aria-labelledby={`${personTypeDetailKey}-label ${personTypeDetailKey}-name-label`}
+            id={`${personTypeDetailKey}_${DETAILS_KEYS.NAME}_${idx}`}
+            value={person[DETAILS_KEYS.NAME]}
+            onChange={onChange}
+          />
+          <input
+            className="row__half-width"
+            type="text"
+            aria-labelledby={`${personTypeDetailKey}-label ${personTypeDetailKey}-credit-label`}
+            id={`${personTypeDetailKey}_${DETAILS_KEYS.LINK}_${idx}`}
+            value={person[DETAILS_KEYS.LINK]}
+            onChange={onChange}
+          />
+        </div>
+      ))}
     </>
   );
 }
