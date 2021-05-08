@@ -74,7 +74,9 @@ export default function DetailContent() {
           checked={details[DETAILS_KEYS.WHAT_GAME] === GAME_OPTIONS.GAME2}
           onChange={handleGameChange}
         />
-        <label htmlFor={GAME_OPTIONS.GAME2}>ES!!</label>
+        <label className="label--radio" htmlFor={GAME_OPTIONS.GAME2}>
+          ES!!
+        </label>
         <input
           type="radio"
           name={DETAILS_KEYS.WHAT_GAME}
@@ -83,7 +85,9 @@ export default function DetailContent() {
           checked={details[DETAILS_KEYS.WHAT_GAME] === GAME_OPTIONS.GAME1}
           onChange={handleGameChange}
         />
-        <label htmlFor={GAME_OPTIONS.GAME1}>ES!</label>
+        <label className="label--radio" htmlFor={GAME_OPTIONS.GAME1}>
+          ES!
+        </label>
       </div>
       <ColorContent />
     </>
@@ -131,7 +135,7 @@ function PersonInput({ personTypeDetailKey, details, onChange }) {
         </label>
       </div>
       {details[personTypeDetailKey].map((person, idx) => (
-        <div className="row" key={`${personTypeDetailKey}_${idx}`}>
+        <div className="row row--person" key={`${personTypeDetailKey}_${idx}`}>
           {idx === 0 ? (
             <label className="row__spacer" id={`${personTypeDetailKey}-label`}>
               {personLabel}

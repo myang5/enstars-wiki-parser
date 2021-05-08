@@ -69,12 +69,6 @@
     input[type='radio'] {
       flex: initial;
     }
-
-    .btn--add-person {
-      &:extend(.secondary-button);
-      background-color: transparent;
-      border: none;
-    }
   }
 }
 
@@ -102,6 +96,25 @@
 
   .row__half-width ~ .row__half-width {
     margin-left: 5px;
+  }
+
+  .row--person {
+    margin-bottom: 5px;
+  }
+
+  .btn--add-person {
+    &:extend(.secondary-button);
+    background-color: transparent;
+    border: none;
+    font-size: 0.8rem;
+    &:focus,
+    &:hover {
+      font-weight: bold;
+    }
+  }
+
+  .label--radio {
+    margin-top: 3px;
   }
 
   .jscolor {
