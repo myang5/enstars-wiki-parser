@@ -8,6 +8,11 @@ import {
 
 export const StateContext = createContext();
 
+const getTranslatorsValue = () =>
+  JSON.parse(localStorage.getItem(DETAILS_KEYS.TRANSLATORS)) || [
+    { [DETAILS_KEYS.NAME]: '', [DETAILS_KEYS.LINK]: '' },
+  ];
+
 export const StateProvider = ({ children }) => {
   const [renders, setRenders] = useState({});
   // needed to solve stale closure problem when renders is passed to CKEditor autosave
@@ -17,9 +22,7 @@ export const StateProvider = ({ children }) => {
   const [details, setDetails] = useState({
     [DETAILS_KEYS.LOCATION]: '',
     [DETAILS_KEYS.AUTHOR]: AUTHOR_NAMES.AKIRA,
-    [DETAILS_KEYS.TRANSLATOR]:
-      localStorage.getItem(DETAILS_KEYS.TRANSLATOR) || '',
-    [DETAILS_KEYS.TL_LINK]: localStorage.getItem(DETAILS_KEYS.TL_LINK) || '',
+    [DETAILS_KEYS.TRANSLATORS]: getTranslatorsValue(),
     [DETAILS_KEYS.EDITOR]: localStorage.getItem(DETAILS_KEYS.EDITOR) || '',
     [DETAILS_KEYS.ED_LINK]: localStorage.getItem(DETAILS_KEYS.ED_LINK) || '',
     [DETAILS_KEYS.WHAT_GAME]: GAME_OPTIONS.GAME2,

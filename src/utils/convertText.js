@@ -28,6 +28,12 @@ export default function convertText({
   const TEMPLATES = getTemplates(details, colors);
   const inputDom = extractBr(convertEditorDataToDom(inputData));
 
+  updateLocalStorage(
+    DETAILS_KEYS.TRANSLATORS,
+    JSON.stringify(details[DETAILS_KEYS.TRANSLATORS])
+  );
+  updateLocalStorage(DETAILS_KEYS.EDITOR, editor);
+  updateLocalStorage(DETAILS_KEYS.ED_LINK, edLink);
   updateLocalStorage('nav', JSON.stringify(nav));
 
   const input = inputDom.querySelectorAll('p');
@@ -53,7 +59,7 @@ export default function convertText({
   }
 
   if (tlMarkerCount > 0) output += formatTlNotes(tlNotesData, tlMarkerCount);
-  output += TEMPLATES.translator;
+  output += TEMPLATES.translators;
   output += TEMPLATES.editor || '';
   output += '|}\n';
   output += formatBottomNavBar(nav);
@@ -74,7 +80,16 @@ export default function convertText({
 function normalizeDetails(details) {
   Object.entries(details).forEach((entry) => {
     const [key, value] = entry;
-    details[key] = value.trim();
+    if (key === DETAILS_KEYS.TRANSLATORS) {
+      value.forEach((person) => {
+        Object.entries(person).forEach((subEntry) => {
+          const [subKey, subValue] = subEntry;
+          person[subKey] = subValue.trim();
+        });
+      });
+    } else {
+      details[key] = value.trim();
+    }
     // add # character to color if it does not exist
     if (key.endsWith('Col')) {
       details[key] = value.startsWith('#') ? value : `#${value}`;
@@ -82,9 +97,36 @@ function normalizeDetails(details) {
   });
 }
 
+// Helpers for getTemplates
 const userUrl = (username) =>
   `https://ensemble-stars.fandom.com/wiki/User:${username}`;
-const templateLink = (link, text, color) => `{{Link|${link}|${text}|${color}}}`;
+
+const externalLinkTemplate = (link, text, color) =>
+  `{{Link|${link}|${text}|${color}}}`;
+
+const internalLinkTemplate = (userName, name, color) =>
+  `{{inLink|User:${userName}|${name}|${color}}}`;
+
+const getTranslatorsTemplate = (translators, textCol, bottomCol) => {
+  const resultText = translators.reduce((result, translator, idx) => {
+    const { [DETAILS_KEYS.NAME]: name, [DETAILS_KEYS.LINK]: link } = translator;
+    if (!name && !link) return result;
+    result += !link
+      ? name
+      : link.startsWith('http')
+      ? externalLinkTemplate(link, name, textCol)
+      : internalLinkTemplate(link, name, textCol);
+    if (idx !== translators.length - 1) {
+      result += ', ';
+    }
+    return result;
+  }, '');
+  if (resultText.length === 0) return resultText;
+  return `|-
+! colspan="2" style="text-align:center;background-color:${bottomCol};color:${textCol};" |'''Translation: ${resultText} '''
+`;
+};
+
 /**
  * Helper function to format the wiki code for story header and footer
  * with the user input
@@ -94,27 +136,19 @@ const templateLink = (link, text, color) => `{{Link|${link}|${text}|${color}}}`;
  * @return {Object} Object containing the wikia syntax to use as templates
  */
 const getTemplates = (details, colors) => {
-  const { location, author, translator, tlLink, editor, edLink } = details;
+  const { location, author, translators, editor, edLink } = details;
   const {
     [COLORS_KEYS.WRITER]: writerCol,
     [COLORS_KEYS.LOCATION]: locationCol,
     [COLORS_KEYS.BOTTOM]: bottomCol,
     [COLORS_KEYS.TEXT]: textCol,
   } = colors;
-  const tlWikiLink = tlLink
-    ? templateLink(tlLink, translator, textCol)
-    : templateLink(userUrl(translator), translator, textCol);
   let edWikiLink;
   if (editor.length > 0) {
     edWikiLink = edLink
-      ? templateLink(edLink, editor, textCol)
-      : templateLink(userUrl(editor), editor, textCol);
+      ? externalLinkTemplate(edLink, editor, textCol)
+      : externalLinkTemplate(userUrl(editor), editor, textCol);
   }
-
-  updateLocalStorage(DETAILS_KEYS.TRANSLATOR, translator);
-  updateLocalStorage(DETAILS_KEYS.TL_LINK, tlLink);
-  updateLocalStorage(DETAILS_KEYS.EDITOR, editor);
-  updateLocalStorage(DETAILS_KEYS.ED_LINK, edLink);
 
   const templates = {};
 
@@ -135,9 +169,11 @@ const getTemplates = (details, colors) => {
   templates.heading = `|-
 ! colspan="2" style="text-align:center;background-color:${locationCol}; color:${textCol};" |'''HEADING'''
 `;
-  templates.translator = `|-
-! colspan="2" style="text-align:center;background-color:${bottomCol};color:${textCol};" |'''Translation: ${tlWikiLink} '''
-`;
+  templates.translators = getTranslatorsTemplate(
+    translators,
+    textCol,
+    bottomCol
+  );
   if (editor.length > 0) {
     templates.editor = `|-
 ! colspan="2" style="text-align:center;background-color:${bottomCol};color:${textCol};" |'''Proofreading: ${edWikiLink} '''

@@ -19,7 +19,17 @@ export default function DetailContent() {
     const {
       target: { value },
     } = e;
-    setDetails({ ...details, whatGame: value });
+    setDetails({ ...details, [DETAILS_KEYS.WHAT_GAME]: value });
+  };
+
+  const handleTranslatorChange = (e) => {
+    const {
+      target: { value, id },
+    } = e;
+    const [personType, key, idx] = id.split('_');
+    const newArr = [...details[personType]];
+    newArr[idx] = { ...newArr[idx], [key]: value };
+    setDetails({ ...details, [personType]: newArr });
   };
 
   return (
@@ -54,32 +64,42 @@ export default function DetailContent() {
       </div>
       <div className="row row--label-only">
         <span className="row__spacer" />
-        <label className="row__half-width" htmlFor={DETAILS_KEYS.TRANSLATOR}>
+        <label className="row__half-width" id="translators-name-label">
           Name
         </label>
-        <label className="row__half-width" htmlFor={DETAILS_KEYS.TL_LINK}>
-          Credit link (optional)
+        <label className="row__half-width" id="translators-credit-label">
+          Credit link or wiki username (optional)
         </label>
       </div>
-      <div className="row">
-        <label className="row__spacer" htmlFor={DETAILS_KEYS.TRANSLATOR}>
-          Translator
-        </label>
-        <input
-          className="row__half-width"
-          type="text"
-          id={DETAILS_KEYS.TRANSLATOR}
-          value={details[DETAILS_KEYS.TRANSLATOR]}
-          onChange={handleChange}
-        />
-        <input
-          className="row__half-width"
-          type="text"
-          id={DETAILS_KEYS.TL_LINK}
-          value={details[DETAILS_KEYS.TL_LINK]}
-          onChange={handleChange}
-        />
-      </div>
+      {details[DETAILS_KEYS.TRANSLATORS].map((translator, idx) => {
+        return (
+          <div className="row" key={`${DETAILS_KEYS.TRANSLATORS}_${idx}`}>
+            {idx === 0 ? (
+              <label className="row__spacer" id="translator-label">
+                Translator
+              </label>
+            ) : (
+              <span className="row__spacer" />
+            )}
+            <input
+              className="row__half-width"
+              type="text"
+              aria-labelledby="translator-label translators-name-label"
+              id={`${DETAILS_KEYS.TRANSLATORS}_${DETAILS_KEYS.NAME}_${idx}`}
+              value={translator[DETAILS_KEYS.NAME]}
+              onChange={handleTranslatorChange}
+            />
+            <input
+              className="row__half-width"
+              type="text"
+              aria-labelledby="translator-label translators-credit-label"
+              id={`${DETAILS_KEYS.TRANSLATORS}_${DETAILS_KEYS.LINK}_${idx}`}
+              value={translator[DETAILS_KEYS.LINK]}
+              onChange={handleTranslatorChange}
+            />
+          </div>
+        );
+      })}
       <div className="row row--label-only">
         <span className="row__spacer" />
         <label className="row__half-width" htmlFor={DETAILS_KEYS.EDITOR}>
