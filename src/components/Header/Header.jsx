@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './Header.less';
 
-const lastUpdated = '4/18/21';
+const lastUpdated = '5/8/21';
 
 export default function Header() {
   const desc = (

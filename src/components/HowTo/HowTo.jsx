@@ -15,11 +15,15 @@ export default function HowTo() {
         <p>Copy and paste your translated chapter into the text box.</p>
         <ul>
           <li>
-            <strong>Header images and other chapter images</strong> - You can
+            <strong>Header images and mid-dialogue images</strong> - You can
             include whole-row images such as a header image or CGs by inserting
             the EXACT file name &#40;ex. &#40;Resounding Beat&#41; Jun Sazanami
             CG2.png&#41; into the dialogue on its own line. To set the header
             image, make the image file name the first line in the dialogue.
+          </li>
+          <li>
+            NOTE: Make sure to upload the header image to the wiki before
+            creating the new chapter page.
           </li>
           <li>
             <strong>Headings for scene changes</strong> - You can indicate scene
@@ -34,9 +38,8 @@ export default function HowTo() {
           </li>
           <li>
             <strong>Links</strong> - Links should also be preserved when pasted
-            in. For now, internal wiki links are not supported so make sure
-            every link is like an external one &#40;i.e. with the https:// in
-            front&#41;.
+            in. Make sure every link is like an external one &#40;i.e. with the
+            https:// in front&#41;.
           </li>
         </ul>
         <p>Here&apos;s an example of a short dialogue:</p>
@@ -79,9 +82,26 @@ export default function HowTo() {
           Fill in information about the chapter and its appearance on the wiki.
         </p>
         <p>
-          The Editor field is an optional detail and will not be added if left
-          blank. The Translator and Editor values should auto-fill based on
-          previous input, if you allow websites to cache information
+          The Translator and Editor values for the chapter's footer should
+          auto-fill based on previous input, if you allow websites to cache
+          information in your local storage. They will not be added if left
+          blank.
+        </p>
+        <p>
+          The credit link fields for each translator/editor can either be the
+          person's wiki username, or some external link. If the credit link is a
+          wiki username, it will be treated as an internal link and formatted
+          with the{' '}
+          <a href="https://ensemble-stars.fandom.com/wiki/Template:InLink">
+            template for internal links
+          </a>
+          .
+        </p>
+        <p>
+          {' '}
+          Make sure that external links include all the stuff at the beginning
+          or they will break (and the formatter won't recognize them as external
+          links)! They should start with http://...
         </p>
         <p>Diagram of the Heading Colors options:</p>
         <img alt="Diagram of the Heading Colors" src={colorDiagram} />
@@ -96,7 +116,7 @@ export default function HowTo() {
         <p>
           For now, if you want to use more than one render per character in one
           chapter, you have to format each section of the chapter with different
-          renders separately. INSERT EXAMPLE
+          renders separately.
         </p>
 
         <h3 id="tlNotesSection">TL Notes Tab</h3>
@@ -106,7 +126,7 @@ export default function HowTo() {
         </p>
         <blockquote>
           Izumi: I don’t know if they’re Eden or oden[1] or what, but we can’t
-          let them have their way in our territory.
+          let them have their way in our territory[2].
         </blockquote>
         <p>
           You can have markers in the middle or end of the line, or even
@@ -131,7 +151,7 @@ export default function HowTo() {
             <strong>
               The TL notes can also be in an actual ordered list, which is
               preferable.
-            </strong>
+            </strong>{' '}
             You can use the editor to format the list:
           </li>
           <img alt="how to creat the list with the editor" src={list} />
@@ -164,11 +184,6 @@ export default function HowTo() {
             Paste in the formatted text, and publish the page.
             <br />
             <img alt="newPage3" src={newPage3} />
-          </li>
-          <li>
-            NOTE: As of now you must manually upload the header image of the
-            chapter in the visual editor unless you upload the header image to
-            the wiki before creating the new chapter page.
           </li>
         </ol>
       </div>
