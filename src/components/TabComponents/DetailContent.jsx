@@ -131,7 +131,7 @@ function PersonInput({ personTypeDetailKey, details, onChange }) {
           className="row__half-width"
           id={`${personTypeDetailKey}-credit-label`}
         >
-          Credit link/wiki username (optional)
+          Credit link/wiki username
         </label>
       </div>
       {details[personTypeDetailKey].map((person, idx) => (
